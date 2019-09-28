@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29201.188
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HardSense", "HardSense.csproj", "{276CCE5F-D67B-44E8-A09A-2E7FE8B7CC06}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{276CCE5F-D67B-44E8-A09A-2E7FE8B7CC06}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{276CCE5F-D67B-44E8-A09A-2E7FE8B7CC06}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{276CCE5F-D67B-44E8-A09A-2E7FE8B7CC06}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{276CCE5F-D67B-44E8-A09A-2E7FE8B7CC06}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8779B163-A2FE-43ED-8C3B-1125303CB412}
+	EndGlobalSection
+EndGlobal
