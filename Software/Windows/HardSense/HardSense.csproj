@@ -57,8 +57,8 @@
     <Compile Include="HardSense.Designer.cs">
       <DependentUpon>HardSense.cs</DependentUpon>
     </Compile>
-    <Compile Include="HardwareMonitor.cs" />
-    <Compile Include="LocalHardwareItem.cs" />
+    <Compile Include="HardwareMonitor\HardwareMonitor.cs" />
+    <Compile Include="HardwareMonitor\LocalHardwareItem.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="HardSense.resx">
@@ -89,6 +89,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AppIcon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="GUI\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

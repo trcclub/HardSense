@@ -8,5 +8,6 @@ namespace HardSense
 {
     class LocalHardwareItem
     {
+        public string Name { get; set; }
     }
 }

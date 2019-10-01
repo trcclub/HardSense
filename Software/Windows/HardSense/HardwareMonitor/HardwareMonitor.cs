@@ -19,7 +19,7 @@ namespace HardSense
         private UpdateVisitor updateVisitor;
         private Computer computer;
 
-        private LocalHardwareItem localMainBoard;
+        private LocalHardwareItem localMainBoard = new LocalHardwareItem();
 
         public HardwareMonitor()
         {
@@ -71,6 +71,11 @@ namespace HardSense
             return true;
         }
 
+        public LocalHardwareItem GetMainboard()
+        {
+            return localMainBoard;
+        }
+
         public void UpdateAllHardwareInfo()
         {
             UpdateMainboardInfo();
@@ -86,7 +91,13 @@ namespace HardSense
             computer.HDDEnabled = false;
 
             computer.Traverse(updateVisitor);
-
+            if(computer.Hardware.Length == 0)
+            {
+                lastErrorMessage = "UpdateMainboardInfo:  Failed to find any hardware";
+                throw new System.Exception("Failed to find any mainboard hardware");
+            }
+            IHardware currMainboardInfo = computer.Hardware[0];
+            localMainBoard.Name = currMainboardInfo.Name;
 
         }
 

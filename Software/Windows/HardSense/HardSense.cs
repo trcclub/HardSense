@@ -23,7 +23,9 @@ namespace HardSense
             //tempThread = new Thread(ThreadProc);
             //tempThread.Start();
 
-            string s = "Mainboard: " + computerMonitor.localMainBoard.Name;
+            LocalHardwareItem mainBoard = computerMonitor.GetMainboard();
+
+            string s = "Mainboard: " + mainBoard.Name;
             tempDisplayBox.AppendText("Starting...");
             tempDisplayBox.AppendText(s);
         }
