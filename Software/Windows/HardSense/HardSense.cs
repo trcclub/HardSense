@@ -1,37 +1,61 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace HardSense
 {
-    public partial class Form1 : Form
+    public partial class HardSense : Form
     {
         private NotifyIcon trayIcon;
         private ContextMenu trayMenu;
+        private HardwareMonitor computerMonitor = new HardwareMonitor();
 
-        public Form1()
+        //private Thread tempThread;
+        //private int counter = 0;
+        public HardSense()
         {
             InitializeComponent();
+            SetupTrayIcon();
+
+
+            computerMonitor.StartMonitor();
+
+
+            //tempThread = new Thread(ThreadProc);
+            //tempThread.Start();
+
+            string s = "Mainboard: " + computerMonitor.localMainBoard.Name;
+            tempDisplayBox.AppendText("Starting...");
+            tempDisplayBox.AppendText(s);
+        }
+
+        /*
+        private void ThreadProc()
+        {
+            while (true)
+            {
+                tempDisplayBox.Invoke((Action)delegate
+                {
+                    counter++;
+                    String str = "Hello World! - " + counter.ToString() + "\n";
+                    tempDisplayBox.AppendText(str);
+                });
+                Thread.Sleep(250);
+            }
+        }
+        */
+
+        private void SetupTrayIcon()
+        {
             trayMenu = new ContextMenu();
             trayMenu.MenuItems.Add("Exit", OnExit);
             trayMenu.MenuItems.Add("Open", trayIcon_DoubleClick);
 
-            // Create a tray icon. In this example we use a
-            // standard system icon for simplicity, but you
-            // can of course use your own custom icon too.
             trayIcon = new NotifyIcon();
             trayIcon.Text = "HardSense";
-            //trayIcon.Icon = new Icon(SystemIcons.Application, 40, 40);
             trayIcon.Icon = Properties.Resources.AppIcon;
             trayIcon.DoubleClick += new System.EventHandler(this.trayIcon_DoubleClick);
 
-            // Add menu to tray icon and show it.
+
             trayIcon.ContextMenu = trayMenu;
             trayIcon.Visible = true;
         }
@@ -39,7 +63,7 @@ namespace HardSense
         protected override void OnLoad(EventArgs e)
         {
             Visible = false; // Hide form window.
-            ShowInTaskbar = false; // Remove from taskbar.
+            //ShowInTaskbar = false; // Remove from taskbar.
 
             base.OnLoad(e);
         }
@@ -55,20 +79,11 @@ namespace HardSense
             // Activate the form.
             this.Show();
         }
+
         private void OnExit(object sender, EventArgs e)
         {
+            computerMonitor.StopMonitor();
             Application.Exit();
-        }
-        private void notifyIcon1_DoubleClick(object Sender, EventArgs e)
-        {
-            // Show the form when the user double clicks on the notify icon.
-
-            // Set the WindowState to normal if the form is minimized.
-            if (this.WindowState == FormWindowState.Minimized)
-                this.WindowState = FormWindowState.Normal;
-
-            // Activate the form.
-            this.Show();
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)

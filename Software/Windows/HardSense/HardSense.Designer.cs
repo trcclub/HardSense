@@ -1,6 +1,6 @@
 ﻿namespace HardSense
 {
-    partial class Form1
+    partial class HardSense
     {
         /// <summary>
         /// Required designer variable.
@@ -29,8 +29,9 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(HardSense));
             this.notifyIcon2 = new System.Windows.Forms.NotifyIcon(this.components);
+            this.tempDisplayBox = new System.Windows.Forms.RichTextBox();
             this.SuspendLayout();
             // 
             // notifyIcon2
@@ -38,14 +39,23 @@
             this.notifyIcon2.Text = "notifyIcon2";
             this.notifyIcon2.Visible = true;
             // 
-            // Form1
+            // tempDisplayBox
+            // 
+            this.tempDisplayBox.Location = new System.Drawing.Point(130, 107);
+            this.tempDisplayBox.Name = "tempDisplayBox";
+            this.tempDisplayBox.Size = new System.Drawing.Size(1180, 396);
+            this.tempDisplayBox.TabIndex = 0;
+            this.tempDisplayBox.Text = "";
+            // 
+            // HardSense
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(1393, 684);
+            this.Controls.Add(this.tempDisplayBox);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Name = "Form1";
-            this.Text = "Form1";
+            this.Name = "HardSense";
+            this.Text = "HardSense";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.ResumeLayout(false);
 
@@ -54,6 +64,7 @@
         #endregion
 
         private System.Windows.Forms.NotifyIcon notifyIcon2;
+        private System.Windows.Forms.RichTextBox tempDisplayBox;
     }
 }
 
