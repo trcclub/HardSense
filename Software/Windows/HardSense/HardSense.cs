@@ -1,5 +1,7 @@
-﻿using System;
+﻿using HardSense.HardwareMonitor;
+using System;
 using System.Windows.Forms;
+//using System.Net.NetworkInformation;
 
 namespace HardSense
 {
@@ -7,7 +9,7 @@ namespace HardSense
     {
         private NotifyIcon trayIcon;
         private ContextMenu trayMenu;
-        private HardwareMonitor computerMonitor = new HardwareMonitor();
+        private LocalHardwareMonitor computerMonitor = new LocalHardwareMonitor();
 
         //private Thread tempThread;
         //private int counter = 0;
@@ -17,17 +19,198 @@ namespace HardSense
             SetupTrayIcon();
 
 
-            computerMonitor.StartMonitor();
-
 
             //tempThread = new Thread(ThreadProc);
             //tempThread.Start();
 
-            LocalHardwareItem mainBoard = computerMonitor.GetMainboard();
+            //Motherboard motherBoard = computerMonitor.motherBoard;
 
-            string s = "Mainboard: " + mainBoard.Name;
-            tempDisplayBox.AppendText("Starting...");
+
+            /*
+            ListViewItem mainBoardRoot = new ListViewItem("Motherboard");
+            mainBoardRoot.SubItems.Add(computerMonitor.motherBoardInfo.Name);
+            mainBoardRoot.SubItems.Add(computerMonitor.motherBoardInfo.Id);
+            listView1.Items.Add(mainBoardRoot);
+            */
+
+            tempDisplayBox.AppendText("Starting...\n");
+
+
+
+            tempDisplayBox.AppendText("\n---\nMotherboard Info\n");
+            string s = "Found " + computerMonitor.motherBoardInfo.Count.ToString() + " Motherboards(s)\n";
             tempDisplayBox.AppendText(s);
+            int count = 0;
+            foreach (LocalHardwareItem currItem in computerMonitor.motherBoardInfo)
+            {
+                count++;
+                s = "\n";
+                s += "Motherboard #" + count.ToString() + "\n";
+                s += "Name: " + currItem.Name + "\n";
+                s += "Id: " + currItem.Id + "\n";
+                s += "Number of sensors: " + currItem.NumberOfSensors.ToString() + "\n\nSensor List:\n";
+                tempDisplayBox.AppendText(s);
+                foreach (LocalSensor currSensor in currItem.SensorList)
+                {
+                    DisplaySensorInfo(currSensor);
+                    tempDisplayBox.AppendText("\n");
+                }
+            }
+
+
+            tempDisplayBox.AppendText("\n---\nCPU Info\n");
+            s = "Found " + computerMonitor.cpuInfo.Count.ToString() + " CPU(s)\n";
+            tempDisplayBox.AppendText(s);
+            count = 0;
+            foreach(LocalHardwareItem currItem in computerMonitor.cpuInfo)
+            {
+                count++;
+                s = "\n";
+                s += "Cpu #" + count.ToString() + "\n";
+                s += "Name: " + currItem.Name + "\n";
+                s += "Id: " + currItem.Id + "\n";
+                s += "Number of sensors: " + currItem.NumberOfSensors.ToString() + "\n\nSensor List:\n";
+                tempDisplayBox.AppendText(s);
+                foreach (LocalSensor currSensor in currItem.SensorList)
+                {
+                    DisplaySensorInfo(currSensor);
+                    tempDisplayBox.AppendText("\n");
+                }
+            }
+
+            tempDisplayBox.AppendText("\n---\nGPU Info\n");
+            s = "Found " + computerMonitor.gpuInfo.Count.ToString() + " GPU(s)\n";
+            tempDisplayBox.AppendText(s);
+            count = 0;
+            foreach (LocalHardwareItem currItem in computerMonitor.gpuInfo)
+            {
+                count++;
+                s = "\n";
+                s += "GPU #" + count.ToString() + "\n";
+                s += "Name: " + currItem.Name + "\n";
+                s += "Id: " + currItem.Id + "\n";
+                s += "Number of sensors: " + currItem.NumberOfSensors.ToString() + "\n\nSensor List:\n";
+                tempDisplayBox.AppendText(s);
+                foreach (LocalSensor currSensor in currItem.SensorList)
+                {
+                    DisplaySensorInfo(currSensor);
+                    tempDisplayBox.AppendText("\n");
+                }
+            }
+
+            tempDisplayBox.AppendText("\n---\nRAM Info\n");
+            s = "Found " + computerMonitor.ramInfo.Count.ToString() + " RAM Unit(s)\n";
+            tempDisplayBox.AppendText(s);
+            count = 0;
+            foreach (LocalHardwareItem currItem in computerMonitor.ramInfo)
+            {
+                count++;
+                s = "\n";
+                s += "Ram #" + count.ToString() + "\n";
+                s += "Name: " + currItem.Name + "\n";
+                s += "Id: " + currItem.Id + "\n";
+                s += "Number of sensors: " + currItem.NumberOfSensors.ToString() + "\n\nSensor List:\n";
+                tempDisplayBox.AppendText(s);
+                foreach (LocalSensor currSensor in currItem.SensorList)
+                {
+                    DisplaySensorInfo(currSensor);
+                    tempDisplayBox.AppendText("\n");
+                }
+            }
+
+            tempDisplayBox.AppendText("\n---\nHDD Info\n");
+            s = "Found " + computerMonitor.hddInfo.Count.ToString() + " HDD(s)\n";
+            tempDisplayBox.AppendText(s);
+            count = 0;
+            foreach (LocalHardwareItem currItem in computerMonitor.hddInfo)
+            {
+                count++;
+                s = "\n";
+                s += "HDD #" + count.ToString() + "\n";
+                s += "Name: " + currItem.Name + "\n";
+                s += "Id: " + currItem.Id + "\n";
+                s += "Number of sensors: " + currItem.NumberOfSensors.ToString() + "\n\nSensor List:\n";
+                tempDisplayBox.AppendText(s);
+                foreach (LocalSensor currSensor in currItem.SensorList)
+                {
+                    DisplaySensorInfo(currSensor);
+                    tempDisplayBox.AppendText("\n");
+                }
+            }
+
+
+            if (computerMonitor.nicInfo.Count != 0)
+            {
+                tempDisplayBox.AppendText("\n---\nNic Info\n");
+                s = "Found " + computerMonitor.nicInfo.Count.ToString() + " nic(s)\n";
+                tempDisplayBox.AppendText(s);
+                count = 0;
+                foreach (LocalHardwareItem currItem in computerMonitor.nicInfo)
+                {
+                    count++;
+                    s = "\n";
+                    s += "nic #" + count.ToString() + "\n";
+                    s += "Name: " + currItem.Name + "\n";
+                    s += "Id: " + currItem.Id + "\n";
+                    s += "Number of sensors: " + currItem.NumberOfSensors.ToString() + "\n\nSensor List:\n";
+                    tempDisplayBox.AppendText(s);
+                    foreach (LocalSensor currSensor in currItem.SensorList)
+                    {
+                        DisplaySensorInfo(currSensor);
+                        tempDisplayBox.AppendText("\n");
+                    }
+                }
+            } else
+            {
+                tempDisplayBox.AppendText("No network connections found\n");
+            }
+
+
+
+
+
+            //ListViewItem cpuRoot = new ListViewItem("CPU's");
+
+
+
+            // NETWORK INTERFACE STUFF //
+            /*
+            tempDisplayBox.AppendText("\n-------------\n");
+
+
+            IPGlobalProperties properties = IPGlobalProperties.GetIPGlobalProperties();
+            s = "Hostname: " + properties.HostName + "\n";
+            s += "Domainname: " + properties.DomainName + "\n";
+
+            tempDisplayBox.AppendText(s);
+            tempDisplayBox.AppendText("\n*******\n");
+
+            NetworkInterface[] adapters = NetworkInterface.GetAllNetworkInterfaces();
+            foreach (NetworkInterface adapter in adapters)
+            {
+                if (!adapter.Supports(NetworkInterfaceComponent.IPv4))
+                    continue;
+
+                s = "ID: " + adapter.Id + "\n";
+                s += "Description: " + adapter.Description + "\n";
+                s += "Name: " + adapter.Name + "\n";
+                s += "Speed: " + adapter.Speed.ToString()+ "\n";
+
+                //adapter.GetIPv4Statistics.
+                tempDisplayBox.AppendText(s);
+                tempDisplayBox.AppendText("\n---\n");
+            }
+
+            */
+            //TreeNode rootNode = new TreeNode();
+            //rootNode.Text = "MotherBoard";
+
+
+
+
+            //sesnsorSelector_TreeView.Nodes.Add(rootNode);
+
+            //computerMonitor.StartMonitor();
         }
 
         /*
@@ -45,6 +228,15 @@ namespace HardSense
             }
         }
         */
+
+
+        private void DisplaySensorInfo(LocalSensor currSensor)
+        {
+            String s = "Name: " + currSensor.Name + "\n";
+            s += "Id: " + currSensor.Id + "\n";
+            s += "Type: " + currSensor.Type + "\n";
+            tempDisplayBox.AppendText(s);
+        }
 
         private void SetupTrayIcon()
         {

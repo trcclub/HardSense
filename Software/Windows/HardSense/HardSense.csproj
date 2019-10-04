@@ -57,8 +57,11 @@
     <Compile Include="HardSense.Designer.cs">
       <DependentUpon>HardSense.cs</DependentUpon>
     </Compile>
-    <Compile Include="HardwareMonitor\HardwareMonitor.cs" />
+    <Compile Include="HardwareMonitor\LocalHardwareMonitor.cs" />
     <Compile Include="HardwareMonitor\LocalHardwareItem.cs" />
+    <Compile Include="HardwareMonitor\LocalSensor.cs" />
+    <Compile Include="HardwareMonitor\NetSpeedMonitor.cs" />
+    <Compile Include="MemFile\MMFile.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="HardSense.resx">
