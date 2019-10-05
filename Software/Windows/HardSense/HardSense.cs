@@ -1,5 +1,6 @@
 ﻿using HardSense.HardwareMonitor;
 using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 //using System.Net.NetworkInformation;
 
@@ -10,7 +11,7 @@ namespace HardSense
         private NotifyIcon trayIcon;
         private ContextMenu trayMenu;
         private LocalHardwareMonitor computerMonitor = new LocalHardwareMonitor();
-
+        
         //private Thread tempThread;
         //private int counter = 0;
         public HardSense()
@@ -35,6 +36,13 @@ namespace HardSense
 
             tempDisplayBox.AppendText("Starting...\n");
 
+            List<string> tmpHardwareList = new List<string>();
+            tmpHardwareList.Add("/mainboard");
+
+            List<string> tmpSensorList = new List<string>();
+            tmpSensorList.Add("/Bluetooth/0/send");
+            tmpSensorList.Add("/Bluetooth/0/recv");
+            computerMonitor.init(tmpHardwareList,tmpSensorList);
 
 
             tempDisplayBox.AppendText("\n---\nMotherboard Info\n");
@@ -48,6 +56,7 @@ namespace HardSense
                 s += "Motherboard #" + count.ToString() + "\n";
                 s += "Name: " + currItem.Name + "\n";
                 s += "Id: " + currItem.Id + "\n";
+                s += "Ignored: " + currItem.ignored.ToString() + "\n";
                 s += "Number of sensors: " + currItem.NumberOfSensors.ToString() + "\n\nSensor List:\n";
                 tempDisplayBox.AppendText(s);
                 foreach (LocalSensor currSensor in currItem.SensorList)
@@ -69,6 +78,7 @@ namespace HardSense
                 s += "Cpu #" + count.ToString() + "\n";
                 s += "Name: " + currItem.Name + "\n";
                 s += "Id: " + currItem.Id + "\n";
+                s += "Ignored: " + currItem.ignored.ToString() + "\n";
                 s += "Number of sensors: " + currItem.NumberOfSensors.ToString() + "\n\nSensor List:\n";
                 tempDisplayBox.AppendText(s);
                 foreach (LocalSensor currSensor in currItem.SensorList)
@@ -89,6 +99,7 @@ namespace HardSense
                 s += "GPU #" + count.ToString() + "\n";
                 s += "Name: " + currItem.Name + "\n";
                 s += "Id: " + currItem.Id + "\n";
+                s += "Ignored: " + currItem.ignored.ToString() + "\n";
                 s += "Number of sensors: " + currItem.NumberOfSensors.ToString() + "\n\nSensor List:\n";
                 tempDisplayBox.AppendText(s);
                 foreach (LocalSensor currSensor in currItem.SensorList)
@@ -109,6 +120,7 @@ namespace HardSense
                 s += "Ram #" + count.ToString() + "\n";
                 s += "Name: " + currItem.Name + "\n";
                 s += "Id: " + currItem.Id + "\n";
+                s += "Ignored: " + currItem.ignored.ToString() + "\n";
                 s += "Number of sensors: " + currItem.NumberOfSensors.ToString() + "\n\nSensor List:\n";
                 tempDisplayBox.AppendText(s);
                 foreach (LocalSensor currSensor in currItem.SensorList)
@@ -129,6 +141,7 @@ namespace HardSense
                 s += "HDD #" + count.ToString() + "\n";
                 s += "Name: " + currItem.Name + "\n";
                 s += "Id: " + currItem.Id + "\n";
+                s += "Ignored: " + currItem.ignored.ToString() + "\n";
                 s += "Number of sensors: " + currItem.NumberOfSensors.ToString() + "\n\nSensor List:\n";
                 tempDisplayBox.AppendText(s);
                 foreach (LocalSensor currSensor in currItem.SensorList)
@@ -152,6 +165,7 @@ namespace HardSense
                     s += "nic #" + count.ToString() + "\n";
                     s += "Name: " + currItem.Name + "\n";
                     s += "Id: " + currItem.Id + "\n";
+                    s += "Ignored: " + currItem.ignored.ToString() + "\n";
                     s += "Number of sensors: " + currItem.NumberOfSensors.ToString() + "\n\nSensor List:\n";
                     tempDisplayBox.AppendText(s);
                     foreach (LocalSensor currSensor in currItem.SensorList)
@@ -167,7 +181,7 @@ namespace HardSense
 
 
 
-
+            computerMonitor.StartMonitor();
 
             //ListViewItem cpuRoot = new ListViewItem("CPU's");
 
@@ -235,6 +249,7 @@ namespace HardSense
             String s = "Name: " + currSensor.Name + "\n";
             s += "Id: " + currSensor.Id + "\n";
             s += "Type: " + currSensor.Type + "\n";
+            s += "Ignored: " + currSensor.ignored.ToString() + "\n";
             tempDisplayBox.AppendText(s);
         }
 

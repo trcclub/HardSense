@@ -16,12 +16,10 @@ namespace HardSense.HardwareMonitor
 
 
         public NetSpeedMonitor()
-        {
-            hasNics = FindNICs();
-                
+        {       
         }
 
-        private bool FindNICs()
+        public bool FindNICs(List<string> sensorListToIgnore)
         {
             nics = new List<NetworkInterface>();
 
@@ -42,11 +40,12 @@ namespace HardSense.HardwareMonitor
             if (nics.Count == 0)
                 return false;
 
-            BuildListOfHardwareItems();
+            BuildListOfHardwareItems(sensorListToIgnore);
+            hasNics = true;
             return true;
         }
 
-        private void BuildListOfHardwareItems()
+        private void BuildListOfHardwareItems(List<string> sensorListToIgnore)
         {
             localHardwareNics = new List<LocalHardwareItem>();
 
@@ -70,8 +69,10 @@ namespace HardSense.HardwareMonitor
                 }
                 tmpHardwareItem.NumberOfSensors = 2;
 
-                tmpHardwareItem.SensorList.Add(new LocalSensor((tmpHardwareItem.Id + "/recv"), "Receive Speed", SensorType.BPS));
-                tmpHardwareItem.SensorList.Add(new LocalSensor((tmpHardwareItem.Id + "/send"), "Send Speed", SensorType.BPS));
+                string tmpRecvID = tmpHardwareItem.Id + "/recv";
+                string tmpSendID = tmpHardwareItem.Id + "/send";
+                tmpHardwareItem.SensorList.Add(new LocalSensor(tmpRecvID, "Receive Speed", SensorType.BPS, sensorListToIgnore.Contains(tmpRecvID)));
+                tmpHardwareItem.SensorList.Add(new LocalSensor(tmpSendID, "Send Speed", SensorType.BPS, sensorListToIgnore.Contains(tmpSendID)));
 
 
                 localHardwareNics.Add(tmpHardwareItem);

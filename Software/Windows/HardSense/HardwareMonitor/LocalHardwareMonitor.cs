@@ -19,24 +19,24 @@ namespace HardSense.HardwareMonitor
         private UpdateVisitor updateVisitor = new UpdateVisitor();
         private Computer computer = new Computer();
         private NetSpeedMonitor netSpeedMonitor = new NetSpeedMonitor();
-        
-        
+                
         private MMFile mmFile;
 
-        public List<LocalHardwareItem> motherBoardInfo;
-        public List<LocalHardwareItem> cpuInfo;
-        public List<LocalHardwareItem> gpuInfo;
-        public List<LocalHardwareItem> ramInfo;
-        public List<LocalHardwareItem> hddInfo;
-        public List<LocalHardwareItem> nicInfo;
-        //public List<LocalHardwareItem> fanControllerInfo;
+        private bool initiationComplete = false;
+
+        public List<LocalHardwareItem> motherBoardInfo { get; private set; }
+        public List<LocalHardwareItem> cpuInfo { get; private set; }
+        public List<LocalHardwareItem> gpuInfo { get; private set; }
+        public List<LocalHardwareItem> ramInfo { get; private set; }
+        public List<LocalHardwareItem> hddInfo { get; private set; }
+        public List<LocalHardwareItem> nicInfo { get; private set; }
+        public List<string> listOfHardwareIDsToIgnore { get; set; } = new List<string>();
+        public List<string> listOfSensorIDsToIgnore { get; set; } = new List<string>();
 
         public LocalHardwareMonitor()
-        {
+        { 
             computer.Open();
             computer.Accept(updateVisitor);
-
-            UpdateAllHardwareInfo();          
         }
 
         ~LocalHardwareMonitor()
@@ -44,16 +44,60 @@ namespace HardSense.HardwareMonitor
             computer.Close();
         }
 
+        public void init(List<string> newListOfHardwareIDsToIgnore, List<string> newListOfSensorIDsToIgnore)
+        {
+            listOfHardwareIDsToIgnore = newListOfHardwareIDsToIgnore;
+            listOfSensorIDsToIgnore = newListOfSensorIDsToIgnore;
+
+            UpdateAllHardwareInfo();
+            initiationComplete = true;
+        }
+        
         private void ThreadProc()
         {
+            if (!initiationComplete)
+                throw new Exception("ThreadPrc: Initiation has not been completed.  You must init().");
+
             EnableAllHardwareItems();
+            
             while (continueMonitoring)
             {
-
+                UpdateComputersSensorValues();
                 Thread.Sleep(250);
             }
         }
 
+        private void UpdateComputersSensorValues()
+        {
+            foreach (IHardware hardwareItem in computer.Hardware)
+            {
+                UpdateHardwareItemsSensorValues(hardwareItem);
+            }
+        }
+
+        private void UpdateHardwareItemsSensorValues(IHardware hardwareItem)
+        {
+            if (listOfHardwareIDsToIgnore.Contains(hardwareItem.Identifier.ToString()))
+                return;
+
+            hardwareItem.Update();
+            foreach (ISensor currSensor in hardwareItem.Sensors)
+                UpdateSensorValue(currSensor);
+
+            foreach (IHardware subHardwareItem in hardwareItem.SubHardware)
+                UpdateHardwareItemsSensorValues(subHardwareItem);
+
+        }
+
+        private void UpdateSensorValue(ISensor currSensor)
+        {
+            if (listOfSensorIDsToIgnore.Contains(currSensor.Identifier.ToString()))
+                return;
+
+            string n = currSensor.Name;
+            float v = currSensor.Value.Value;
+            return;
+        }
         public bool StartMonitor()
         {
             continueMonitoring = true;
@@ -104,7 +148,6 @@ namespace HardSense.HardwareMonitor
             UpdateGPUInfo();
             UpdateRAMInfo();
             UpdateHDDInfo();
-            //UpdateFanControllerInfo();
             UpdateNicInfo();
 
             if (wasMonitorRuning)
@@ -123,13 +166,40 @@ namespace HardSense.HardwareMonitor
 
             foreach (IHardware currHardware in computer.Hardware)
             {
-                ret.Add(new LocalHardwareItem(currHardware));
+                ret.Add(new LocalHardwareItem(currHardware, listOfHardwareIDsToIgnore, listOfSensorIDsToIgnore));
             }
 
             return ret;
         }
 
-        public void UpdateHDDInfo()
+        private void UpdateMainboardInfo()
+        {
+            DisableAllHardwareItems();
+            computer.MainboardEnabled = true;
+            motherBoardInfo = FetchHardwareInfo();
+        }
+        private void UpdateCPUInfo()
+        {
+            DisableAllHardwareItems();
+            computer.CPUEnabled = true;
+            cpuInfo = FetchHardwareInfo();
+        }
+
+        private void UpdateGPUInfo()
+        {
+            DisableAllHardwareItems();
+            computer.GPUEnabled = true;
+            gpuInfo = FetchHardwareInfo();
+        }
+
+        private void UpdateRAMInfo()
+        {
+            DisableAllHardwareItems();
+            computer.RAMEnabled = true;
+            ramInfo = FetchHardwareInfo();
+        }
+
+        private void UpdateHDDInfo()
         {
             DisableAllHardwareItems();
             computer.HDDEnabled = true;
@@ -150,85 +220,16 @@ namespace HardSense.HardwareMonitor
             }
         }
 
-        public void UpdateRAMInfo()
+        private void UpdateNicInfo()
         {
-            DisableAllHardwareItems();
-            computer.RAMEnabled = true;
-            ramInfo = FetchHardwareInfo();
-        }
-
-        public void UpdateGPUInfo()
-        {
-            DisableAllHardwareItems();
-            computer.GPUEnabled = true;
-            gpuInfo = FetchHardwareInfo();
-        }
-        public void UpdateCPUInfo()
-        {
-            DisableAllHardwareItems();
-            computer.CPUEnabled = true;
-            cpuInfo = FetchHardwareInfo();
-        }
-
-        public void UpdateMainboardInfo()
-        {
-            DisableAllHardwareItems();
-            computer.MainboardEnabled = true;
-            motherBoardInfo = FetchHardwareInfo();
-        }
-
-        public void UpdateNicInfo()
-        {
+            netSpeedMonitor.FindNICs(listOfSensorIDsToIgnore);
             nicInfo = new List<LocalHardwareItem>();
 
             if (!netSpeedMonitor.hasNics)
                 return;
 
-            nicInfo = netSpeedMonitor.localHardwareNics ;
-
-            /*
-            int ethernetCounter = 0;
-            int bluetoothCounter = 0;
-            foreach(NetworkInterface currNic in nics)
-            {
-                LocalHardwareItem tmpHardwareItem = new LocalHardwareItem();
-                tmpHardwareItem.Name = currNic.Name;
-
-                if (currNic.Name.Contains("Bluetooth"))
-                {
-                    tmpHardwareItem.Id = "/Bluetooth/" + bluetoothCounter.ToString();
-                    bluetoothCounter++;
-                }
-                else
-                {
-                    tmpHardwareItem.Id = "/Ethernet/" + ethernetCounter.ToString();
-                    ethernetCounter++;
-                }
-                tmpHardwareItem.NumberOfSensors = 2;
-
-                tmpHardwareItem.SensorList.Add(new LocalSensor((tmpHardwareItem.Id + "/recv"),"Receive Speed", SensorType.SmallData));
-                tmpHardwareItem.SensorList.Add(new LocalSensor((tmpHardwareItem.Id + "/send"), "Send Speed", SensorType.SmallData));
-
-
-                nicInfo.Add(tmpHardwareItem);
-            }
-            */
+            nicInfo = netSpeedMonitor.localHardwareNics;
         }
-
-        /*
-        public void UpdateFanControllerInfo()
-        {
-            computer.MainboardEnabled = false;
-            computer.CPUEnabled = false;
-            computer.GPUEnabled = false;
-            computer.RAMEnabled = false;
-            computer.FanControllerEnabled = true;
-            computer.HDDEnabled = false;
-
-            fanControllerInfo = FetchHardwareInfo();
-        }
-        */
-
 
     }
 

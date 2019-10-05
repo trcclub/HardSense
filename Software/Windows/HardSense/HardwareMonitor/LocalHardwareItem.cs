@@ -11,7 +11,8 @@ namespace HardSense.HardwareMonitor
     {
         public string Name { get; set; }
         public string Id { get; set; }
-        
+        public bool ignored { get; private set; } = false;
+
         public List<LocalSensor> SensorList = new List<LocalSensor>();
         public int NumberOfSensors { get; set; }
         
@@ -20,27 +21,28 @@ namespace HardSense.HardwareMonitor
 
         }
 
-        public LocalHardwareItem(IHardware currHardware)
+        public LocalHardwareItem(IHardware currHardware, List<string> hardwareListToIgnore, List<string> sensorListToIgnore)
         {
             Name = currHardware.Name;
             Id = currHardware.Identifier.ToString();
+            ignored = hardwareListToIgnore.Contains(Id);
 
-            SensorList.AddRange(CollectSensorInfoFromOpenHardware(currHardware));
+            SensorList.AddRange(CollectSensorInfoFromOpenHardware(currHardware, sensorListToIgnore));
             NumberOfSensors = SensorList.Count;
         }
 
 
 
-        private List<LocalSensor> CollectSensorInfoFromOpenHardware(IHardware currHardware)
+        private List<LocalSensor> CollectSensorInfoFromOpenHardware(IHardware currHardware, List<string> sensorListToIgnore)
         {
             List<LocalSensor> tempSensorList = new List<LocalSensor>();
             foreach (var sensorItem in currHardware.Sensors)
             {
-                tempSensorList.Add(new LocalSensor(sensorItem));
+                tempSensorList.Add(new LocalSensor(sensorItem, sensorListToIgnore));
             }
 
             foreach (var subHardwareItem in currHardware.SubHardware)
-                tempSensorList.AddRange(CollectSensorInfoFromOpenHardware(subHardwareItem));
+                tempSensorList.AddRange(CollectSensorInfoFromOpenHardware(subHardwareItem, sensorListToIgnore));
 
             return tempSensorList;
         }
