@@ -27,7 +27,7 @@ namespace OpenHardwareMonitor.Hardware {
     Power, // W
     Data, // GB = 2^30 Bytes    
     SmallData, // MB = 2^20 Bytes
-    BPS, //Bytes per second - double
+    KBPS, //Bytes per second
   }
 
   public struct SensorValue {

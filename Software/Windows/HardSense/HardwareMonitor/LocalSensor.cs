@@ -12,6 +12,7 @@ namespace HardSense.HardwareMonitor
         public string Id { get; private set; } = "";
         public string Name { get; private set; } = "";
         public SensorType Type { get; private set; }
+        public string value { get; private set; } = "n/a";
         public bool ignored { get; private set; } = false;
 
         public LocalSensor()
@@ -24,6 +25,7 @@ namespace HardSense.HardwareMonitor
             Id = newId;
             Name = newName;
             Type = newType;
+            
             ignored = isIgnored;
         }
 
@@ -32,6 +34,7 @@ namespace HardSense.HardwareMonitor
             Id = currSensor.Identifier.ToString();
             Name = currSensor.Name;
             Type = currSensor.SensorType;
+            value = currSensor.Value.Value.ToString();
             ignored = sensorListToIgnore.Contains(Id);
         }
         

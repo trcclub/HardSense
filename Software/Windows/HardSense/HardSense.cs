@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
-//using System.Net.NetworkInformation;
 
 namespace HardSense
 {
@@ -247,9 +246,10 @@ namespace HardSense
         private void DisplaySensorInfo(LocalSensor currSensor)
         {
             String s = "Name: " + currSensor.Name + "\n";
-            s += "Id: " + currSensor.Id + "\n";
+            //s += "Id: " + currSensor.Id + "\n";
             s += "Type: " + currSensor.Type + "\n";
-            s += "Ignored: " + currSensor.ignored.ToString() + "\n";
+            s += "Value: " + currSensor.value + "\n";
+            //s += "Ignored: " + currSensor.ignored.ToString() + "\n";
             tempDisplayBox.AppendText(s);
         }
 

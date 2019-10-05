@@ -4,8 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using OpenHardwareMonitor.Hardware;
 using HardSense.MemFile;
+using OpenHardwareMonitor.Hardware;
 
 namespace HardSense.HardwareMonitor
 {    
@@ -20,7 +20,7 @@ namespace HardSense.HardwareMonitor
         private Computer computer = new Computer();
         private NetSpeedMonitor netSpeedMonitor = new NetSpeedMonitor();
                 
-        private MMFile mmFile;
+        private MMFile mmFile = new MMFile();
 
         private bool initiationComplete = false;
 
@@ -50,7 +50,11 @@ namespace HardSense.HardwareMonitor
             listOfSensorIDsToIgnore = newListOfSensorIDsToIgnore;
 
             UpdateAllHardwareInfo();
+
             initiationComplete = true;
+            //mmFile.IterateMap();
+            //mmFile.IterateMap();
+
         }
         
         private void ThreadProc()
@@ -73,6 +77,8 @@ namespace HardSense.HardwareMonitor
             {
                 UpdateHardwareItemsSensorValues(hardwareItem);
             }
+
+
         }
 
         private void UpdateHardwareItemsSensorValues(IHardware hardwareItem)
@@ -96,6 +102,11 @@ namespace HardSense.HardwareMonitor
 
             string n = currSensor.Name;
             float v = currSensor.Value.Value;
+
+            /***
+             * This is where we will update the mmFile with a new double value
+             ***/
+
             return;
         }
         public bool StartMonitor()
@@ -142,6 +153,8 @@ namespace HardSense.HardwareMonitor
             bool wasMonitorRuning = running;
             if (running)
                 StopMonitor();
+            
+            mmFile.Clear();
 
             UpdateMainboardInfo();
             UpdateCPUInfo();
@@ -149,6 +162,8 @@ namespace HardSense.HardwareMonitor
             UpdateRAMInfo();
             UpdateHDDInfo();
             UpdateNicInfo();
+
+            mmFile.InitFile();
 
             if (wasMonitorRuning)
                 StartMonitor();
@@ -177,12 +192,14 @@ namespace HardSense.HardwareMonitor
             DisableAllHardwareItems();
             computer.MainboardEnabled = true;
             motherBoardInfo = FetchHardwareInfo();
+            AddHardwareListToMMFileMap(motherBoardInfo);
         }
         private void UpdateCPUInfo()
         {
             DisableAllHardwareItems();
             computer.CPUEnabled = true;
             cpuInfo = FetchHardwareInfo();
+            AddHardwareListToMMFileMap(cpuInfo);
         }
 
         private void UpdateGPUInfo()
@@ -190,6 +207,7 @@ namespace HardSense.HardwareMonitor
             DisableAllHardwareItems();
             computer.GPUEnabled = true;
             gpuInfo = FetchHardwareInfo();
+            AddHardwareListToMMFileMap(gpuInfo);
         }
 
         private void UpdateRAMInfo()
@@ -197,6 +215,7 @@ namespace HardSense.HardwareMonitor
             DisableAllHardwareItems();
             computer.RAMEnabled = true;
             ramInfo = FetchHardwareInfo();
+            AddHardwareListToMMFileMap(ramInfo);
         }
 
         private void UpdateHDDInfo()
@@ -218,6 +237,7 @@ namespace HardSense.HardwareMonitor
                     }
                 }
             }
+            AddHardwareListToMMFileMap(hddInfo);
         }
 
         private void UpdateNicInfo()
@@ -229,8 +249,24 @@ namespace HardSense.HardwareMonitor
                 return;
 
             nicInfo = netSpeedMonitor.localHardwareNics;
+            AddHardwareListToMMFileMap(nicInfo);
         }
 
+        private void AddHardwareListToMMFileMap(List<LocalHardwareItem> currHardwareItemList)
+        {
+            foreach(LocalHardwareItem currHardwareItem in currHardwareItemList)
+            {
+                if (currHardwareItem.ignored)
+                    continue;
+
+                foreach (LocalSensor currSensor in currHardwareItem.SensorList)
+                {
+                    if (currSensor.ignored)
+                        continue;
+                    mmFile.AddNewDataItem(currSensor.Id, 10);
+                }
+            }
+        }
     }
 
 
