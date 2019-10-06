@@ -5,24 +5,45 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO.MemoryMappedFiles;
 
-namespace HardSense.MemFile
+namespace HardSense.HardSenseMemFile
 {
-    public class MMFile
+    public class HardSenseMemFile
     {
+        private static bool isCreator = false;
         private int mmFileItemMaxLength = 10;
 
-        private List<DataItem> map = new List<DataItem>();
+        private static List<DataItem> map = new List<DataItem>();
         private int fileLength = 0;
-        private MemoryMappedFile mmFile = null;
-        
-        //private double counter = 4;
+        private static MemoryMappedFile mmFile = null;
 
-        public void InitFile()
+        //private double counter = 4;
+        public HardSenseMemFile(bool creatorRequest = false)
         {
+            if (creatorRequest)
+            {
+                if (isCreator)
+                {
+                    throw new Exception("MMFile():  A MMFIle creator already exists.");
+                }
+                isCreator = true;
+            }
+        }
+
+
+
+        public void InitializeMemoryMappedFileWithData()
+        {
+            if (!isCreator)
+            {
+                throw new Exception("MMFile::InitFile():  Must be a creator to access.");
+            }
+
             if (fileLength == 0 || map.Count == 0)
+            {
                 throw new Exception("CreateFile:  No items in map.");
+            }
             
-            mmFile = MemoryMappedFile.CreateNew("HardSenseMemoryMappedFileForTesting", fileLength);
+            mmFile = MemoryMappedFile.CreateNew(Properties.Settings.Default.MemoryMapFileName, fileLength);
 
             foreach (DataItem currDataItem in map)
             {
@@ -52,12 +73,22 @@ namespace HardSense.MemFile
         */
         public void AddNewDataItem(string newKey, int newMaxLength)
         {
+            if (!isCreator)
+            {
+                throw new Exception("MMFile::InitFile():  Must be a creator to access.");
+            }
+
             map.Add(new DataItem(newKey, newMaxLength, fileLength));
             fileLength += newMaxLength;
         }
 
         public void UpdateKeyWithValue(string key, double value)
         {
+            if (!isCreator)
+            {
+                throw new Exception("MMFile::InitFile():  Must be a creator to access.");
+            }
+
             DataItem currDataItem = FindItemByKey(key);
             if (currDataItem == null)
                 return;
@@ -68,7 +99,7 @@ namespace HardSense.MemFile
             currDataItem.mmvAccessor.Write(0, value);
         }
 
-        public double GetValueByKey(string key)
+        public static double GetValueByKey(string key)
         {
             DataItem currDataItem = FindItemByKey(key);
             if (currDataItem == null)
@@ -77,7 +108,7 @@ namespace HardSense.MemFile
             return currDataItem.mmvAccessor.ReadDouble(0);
         }
 
-        private DataItem FindItemByKey(string needle)
+        private static DataItem FindItemByKey(string needle)
         {
             if (map.Count == 0)
                 throw new Exception("MMFileMap::FindItemByKey() - Map is empty");
@@ -92,6 +123,11 @@ namespace HardSense.MemFile
 
         public void Clear()
         {
+            if (!isCreator)
+            {
+                throw new Exception("MMFile::InitFile():  Must be a creator to access.");
+            }
+
             map.Clear();
             fileLength = 0;
             if(mmFile != null)

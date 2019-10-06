@@ -32,6 +32,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Resources\AppIcon.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -57,7 +60,7 @@
     <Compile Include="HardwareMonitor\LocalHardwareItem.cs" />
     <Compile Include="HardwareMonitor\LocalSensor.cs" />
     <Compile Include="HardwareMonitor\NetSpeedMonitor.cs" />
-    <Compile Include="MemFile\MMFile.cs" />
+    <Compile Include="MemFile\HardSenseMemFile.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="HardSense.resx">

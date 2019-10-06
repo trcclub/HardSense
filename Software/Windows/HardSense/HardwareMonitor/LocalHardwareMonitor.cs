@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using HardSense.MemFile;
+using HardSense.HardSenseMemFile;
 using OpenHardwareMonitor.Hardware;
 
 namespace HardSense.HardwareMonitor
@@ -20,7 +20,7 @@ namespace HardSense.HardwareMonitor
         private Computer computer = new Computer();
         private NetSpeedMonitor netSpeedMonitor = new NetSpeedMonitor();
                 
-        private MMFile mmFile = new MMFile();
+        private HardSenseMemFile.HardSenseMemFile mmFile = new HardSenseMemFile.HardSenseMemFile(true);
 
         private bool initiationComplete = false;
 
@@ -163,7 +163,7 @@ namespace HardSense.HardwareMonitor
             UpdateHDDInfo();
             UpdateNicInfo();
 
-            mmFile.InitFile();
+            mmFile.InitializeMemoryMappedFileWithData();
 
             if (wasMonitorRuning)
                 StartMonitor();

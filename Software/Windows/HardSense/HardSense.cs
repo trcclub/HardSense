@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using HardSense.HardSenseMemFile;
 
 namespace HardSense
 {
@@ -11,6 +12,8 @@ namespace HardSense
         private ContextMenu trayMenu;
         private LocalHardwareMonitor computerMonitor = new LocalHardwareMonitor();
         
+
+
         //private Thread tempThread;
         //private int counter = 0;
         public HardSense()
@@ -32,7 +35,7 @@ namespace HardSense
             mainBoardRoot.SubItems.Add(computerMonitor.motherBoardInfo.Id);
             listView1.Items.Add(mainBoardRoot);
             */
-
+            
             tempDisplayBox.AppendText("Starting...\n");
 
             List<string> tmpHardwareList = new List<string>();
@@ -65,6 +68,7 @@ namespace HardSense
                 }
             }
 
+            
 
             tempDisplayBox.AppendText("\n---\nCPU Info\n");
             s = "Found " + computerMonitor.cpuInfo.Count.ToString() + " CPU(s)\n";
