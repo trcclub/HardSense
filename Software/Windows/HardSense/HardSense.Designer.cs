@@ -40,6 +40,8 @@
             this.Name_Column = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ID_Column = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.Sensor_Column = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -59,7 +61,8 @@
             // menuStrip1
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.hardwareToolStripMenuItem});
+            this.hardwareToolStripMenuItem,
+            this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(1393, 24);
@@ -77,7 +80,7 @@
             // mainboardToolStripMenuItem
             // 
             this.mainboardToolStripMenuItem.Name = "mainboardToolStripMenuItem";
-            this.mainboardToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
+            this.mainboardToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.mainboardToolStripMenuItem.Text = "Mainboard";
             // 
             // listView1
@@ -88,7 +91,7 @@
             this.ID_Column,
             this.Sensor_Column});
             this.listView1.HideSelection = false;
-            this.listView1.Location = new System.Drawing.Point(29, 69);
+            this.listView1.Location = new System.Drawing.Point(35, 382);
             this.listView1.Name = "listView1";
             this.listView1.Size = new System.Drawing.Size(768, 242);
             this.listView1.TabIndex = 2;
@@ -112,6 +115,20 @@
             // Sensor_Column
             // 
             this.Sensor_Column.Text = "Sensor";
+            // 
+            // helpToolStripMenuItem
+            // 
+            this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.aboutToolStripMenuItem});
+            this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
+            this.helpToolStripMenuItem.Text = "Help";
+            // 
+            // aboutToolStripMenuItem
+            // 
+            this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.aboutToolStripMenuItem.Text = "About";
             // 
             // HardSense
             // 
@@ -145,6 +162,8 @@
         private System.Windows.Forms.ColumnHeader Component_Column;
         private System.Windows.Forms.ColumnHeader ID_Column;
         private System.Windows.Forms.ColumnHeader Sensor_Column;
+        private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
     }
 }
 

@@ -32,14 +32,12 @@ namespace HardSense.Properties {
             }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        public global::System.Collections.Specialized.StringCollection Setting {
+        [global::System.Configuration.DefaultSettingValueAttribute("10")]
+        public int DefaultMemoryMappedFieldSize {
             get {
-                return ((global::System.Collections.Specialized.StringCollection)(this["Setting"]));
-            }
-            set {
-                this["Setting"] = value;
+                return ((int)(this["DefaultMemoryMappedFieldSize"]));
             }
         }
     }

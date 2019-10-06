@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.IO.MemoryMappedFiles;
 
@@ -15,7 +16,7 @@ namespace HardSense.MemFile
         private static List<DataItem> map = new List<DataItem>();
         private int fileLength = 0;
         private static MemoryMappedFile mmFile = null;
-
+        
         //private double counter = 4;
         public HardSenseMemFile(bool creatorRequest = false)
         {
@@ -47,7 +48,9 @@ namespace HardSense.MemFile
 
             foreach (DataItem currDataItem in map)
             {
-                currDataItem.mmvAccessor = mmFile.CreateViewAccessor(currDataItem.offset, currDataItem.maxLength);
+                currDataItem.SetAccessor(mmFile.CreateViewAccessor(currDataItem.offset, currDataItem.maxLength));
+                //currDataItem.mmvAccessor = mmFile.CreateViewAccessor(currDataItem.offset, currDataItem.maxLength);
+
                 //UpdateKeyWithValue(currDataItem.key, 11.11d);
                 
                 //currDataItem.mmvAccessor.Write(0, 1111.11);
@@ -99,7 +102,7 @@ namespace HardSense.MemFile
             if(value.ToString().Length > mmFileItemMaxLength)
                 value = Convert.ToDouble(value.ToString().Substring(0,mmFileItemMaxLength));
 
-            currDataItem.mmvAccessor.Write(0, value);
+            currDataItem.WriteDouble(value);
         }
 
         public static double GetValueByKey(string key)
@@ -108,8 +111,7 @@ namespace HardSense.MemFile
             if (currDataItem == null)
                 return 0d;
 
-            double tmp = currDataItem.mmvAccessor.ReadDouble(0);
-            return tmp;
+            return currDataItem.ReadDouble();
         }
 
         private static DataItem FindItemByKey(string needle)
@@ -142,16 +144,47 @@ namespace HardSense.MemFile
 
     public class DataItem
     {
-        public string key { get; private set; }
-        public int maxLength { get; private set; }
-        public int offset { get; private set; }
-        public MemoryMappedViewAccessor mmvAccessor { get; set; }
-        
+        public string key { get; private set; } = "";
+        public int maxLength { get; private set; } = 0;
+        public int offset { get; private set; } = 0;
+
+        private bool ready = false;
+        private MemoryMappedViewAccessor mmvAccessor = null;
+        private Mutex accessorMutex = new Mutex();
+
         public DataItem(string newKey, int newMaxLength, int newOffset)
         {
             key = newKey;
             maxLength = newMaxLength;
             offset = newOffset;
+        }
+
+        public void SetAccessor(MemoryMappedViewAccessor newAccessor)
+        {
+            mmvAccessor = newAccessor;
+            ready = true;
+        }
+
+        public void WriteDouble(double value)
+        {
+            if (ready)
+            {
+                accessorMutex.WaitOne();
+                mmvAccessor.Write(0, value);
+                accessorMutex.ReleaseMutex();
+            }
+        }
+
+        public double ReadDouble()
+        {
+            double ret = 0;
+            if (ready)
+            {
+                accessorMutex.WaitOne();
+                ret = mmvAccessor.ReadDouble(0);
+                accessorMutex.ReleaseMutex();
+            }
+            return ret;
         }
     }
 }

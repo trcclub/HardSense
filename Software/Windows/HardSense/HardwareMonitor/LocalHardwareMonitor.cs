@@ -29,7 +29,9 @@ namespace HardSense.HardwareMonitor
         public List<LocalHardwareItem> gpuInfo { get; private set; }
         public List<LocalHardwareItem> ramInfo { get; private set; }
         public List<LocalHardwareItem> hddInfo { get; private set; }
+        public List<LocalHardwareItem> fanInfo { get; private set; }
         public List<LocalHardwareItem> nicInfo { get; private set; }
+        
         public List<string> listOfHardwareIDsToIgnore { get; set; } = new List<string>();
         public List<string> listOfSensorIDsToIgnore { get; set; } = new List<string>();
         public List<LocalSensor> allAvailableSensors { get; private set; } = new List<LocalSensor>();
@@ -83,7 +85,9 @@ namespace HardSense.HardwareMonitor
             foreach(LocalNetworkInterface currNic in netSpeedMonitor.nics)
             {
                 if (listOfHardwareIDsToIgnore.Contains(currNic.id))
+                {
                     continue;
+                }
 
                 string recvID = currNic.id + "/recv";
                 string sendID = currNic.id + "/send";
@@ -107,38 +111,45 @@ namespace HardSense.HardwareMonitor
 
             hardwareItem.Update();
             foreach (ISensor currSensor in hardwareItem.Sensors)
+            {
                 UpdateSensorValue(currSensor);
+            }
 
             foreach (IHardware subHardwareItem in hardwareItem.SubHardware)
+            {
                 UpdateHardwareItemsSensorValues(subHardwareItem);
+            }
 
         }
 
         private void UpdateSensorValue(ISensor currSensor)
         {
             if (listOfSensorIDsToIgnore.Contains(currSensor.Identifier.ToString()))
+            {
                 return;
+            }
 
             mmFile.UpdateKeyWithValue(currSensor.Identifier.ToString(), currSensor.Value.Value);
 
             return;
         }
-        public bool StartMonitor()
+        public void StartMonitor()
         {
             continueMonitoring = true;
             monitorThread = new Thread(ThreadProc);
             monitorThread.Start();
             running = true;
-            return true;
         }
 
-        public bool StopMonitor()
+        public void StopMonitor()
         {
-            if (!running) return true;
+            if (!running)
+            {
+                return;
+            }
             continueMonitoring = false;
             monitorThread.Join();
             running = false;
-            return true;
         }
 
         private void EnableAllHardwareItems()
@@ -166,8 +177,10 @@ namespace HardSense.HardwareMonitor
         {
             bool wasMonitorRuning = running;
             if (running)
+            {
                 StopMonitor();
-            
+            }
+
             mmFile.Clear();
             allAvailableSensors.Clear();
 
@@ -176,12 +189,15 @@ namespace HardSense.HardwareMonitor
             UpdateGPUInfo();
             UpdateRAMInfo();
             UpdateHDDInfo();
+            UpdateFanInfo();
             UpdateNicInfo();
 
             mmFile.InitializeMemoryMappedFileWithData();
 
             if (wasMonitorRuning)
+            {
                 StartMonitor();
+            }
         }
 
         private List<LocalHardwareItem> FetchHardwareInfo()
@@ -191,8 +207,9 @@ namespace HardSense.HardwareMonitor
             computer.Traverse(updateVisitor);
             if (computer.Hardware.Length == 0)
             {
-                throw new Exception("Failed to find any hardware.  Which is really weird to say the least.");
+                return ret;
             }
+            
 
             foreach (IHardware currHardware in computer.Hardware)
             {
@@ -235,12 +252,21 @@ namespace HardSense.HardwareMonitor
             AddHardwareListToMMFileMap(ramInfo);
         }
 
+        private void UpdateFanInfo()
+        {
+            DisableAllHardwareItems();
+            computer.FanControllerEnabled = true;
+            fanInfo = FetchHardwareInfo();
+            AddHardwareListToMMFileMap(fanInfo);
+        }
+
         private void UpdateHDDInfo()
         {
             DisableAllHardwareItems();
             computer.HDDEnabled = true;
 
             hddInfo = FetchHardwareInfo();
+
             foreach(LocalHardwareItem currHDD in hddInfo)
             {
                 foreach(IHardware hdd in computer.Hardware)
@@ -297,7 +323,7 @@ namespace HardSense.HardwareMonitor
                 {
                     if (currSensor.ignored)
                         continue;
-                    mmFile.AddNewDataItem(currSensor.Id, 10);
+                    mmFile.AddNewDataItem(currSensor.Id, Properties.Settings.Default.DefaultMemoryMappedFieldSize);
                 }
             }
         }

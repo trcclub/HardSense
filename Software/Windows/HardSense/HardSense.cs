@@ -21,22 +21,13 @@ namespace HardSense
             InitializeComponent();
             SetupTrayIcon();
 
+            tempDisplayBox.AppendText("Starting...\n");
 
 
             //tempThread = new Thread(ThreadProc);
             //tempThread.Start();
 
-            //Motherboard motherBoard = computerMonitor.motherBoard;
-
-
-            /*
-            ListViewItem mainBoardRoot = new ListViewItem("Motherboard");
-            mainBoardRoot.SubItems.Add(computerMonitor.motherBoardInfo.Name);
-            mainBoardRoot.SubItems.Add(computerMonitor.motherBoardInfo.Id);
-            listView1.Items.Add(mainBoardRoot);
-            */
             
-            tempDisplayBox.AppendText("Starting...\n");
 
             
             List<string> tmpHardwareExludeList = new List<string>();

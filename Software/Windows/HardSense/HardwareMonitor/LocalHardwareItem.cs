@@ -9,12 +9,12 @@ namespace HardSense.HardwareMonitor
 {
     public class LocalHardwareItem
     {
-        public string Name { get; set; }
-        public string Id { get; set; }
+        public string Name { get; set; } = "";
+        public string Id { get; set; } = "";
         public bool ignored { get; set; } = false;
 
         public List<LocalSensor> SensorList = new List<LocalSensor>();
-        public int NumberOfSensors { get; set; }
+        public int NumberOfSensors { get; set; } = 0;
         
         public LocalHardwareItem()
         {
