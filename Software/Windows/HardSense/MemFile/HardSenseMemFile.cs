@@ -49,33 +49,9 @@ namespace HardSense.MemFile
             foreach (DataItem currDataItem in map)
             {
                 currDataItem.SetAccessor(mmFile.CreateViewAccessor(currDataItem.offset, currDataItem.maxLength));
-                //currDataItem.mmvAccessor = mmFile.CreateViewAccessor(currDataItem.offset, currDataItem.maxLength);
-
-                //UpdateKeyWithValue(currDataItem.key, 11.11d);
-                
-                //currDataItem.mmvAccessor.Write(0, 1111.11);
-                //UpdateKeyWithValue(currDataItem.key, 111.11d);
-                //mmFileViewAccessor.Write(currDataItem.offset, counter);
-                //counter = counter * 6.8;
             }
             
         }
-        
-        /*
-        public void IterateMap()
-        {
-            foreach(DataItem currDataItem in map)
-            {
-                double s = HardSenseMemFile.GetValueByKey(currDataItem.key);
-                string x = "interesitng";
-
-                //currDataItem.mmvAccessor.Write(0, 3d);
-                UpdateKeyWithValue(currDataItem.key, 3d);
-                //double s = mmFileViewAccessor.ReadDouble(currDataItem.offset);
-                //string x = "interesitng";
-            }
-        }
-        */
         
         public void AddNewDataItem(string newKey, int newMaxLength)
         {

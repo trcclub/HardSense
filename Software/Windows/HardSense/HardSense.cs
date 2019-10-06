@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using HardSense.MemFile;
+using System.Threading;
 
 namespace HardSense
 {
@@ -181,7 +182,9 @@ namespace HardSense
             }
             */
             
-
+            computerMonitor.StartMonitor();
+            Thread.Sleep(2000);
+            
             string numSensors = "Total available sensors: " + computerMonitor.allAvailableSensors.Count.ToString() + "\n";
             tempDisplayBox.AppendText(numSensors);
             
@@ -193,12 +196,6 @@ namespace HardSense
                 tempDisplayBox.AppendText(currSensorString);
                 tempDisplayBox.AppendText("---\n");
             }
-            
-            computerMonitor.StartMonitor();
-
-            //ListViewItem cpuRoot = new ListViewItem("CPU's");
-
-
 
             // NETWORK INTERFACE STUFF //
             /*
@@ -229,15 +226,6 @@ namespace HardSense
             }
 
             */
-            //TreeNode rootNode = new TreeNode();
-            //rootNode.Text = "MotherBoard";
-
-
-
-
-            //sesnsorSelector_TreeView.Nodes.Add(rootNode);
-
-            //computerMonitor.StartMonitor();
         }
 
         /*

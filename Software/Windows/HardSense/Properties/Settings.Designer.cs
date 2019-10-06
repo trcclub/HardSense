@@ -40,5 +40,41 @@ namespace HardSense.Properties {
                 return ((int)(this["DefaultMemoryMappedFieldSize"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("/recv")]
+        public string DefaultNicReceiveID {
+            get {
+                return ((string)(this["DefaultNicReceiveID"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("/send")]
+        public string DefaultNicSendID {
+            get {
+                return ((string)(this["DefaultNicSendID"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Receive Speed")]
+        public string DefaultNicReceiveSensorName {
+            get {
+                return ((string)(this["DefaultNicReceiveSensorName"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Send Speed")]
+        public string DefaultNicSendSensorName {
+            get {
+                return ((string)(this["DefaultNicSendSensorName"]));
+            }
+        }
     }
 }

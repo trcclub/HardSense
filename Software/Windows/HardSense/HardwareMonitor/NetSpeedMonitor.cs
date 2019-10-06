@@ -83,10 +83,10 @@ namespace HardSense.HardwareMonitor
                 
                 tmpHardwareItem.NumberOfSensors = 2;
 
-                string tmpRecvID = tmpHardwareItem.Id + "/recv";
-                string tmpSendID = tmpHardwareItem.Id + "/send";
-                tmpHardwareItem.SensorList.Add(new LocalSensor(tmpRecvID, "Receive Speed", SensorType.KBPS, sensorListToIgnore.Contains(tmpRecvID)));
-                tmpHardwareItem.SensorList.Add(new LocalSensor(tmpSendID, "Send Speed", SensorType.KBPS, sensorListToIgnore.Contains(tmpSendID)));
+                string tmpRecvID = tmpHardwareItem.Id + Properties.Settings.Default.DefaultNicReceiveID;
+                string tmpSendID = tmpHardwareItem.Id + Properties.Settings.Default.DefaultNicSendID;
+                tmpHardwareItem.SensorList.Add(new LocalSensor(tmpRecvID, Properties.Settings.Default.DefaultNicReceiveSensorName, SensorType.KBPS, sensorListToIgnore.Contains(tmpRecvID)));
+                tmpHardwareItem.SensorList.Add(new LocalSensor(tmpSendID, Properties.Settings.Default.DefaultNicSendSensorName, SensorType.KBPS, sensorListToIgnore.Contains(tmpSendID)));
 
 
                 localHardwareNics.Add(tmpHardwareItem);

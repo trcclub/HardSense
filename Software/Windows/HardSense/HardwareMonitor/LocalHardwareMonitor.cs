@@ -56,10 +56,6 @@ namespace HardSense.HardwareMonitor
             EnableAllHardwareItems();
             UpdateComputersSensorValues();
             initiationComplete = true;
-            
-            //mmFile.IterateMap();
-            //mmFile.IterateMap();
-
         }
         
         private void ThreadProc()
@@ -89,8 +85,8 @@ namespace HardSense.HardwareMonitor
                     continue;
                 }
 
-                string recvID = currNic.id + "/recv";
-                string sendID = currNic.id + "/send";
+                string recvID = currNic.id + Properties.Settings.Default.DefaultNicReceiveID;
+                string sendID = currNic.id + Properties.Settings.Default.DefaultNicSendID;
 
                 if(!listOfSensorIDsToIgnore.Contains(recvID))
                 {

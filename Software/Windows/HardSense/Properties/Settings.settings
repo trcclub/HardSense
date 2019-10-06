@@ -8,5 +8,17 @@
     <Setting Name="DefaultMemoryMappedFieldSize" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">10</Value>
     </Setting>
+    <Setting Name="DefaultNicReceiveID" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">/recv</Value>
+    </Setting>
+    <Setting Name="DefaultNicSendID" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">/send</Value>
+    </Setting>
+    <Setting Name="DefaultNicReceiveSensorName" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Receive Speed</Value>
+    </Setting>
+    <Setting Name="DefaultNicSendSensorName" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Send Speed</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
