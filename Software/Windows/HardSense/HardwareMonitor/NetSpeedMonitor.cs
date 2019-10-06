@@ -11,22 +11,26 @@ namespace HardSense.HardwareMonitor
 {
     class NetSpeedMonitor
     {
-        //private List<NetworkInterface> nics;
-        private List<LocalNetworkInterface> nics;
+        public List<LocalNetworkInterface> nics { get; private set; }
         public List<LocalHardwareItem> localHardwareNics { get; private set; }
         public bool hasNics { get; private set; } = false;
 
-        public NetSpeedMonitor()
-        {       
-        }
 
-        public bool FindNICs(List<string> sensorListToIgnore)
+        public void UpdateAllNics()
+        {
+            foreach(LocalNetworkInterface currNic in nics)
+            {
+                currNic.UpdateMonitor();
+            }
+        }
+        public bool FindNICs(List<string> hardwareListToIgnore, List<string> sensorListToIgnore)
         {
             nics = new List<LocalNetworkInterface>();
 
             NetworkInterface[] localNics = NetworkInterface.GetAllNetworkInterfaces();
             if (localNics == null || localNics.Length < 1)
             {
+                hasNics = false;
                 return false;
             }
             foreach (NetworkInterface adapter in localNics)
@@ -38,14 +42,17 @@ namespace HardSense.HardwareMonitor
             }
 
             if (nics.Count == 0)
+            {
+                hasNics = false;
                 return false;
+            }
 
-            BuildListOfHardwareItems(sensorListToIgnore);
+            BuildListOfHardwareItems(hardwareListToIgnore, sensorListToIgnore);
             hasNics = true;
             return true;
         }
 
-        private void BuildListOfHardwareItems(List<string> sensorListToIgnore)
+        private void BuildListOfHardwareItems(List<string> hardwareListToIgnore, List<string> sensorListToIgnore)
         {
             localHardwareNics = new List<LocalHardwareItem>();
 
@@ -69,6 +76,10 @@ namespace HardSense.HardwareMonitor
                 }
 
                 currNic.id = tmpHardwareItem.Id;
+                if (hardwareListToIgnore.Contains(currNic.id))
+                {
+                    tmpHardwareItem.ignored = true;
+                }
                 
                 tmpHardwareItem.NumberOfSensors = 2;
 
@@ -79,6 +90,7 @@ namespace HardSense.HardwareMonitor
 
 
                 localHardwareNics.Add(tmpHardwareItem);
+                currNic.StartMonitor();
             }
         }
     }

@@ -11,7 +11,7 @@ namespace HardSense.HardwareMonitor
     {
         public string Name { get; set; }
         public string Id { get; set; }
-        public bool ignored { get; private set; } = false;
+        public bool ignored { get; set; } = false;
 
         public List<LocalSensor> SensorList = new List<LocalSensor>();
         public int NumberOfSensors { get; set; }

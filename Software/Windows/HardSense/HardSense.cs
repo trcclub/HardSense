@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using HardSense.HardSenseMemFile;
+using HardSense.MemFile;
 
 namespace HardSense
 {
@@ -38,15 +38,22 @@ namespace HardSense
             
             tempDisplayBox.AppendText("Starting...\n");
 
-            List<string> tmpHardwareList = new List<string>();
-            tmpHardwareList.Add("/mainboard");
+            
+            List<string> tmpHardwareExludeList = new List<string>();
+            //tmpHardwareExludeList.Add("/mainboard");
+            //tmpHardwareExludeList.Add("/intelcpu/0");
+            //tmpHardwareExludeList.Add("/ram");
+            //tmpHardwareExludeList.Add("/hdd/0");
+            //tmpHardwareExludeList.Add("/hdd/1");
+            //tmpHardwareExludeList.Add("/hdd/2");
+            //tmpHardwareExludeList.Add("/Bluetooth/0");
 
-            List<string> tmpSensorList = new List<string>();
-            tmpSensorList.Add("/Bluetooth/0/send");
-            tmpSensorList.Add("/Bluetooth/0/recv");
-            computerMonitor.init(tmpHardwareList,tmpSensorList);
+            List<string> tmpSensorExcludeList = new List<string>();
+            //tmpSensorExcludeList.Add("/Bluetooth/0/send");
+            //tmpSensorExcludeList.Add("/Bluetooth/0/recv");
+            computerMonitor.init(tmpHardwareExludeList,tmpSensorExcludeList);
 
-
+            /*
             tempDisplayBox.AppendText("\n---\nMotherboard Info\n");
             string s = "Found " + computerMonitor.motherBoardInfo.Count.ToString() + " Motherboards(s)\n";
             tempDisplayBox.AppendText(s);
@@ -181,9 +188,21 @@ namespace HardSense
             {
                 tempDisplayBox.AppendText("No network connections found\n");
             }
+            */
+            
 
-
-
+            string numSensors = "Total available sensors: " + computerMonitor.allAvailableSensors.Count.ToString() + "\n";
+            tempDisplayBox.AppendText(numSensors);
+            
+            foreach(LocalSensor currSensor in computerMonitor.allAvailableSensors)
+            {
+                string currSensorString = "Name: " + currSensor.Name + "\n";
+                currSensorString += "ID: " + currSensor.Id + "\n";
+                currSensorString += "Value: " + HardSenseMemFile.GetValueByKey(currSensor.Id) + "\n";
+                tempDisplayBox.AppendText(currSensorString);
+                tempDisplayBox.AppendText("---\n");
+            }
+            
             computerMonitor.StartMonitor();
 
             //ListViewItem cpuRoot = new ListViewItem("CPU's");
@@ -252,7 +271,7 @@ namespace HardSense
             String s = "Name: " + currSensor.Name + "\n";
             //s += "Id: " + currSensor.Id + "\n";
             s += "Type: " + currSensor.Type + "\n";
-            s += "Value: " + currSensor.value + "\n";
+            //s += "Value: " + currSensor.value + "\n";
             //s += "Ignored: " + currSensor.ignored.ToString() + "\n";
             tempDisplayBox.AppendText(s);
         }

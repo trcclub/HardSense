@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using HardSense.HardSenseMemFile;
+using HardSense.MemFile;
 using OpenHardwareMonitor.Hardware;
 
 namespace HardSense.HardwareMonitor
@@ -20,7 +20,7 @@ namespace HardSense.HardwareMonitor
         private Computer computer = new Computer();
         private NetSpeedMonitor netSpeedMonitor = new NetSpeedMonitor();
                 
-        private HardSenseMemFile.HardSenseMemFile mmFile = new HardSenseMemFile.HardSenseMemFile(true);
+        private MemFile.HardSenseMemFile mmFile = new MemFile.HardSenseMemFile(true);
 
         private bool initiationComplete = false;
 
@@ -32,6 +32,7 @@ namespace HardSense.HardwareMonitor
         public List<LocalHardwareItem> nicInfo { get; private set; }
         public List<string> listOfHardwareIDsToIgnore { get; set; } = new List<string>();
         public List<string> listOfSensorIDsToIgnore { get; set; } = new List<string>();
+        public List<LocalSensor> allAvailableSensors { get; private set; } = new List<LocalSensor>();
 
         public LocalHardwareMonitor()
         { 
@@ -50,8 +51,10 @@ namespace HardSense.HardwareMonitor
             listOfSensorIDsToIgnore = newListOfSensorIDsToIgnore;
 
             UpdateAllHardwareInfo();
-
+            EnableAllHardwareItems();
+            UpdateComputersSensorValues();
             initiationComplete = true;
+            
             //mmFile.IterateMap();
             //mmFile.IterateMap();
 
@@ -61,9 +64,7 @@ namespace HardSense.HardwareMonitor
         {
             if (!initiationComplete)
                 throw new Exception("ThreadPrc: Initiation has not been completed.  You must init().");
-
-            EnableAllHardwareItems();
-            
+                        
             while (continueMonitoring)
             {
                 UpdateComputersSensorValues();
@@ -78,7 +79,25 @@ namespace HardSense.HardwareMonitor
                 UpdateHardwareItemsSensorValues(hardwareItem);
             }
 
+            netSpeedMonitor.UpdateAllNics();
+            foreach(LocalNetworkInterface currNic in netSpeedMonitor.nics)
+            {
+                if (listOfHardwareIDsToIgnore.Contains(currNic.id))
+                    continue;
 
+                string recvID = currNic.id + "/recv";
+                string sendID = currNic.id + "/send";
+
+                if(!listOfSensorIDsToIgnore.Contains(recvID))
+                {
+                    mmFile.UpdateKeyWithValue(recvID, currNic.recvSpeed);
+                }
+                if (!listOfSensorIDsToIgnore.Contains(sendID))
+                {
+                    mmFile.UpdateKeyWithValue(sendID, currNic.sendSpeed);
+                }
+            }
+            
         }
 
         private void UpdateHardwareItemsSensorValues(IHardware hardwareItem)
@@ -100,12 +119,7 @@ namespace HardSense.HardwareMonitor
             if (listOfSensorIDsToIgnore.Contains(currSensor.Identifier.ToString()))
                 return;
 
-            string n = currSensor.Name;
-            float v = currSensor.Value.Value;
-
-            /***
-             * This is where we will update the mmFile with a new double value
-             ***/
+            mmFile.UpdateKeyWithValue(currSensor.Identifier.ToString(), currSensor.Value.Value);
 
             return;
         }
@@ -155,6 +169,7 @@ namespace HardSense.HardwareMonitor
                 StopMonitor();
             
             mmFile.Clear();
+            allAvailableSensors.Clear();
 
             UpdateMainboardInfo();
             UpdateCPUInfo();
@@ -181,7 +196,9 @@ namespace HardSense.HardwareMonitor
 
             foreach (IHardware currHardware in computer.Hardware)
             {
-                ret.Add(new LocalHardwareItem(currHardware, listOfHardwareIDsToIgnore, listOfSensorIDsToIgnore));
+                LocalHardwareItem tmpHardwareItem = new LocalHardwareItem(currHardware, listOfHardwareIDsToIgnore, listOfSensorIDsToIgnore);
+                AddSensorsToAllAvailableList(tmpHardwareItem);
+                ret.Add(tmpHardwareItem);
             }
 
             return ret;
@@ -242,14 +259,31 @@ namespace HardSense.HardwareMonitor
 
         private void UpdateNicInfo()
         {
-            netSpeedMonitor.FindNICs(listOfSensorIDsToIgnore);
+            netSpeedMonitor.FindNICs(listOfHardwareIDsToIgnore, listOfSensorIDsToIgnore);
             nicInfo = new List<LocalHardwareItem>();
 
             if (!netSpeedMonitor.hasNics)
                 return;
 
             nicInfo = netSpeedMonitor.localHardwareNics;
+            foreach(LocalHardwareItem currHardwareItem in nicInfo)
+            {
+                AddSensorsToAllAvailableList(currHardwareItem);
+            }
             AddHardwareListToMMFileMap(nicInfo);
+        }
+
+        private void AddSensorsToAllAvailableList(LocalHardwareItem currHardwareItem)
+        {
+            if (!currHardwareItem.ignored)
+            {
+                foreach (LocalSensor currSensor in currHardwareItem.SensorList)
+                {
+                    if (currSensor.ignored)
+                        continue;
+                    allAvailableSensors.Add(currSensor);
+                }
+            }
         }
 
         private void AddHardwareListToMMFileMap(List<LocalHardwareItem> currHardwareItemList)
