@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using HardSense.MemFile;
+using HardSense.GUI;
 using System.Threading;
 
 namespace HardSense
@@ -304,6 +305,12 @@ namespace HardSense
                 e.Cancel = true;
                 this.WindowState = FormWindowState.Minimized;
             }
+        }
+
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AboutBox ab = new AboutBox();
+            ab.ShowDialog(this);
         }
     }
 }

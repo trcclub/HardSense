@@ -50,6 +50,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GUI\AboutBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\AboutBox.Designer.cs">
+      <DependentUpon>AboutBox.cs</DependentUpon>
+    </Compile>
     <Compile Include="HardSense.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -63,6 +69,9 @@
     <Compile Include="MemFile\HardSenseMemFile.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="GUI\AboutBox.resx">
+      <DependentUpon>AboutBox.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="HardSense.resx">
       <DependentUpon>HardSense.cs</DependentUpon>
     </EmbeddedResource>
@@ -92,9 +101,7 @@
   <ItemGroup>
     <None Include="Resources\AppIcon.ico" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="GUI\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\openhardwaremonitor\OpenHardwareMonitorLib.csproj">
       <Project>{b0397530-545a-471d-bb74-027ae456df1a}</Project>

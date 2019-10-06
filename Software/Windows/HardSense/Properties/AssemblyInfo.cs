@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("HardSense")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("HardSense reads all of the local computers sensors including cpu/gpu useage, temperatures, fan speeds, voltages, network adapter up/down speeds and much more.  The data is then available to be streamed via a TCP Socket connection.  HardSense uses the Open Hardware Monitor (https://openhardwaremonitor.org/) to get all local sensor information (except network).")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("HardSense")]
