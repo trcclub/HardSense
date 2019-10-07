@@ -34,7 +34,7 @@ namespace HardSense.HardwareMonitor
         
         public List<string> listOfHardwareIDsToIgnore { get; set; } = new List<string>();
         public List<string> listOfSensorIDsToIgnore { get; set; } = new List<string>();
-        public List<LocalSensor> allAvailableSensors { get; private set; } = new List<LocalSensor>();
+        public static List<LocalSensor> allAvailableSensors { get; private set; } = new List<LocalSensor>();
 
         public LocalHardwareMonitor()
         { 
@@ -302,8 +302,11 @@ namespace HardSense.HardwareMonitor
                 foreach (LocalSensor currSensor in currHardwareItem.SensorList)
                 {
                     if (currSensor.ignored)
+                    {
                         continue;
-                    allAvailableSensors.Add(currSensor);
+                    }
+                        
+                    allAvailableSensors.Add(new LocalSensor(currSensor));
                 }
             }
         }

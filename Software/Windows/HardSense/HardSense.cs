@@ -185,14 +185,15 @@ namespace HardSense
             
             computerMonitor.StartMonitor();
             Thread.Sleep(2000);
-            
-            string numSensors = "Total available sensors: " + computerMonitor.allAvailableSensors.Count.ToString() + "\n";
+
+            string numSensors = "Total available sensors: " + LocalHardwareMonitor.allAvailableSensors.Count.ToString();// computerMonitor.allAvailableSensors.Count.ToString() + "\n";
             tempDisplayBox.AppendText(numSensors);
             
-            foreach(LocalSensor currSensor in computerMonitor.allAvailableSensors)
+            foreach(LocalSensor currSensor in LocalHardwareMonitor.allAvailableSensors)// computerMonitor.allAvailableSensors)
             {
                 string currSensorString = "Name: " + currSensor.Name + "\n";
                 currSensorString += "ID: " + currSensor.Id + "\n";
+                currSensorString += "Type: " + currSensor.Type + "\n";
                 currSensorString += "Value: " + HardSenseMemFile.GetValueByKey(currSensor.Id) + "\n";
                 tempDisplayBox.AppendText(currSensorString);
                 tempDisplayBox.AppendText("---\n");

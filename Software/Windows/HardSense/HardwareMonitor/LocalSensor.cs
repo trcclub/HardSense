@@ -14,9 +14,12 @@ namespace HardSense.HardwareMonitor
         public SensorType Type { get; private set; }
         public bool ignored { get; private set; } = false;
 
-        public LocalSensor()
+        public LocalSensor(LocalSensor origSensor)
         {
-
+            Id = origSensor.Id;
+            Name = origSensor.Name;
+            Type = origSensor.Type;
+            ignored = origSensor.ignored;
         }
             
         public LocalSensor(string newId, string newName, SensorType newType, bool isIgnored = false)
@@ -24,7 +27,6 @@ namespace HardSense.HardwareMonitor
             Id = newId;
             Name = newName;
             Type = newType;
-            
             ignored = isIgnored;
         }
 
