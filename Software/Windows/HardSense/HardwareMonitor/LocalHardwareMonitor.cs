@@ -66,7 +66,7 @@ namespace HardSense.HardwareMonitor
             while (continueMonitoring)
             {
                 UpdateComputersSensorValues();
-                Thread.Sleep(250);
+                Thread.Sleep(Properties.Settings.Default.DefaultHardwareMonitorPollTime);
             }
         }
 
@@ -210,7 +210,6 @@ namespace HardSense.HardwareMonitor
             foreach (IHardware currHardware in computer.Hardware)
             {
                 LocalHardwareItem tmpHardwareItem = new LocalHardwareItem(currHardware, listOfHardwareIDsToIgnore, listOfSensorIDsToIgnore);
-                AddSensorsToAllAvailableList(tmpHardwareItem);
                 ret.Add(tmpHardwareItem);
             }
 
@@ -222,6 +221,7 @@ namespace HardSense.HardwareMonitor
             DisableAllHardwareItems();
             computer.MainboardEnabled = true;
             motherBoardInfo = FetchHardwareInfo();
+            AddSensorsToAllAvailableList(motherBoardInfo);
             AddHardwareListToMMFileMap(motherBoardInfo);
         }
         private void UpdateCPUInfo()
@@ -229,6 +229,7 @@ namespace HardSense.HardwareMonitor
             DisableAllHardwareItems();
             computer.CPUEnabled = true;
             cpuInfo = FetchHardwareInfo();
+            AddSensorsToAllAvailableList(cpuInfo);
             AddHardwareListToMMFileMap(cpuInfo);
         }
 
@@ -237,6 +238,7 @@ namespace HardSense.HardwareMonitor
             DisableAllHardwareItems();
             computer.GPUEnabled = true;
             gpuInfo = FetchHardwareInfo();
+            AddSensorsToAllAvailableList(gpuInfo);
             AddHardwareListToMMFileMap(gpuInfo);
         }
 
@@ -245,6 +247,7 @@ namespace HardSense.HardwareMonitor
             DisableAllHardwareItems();
             computer.RAMEnabled = true;
             ramInfo = FetchHardwareInfo();
+            AddSensorsToAllAvailableList(ramInfo);
             AddHardwareListToMMFileMap(ramInfo);
         }
 
@@ -253,6 +256,7 @@ namespace HardSense.HardwareMonitor
             DisableAllHardwareItems();
             computer.FanControllerEnabled = true;
             fanInfo = FetchHardwareInfo();
+            AddSensorsToAllAvailableList(fanInfo);
             AddHardwareListToMMFileMap(fanInfo);
         }
 
@@ -272,10 +276,12 @@ namespace HardSense.HardwareMonitor
                         string report = hdd.GetReport();
                         int x = report.IndexOf("Logical drive name: ");
                         string tmp = report.Substring(x + 20, 2);
-                        currHDD.Name = currHDD.Name + " (" + tmp + ")";
+                        string newName = currHDD.Name + " (" + tmp + ")";
+                        currHDD.SetNewName(newName);
                     }
                 }
             }
+            AddSensorsToAllAvailableList(hddInfo);
             AddHardwareListToMMFileMap(hddInfo);
         }
 
@@ -288,25 +294,23 @@ namespace HardSense.HardwareMonitor
                 return;
 
             nicInfo = netSpeedMonitor.localHardwareNics;
-            foreach(LocalHardwareItem currHardwareItem in nicInfo)
-            {
-                AddSensorsToAllAvailableList(currHardwareItem);
-            }
             AddHardwareListToMMFileMap(nicInfo);
+            AddSensorsToAllAvailableList(nicInfo);
         }
 
-        private void AddSensorsToAllAvailableList(LocalHardwareItem currHardwareItem)
+        private void AddSensorsToAllAvailableList(List<LocalHardwareItem> hardwareItemList)
         {
-            if (!currHardwareItem.ignored)
+            foreach (LocalHardwareItem currHardwareItem in hardwareItemList)
             {
-                foreach (LocalSensor currSensor in currHardwareItem.SensorList)
+                if (!currHardwareItem.ignored)
                 {
-                    if (currSensor.ignored)
+                    foreach (LocalSensor currSensor in currHardwareItem.SensorList)
                     {
-                        continue;
+                        if (!currSensor.ignored)
+                        {
+                            allAvailableSensors.Add(new LocalSensor(currSensor));
+                        }
                     }
-                        
-                    allAvailableSensors.Add(new LocalSensor(currSensor));
                 }
             }
         }

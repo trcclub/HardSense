@@ -38,13 +38,21 @@ namespace HardSense.HardwareMonitor
             List<LocalSensor> tempSensorList = new List<LocalSensor>();
             foreach (var sensorItem in currHardware.Sensors)
             {
-                tempSensorList.Add(new LocalSensor(sensorItem, sensorListToIgnore));
+                tempSensorList.Add(new LocalSensor(sensorItem, currHardware.HardwareType.ToString(), Name, sensorListToIgnore));
             }
 
             foreach (var subHardwareItem in currHardware.SubHardware)
                 tempSensorList.AddRange(CollectSensorInfoFromOpenHardware(subHardwareItem, sensorListToIgnore));
 
             return tempSensorList;
+        }
+        public void SetNewName(string newName)
+        {
+            Name = newName;
+            foreach (LocalSensor currSensor in SensorList)
+            {
+                currSensor.Parent = Name;
+            }
         }
     }
 }

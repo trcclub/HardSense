@@ -24,7 +24,7 @@ namespace HardSense
             SetupTrayIcon();
 
             tempDisplayBox.AppendText("Starting...\n");
-
+            
 
             //tempThread = new Thread(ThreadProc);
             //tempThread.Start();
@@ -186,7 +186,7 @@ namespace HardSense
             computerMonitor.StartMonitor();
             Thread.Sleep(2000);
 
-            string numSensors = "Total available sensors: " + LocalHardwareMonitor.allAvailableSensors.Count.ToString();// computerMonitor.allAvailableSensors.Count.ToString() + "\n";
+            string numSensors = "Total available sensors: " + LocalHardwareMonitor.allAvailableSensors.Count.ToString() + "\n";// computerMonitor.allAvailableSensors.Count.ToString() + "\n";
             tempDisplayBox.AppendText(numSensors);
             
             foreach(LocalSensor currSensor in LocalHardwareMonitor.allAvailableSensors)// computerMonitor.allAvailableSensors)
@@ -194,6 +194,8 @@ namespace HardSense
                 string currSensorString = "Name: " + currSensor.Name + "\n";
                 currSensorString += "ID: " + currSensor.Id + "\n";
                 currSensorString += "Type: " + currSensor.Type + "\n";
+                currSensorString += "Member of: " + currSensor.MemberOf + "\n";
+                currSensorString += "Parent: " + currSensor.Parent + "\n";
                 currSensorString += "Value: " + HardSenseMemFile.GetValueByKey(currSensor.Id) + "\n";
                 tempDisplayBox.AppendText(currSensorString);
                 tempDisplayBox.AppendText("---\n");

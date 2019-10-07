@@ -76,5 +76,26 @@ namespace HardSense.Properties {
                 return ((string)(this["DefaultNicSendSensorName"]));
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("250")]
+        public int DefaultHardwareMonitorPollTime {
+            get {
+                return ((int)(this["DefaultHardwareMonitorPollTime"]));
+            }
+            set {
+                this["DefaultHardwareMonitorPollTime"] = value;
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("NIC")]
+        public string DefaultNetworkInterfaceType {
+            get {
+                return ((string)(this["DefaultNetworkInterfaceType"]));
+            }
+        }
     }
 }

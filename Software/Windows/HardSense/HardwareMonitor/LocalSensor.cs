@@ -11,6 +11,8 @@ namespace HardSense.HardwareMonitor
     {
         public string Id { get; private set; } = "";
         public string Name { get; private set; } = "";
+        public string MemberOf { get; private set; } = "";
+        public string Parent { get; set; } = "";
         public SensorType Type { get; private set; }
         public bool ignored { get; private set; } = false;
 
@@ -18,25 +20,42 @@ namespace HardSense.HardwareMonitor
         {
             Id = origSensor.Id;
             Name = origSensor.Name;
+            MemberOf = origSensor.MemberOf;
+            Parent = origSensor.Parent;
             Type = origSensor.Type;
             ignored = origSensor.ignored;
         }
             
-        public LocalSensor(string newId, string newName, SensorType newType, bool isIgnored = false)
+        public LocalSensor(string newId, string newName, string parentType, string parentName, SensorType newType, bool isIgnored = false)
         {
             Id = newId;
             Name = newName;
+            MemberOf = NormalizeMemberOf(parentType);
+            Parent = parentName;
             Type = newType;
             ignored = isIgnored;
+
         }
 
-        public LocalSensor(ISensor currSensor, List<string> sensorListToIgnore)
+        public LocalSensor(ISensor currSensor, string parentType, string parentName, List<string> sensorListToIgnore)
         {
             Id = currSensor.Identifier.ToString();
             Name = currSensor.Name;
+            MemberOf = NormalizeMemberOf(parentType); ;
+            Parent = parentName;
             Type = currSensor.SensorType;
             ignored = sensorListToIgnore.Contains(Id);
         }
+
+        private string NormalizeMemberOf(string parentType)
+        {
+            if (parentType.Equals("SuperIO"))
+            {
+                return "Mainboard";
+            }
+            return parentType;
+        }
+
         
     }
 
