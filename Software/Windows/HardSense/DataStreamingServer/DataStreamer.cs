@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
+using HardSense.MemFile;
 
 namespace HardSense.DataStreamingServer
 {
@@ -31,10 +32,12 @@ namespace HardSense.DataStreamingServer
 
         private Socket socketToStreamTo;
         private StateObject state = new StateObject();
+        private Sender dataToSend;
 
         public DataStreamer(Socket socket)
         {
             socketToStreamTo = socket;
+            dataToSend = new Sender(socket);
             readThread = new Thread(readThreadProc);
             writeThread = new Thread(writeThreadProc);
         }
@@ -129,9 +132,15 @@ namespace HardSense.DataStreamingServer
 
         private void parseInput(string inputData)
         {
-            string strippedData = inputData.Substring(1, inputData.Length - 2);
-            strippedData += " HardSense";
-            Send(strippedData);
+            string strippedData = inputData.Substring(2, inputData.Length - 3);
+            //strippedData += " HardSense!";
+            strippedData = inputData.Substring(0, inputData.IndexOf(":"));
+            strippedData += " ACK";
+            dataToSend.AddStringToMessage(ProtocolKeys.TRANSMISSION_KEYS["TRANS__SENDING_FULL_SENSOR_LIST"], strippedData);
+            dataToSend.AddDoubleToMessage(ProtocolKeys.TRANSMISSION_KEYS["TRANS__REQUEST_SENSORS_FOR_STREAMING"], HardSenseMemFile.GetValueByKey("/Ethernet/0/recv"));
+            dataToSend.SendData();
+            //SendRaw(strippedData);
+            //Send(strippedData);
         }
 
         private void writeThreadProc()
@@ -143,11 +152,13 @@ namespace HardSense.DataStreamingServer
 
         }
 
-        private void Send(String data)
+        
+        private void SendRaw(String data)
         {
             // Convert the string data to byte data using ASCII encoding.  
             byte[] byteData = Encoding.ASCII.GetBytes(data);
             socketToStreamTo.Send(byteData, 0, byteData.Length, 0);
         }
+        
     }
 }
