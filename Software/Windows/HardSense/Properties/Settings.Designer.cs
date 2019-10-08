@@ -97,5 +97,17 @@ namespace HardSense.Properties {
                 return ((string)(this["DefaultNetworkInterfaceType"]));
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("4121")]
+        public int DefaultDataStreamingServerPort {
+            get {
+                return ((int)(this["DefaultDataStreamingServerPort"]));
+            }
+            set {
+                this["DefaultDataStreamingServerPort"] = value;
+            }
+        }
     }
 }

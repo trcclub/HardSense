@@ -184,7 +184,9 @@ namespace HardSense
             */
             
             computerMonitor.StartMonitor();
-            Thread.Sleep(2000);
+            DataStreamingServer.DataStreamingServer.StartServer();
+
+            //Thread.Sleep(2000);
 
             string numSensors = "Total available sensors: " + LocalHardwareMonitor.allAvailableSensors.Count.ToString() + "\n";// computerMonitor.allAvailableSensors.Count.ToString() + "\n";
             tempDisplayBox.AppendText(numSensors);
@@ -297,6 +299,7 @@ namespace HardSense
 
         private void OnExit(object sender, EventArgs e)
         {
+            DataStreamingServer.DataStreamingServer.StopServer();
             computerMonitor.StopMonitor();
             Application.Exit();
         }

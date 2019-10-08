@@ -26,5 +26,8 @@
     <Setting Name="DefaultNetworkInterfaceType" Type="System.String" Scope="Application">
       <Value Profile="(Default)">NIC</Value>
     </Setting>
+    <Setting Name="DefaultDataStreamingServerPort" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">4121</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
