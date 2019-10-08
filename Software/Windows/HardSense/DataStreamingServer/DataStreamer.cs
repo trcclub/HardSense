@@ -130,7 +130,7 @@ namespace HardSense.DataStreamingServer
         private void parseInput(string inputData)
         {
             string strippedData = inputData.Substring(1, inputData.Length - 2);
-            strippedData += ProtocolKeys.TRANSMISSION_KEYS["TRANS__ETX"];
+            strippedData += " HardSense";
             Send(strippedData);
         }
 

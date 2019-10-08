@@ -109,5 +109,14 @@ namespace HardSense.Properties {
                 this["DefaultDataStreamingServerPort"] = value;
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1024")]
+        public int DefaultMaxLengthDataToSend {
+            get {
+                return ((int)(this["DefaultMaxLengthDataToSend"]));
+            }
+        }
     }
 }
