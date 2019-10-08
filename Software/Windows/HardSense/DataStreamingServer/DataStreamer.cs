@@ -51,10 +51,9 @@ namespace HardSense.DataStreamingServer
             readThread.Start();
             writeThread.Start();
             //sdStreamer.StartStreaming();
-            while(DataStreamingServer.continueRunning)
-            {
-                Thread.Sleep(50);
-            }
+
+            readThread.Join();
+            writeThread.Join();
 
             Stop();
         }
