@@ -33,11 +33,14 @@ namespace HardSense.DataStreamingServer
         private Socket socketToStreamTo;
         private StateObject state = new StateObject();
         private Sender dataToSend;
+        private SensorDataStreamer sdStreamer;
 
         public DataStreamer(Socket socket)
         {
             socketToStreamTo = socket;
             dataToSend = new Sender(socket);
+            sdStreamer = new SensorDataStreamer(dataToSend);
+
             readThread = new Thread(readThreadProc);
             writeThread = new Thread(writeThreadProc);
         }
@@ -47,6 +50,7 @@ namespace HardSense.DataStreamingServer
         {
             readThread.Start();
             writeThread.Start();
+            //sdStreamer.StartStreaming();
             while(DataStreamingServer.continueRunning)
             {
                 Thread.Sleep(50);
@@ -96,7 +100,7 @@ namespace HardSense.DataStreamingServer
                 inputData = inputData.Substring(firstInstanceOfStart);
             }
 
-            if (!inputData.StartsWith(ProtocolKeys.TRANSMISSION_KEYS["TRANS_START"]))
+            if (!inputData.StartsWith(ProtocolKeys.TRANSMISSION_KEYS["TRANS_START"].ToString()))
             {
                 if (inputData.IndexOf(ProtocolKeys.TRANSMISSION_KEYS["TRANS_START"]) > 0)
                 {
@@ -132,32 +136,44 @@ namespace HardSense.DataStreamingServer
 
         private void parseInput(string inputData)
         {
-            string strippedData = inputData.Substring(2, inputData.Length - 3);
-            //strippedData += " HardSense!";
-            strippedData = inputData.Substring(0, inputData.IndexOf(":"));
-            strippedData += " ACK";
-            dataToSend.AddStringToMessage(ProtocolKeys.TRANSMISSION_KEYS["TRANS__SENDING_FULL_SENSOR_LIST"], strippedData);
-            dataToSend.AddDoubleToMessage(ProtocolKeys.TRANSMISSION_KEYS["TRANS__REQUEST_SENSORS_FOR_STREAMING"], HardSenseMemFile.GetValueByKey("/Ethernet/0/recv"));
-            dataToSend.SendData();
-            //SendRaw(strippedData);
-            //Send(strippedData);
+            string strippedData = inputData.Substring(1, inputData.Length - 3);
+            string[] tokens = strippedData.Split(ProtocolKeys.TRANSMISSION_KEYS["TRANS__PACKET_END"]);
+            {
+                foreach(string currItem in tokens)
+                {
+                    char key = currItem.ToCharArray()[0];
+                    string value = currItem.Substring(1);
+                    DispatchRequest(key, value);
+                }
+            }
+
+        }
+
+        private void DispatchRequest(char key, string value)
+        {
+            switch (key)
+            {
+                case (char)TRANS__KEY.TRANS__START_SENSOR_DATA_STREAM:
+                    sdStreamer.StartStreaming();
+                    dataToSend.AddStringToMessage(ProtocolKeys.TRANSMISSION_KEYS["TRANS__CONNECTION_ACK"], "Started data streaming");
+                    break;
+                case (char)TRANS__KEY.TRANS__STOP_SENSOR_DATA_STREAM:
+                    sdStreamer.StopStreaming();
+                    dataToSend.AddStringToMessage(ProtocolKeys.TRANSMISSION_KEYS["TRANS__CONNECTION_ACK"], "Stoped data streaming");
+                    break;
+                default:
+                    break;
+            }
         }
 
         private void writeThreadProc()
         {
             while (DataStreamingServer.continueRunning)
             {
-                Thread.Sleep(500);
+                dataToSend.SendData();
+                Thread.Sleep(250);
             }
 
-        }
-
-        
-        private void SendRaw(String data)
-        {
-            // Convert the string data to byte data using ASCII encoding.  
-            byte[] byteData = Encoding.ASCII.GetBytes(data);
-            socketToStreamTo.Send(byteData, 0, byteData.Length, 0);
         }
         
     }

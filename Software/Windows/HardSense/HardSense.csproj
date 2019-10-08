@@ -54,6 +54,7 @@
     <Compile Include="DataStreamingServer\DataStreamingServer.cs" />
     <Compile Include="DataStreamingServer\ProtocolKeys.cs" />
     <Compile Include="DataStreamingServer\Sender.cs" />
+    <Compile Include="DataStreamingServer\SensorDataStreamer.cs" />
     <Compile Include="GUI\AboutBox.cs">
       <SubType>Form</SubType>
     </Compile>

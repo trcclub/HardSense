@@ -9,19 +9,6 @@ using System.Threading;
 
 namespace HardSense.DataStreamingServer
 {
-    /*
-    public class StateObject
-    {
-        // Client  socket.  
-        public Socket workSocket = null;
-        // Size of receive buffer.  
-        public const int BufferSize = 1024;
-        // Receive buffer.  
-        public byte[] buffer = new byte[BufferSize];
-        // Received data string.  
-        public StringBuilder sb = new StringBuilder();
-    }
-    */
     public class DataStreamingServer
     {
         public static ManualResetEvent allDone = new ManualResetEvent(false);

@@ -9,7 +9,7 @@ using System.Net.Sockets;
 
 namespace HardSense.DataStreamingServer
 {
-    class Sender
+    public class Sender
     {
         private StringBuilder message = new StringBuilder();
         private Socket socketToStreamTo;
@@ -19,29 +19,24 @@ namespace HardSense.DataStreamingServer
         {
             socketToStreamTo = socket;
         }
-
-        public void AddKeyToMessage(string key)
+        
+        public void AddKeyToMessage(char key)
         {
             AddStringToMessage(key, "");
         }
 
-        public void AddIntToMessage(string key, int value)
+        public void AddIntToMessage(char key, int value)
         {
             AddStringToMessage(key, value.ToString());
         }
 
-        public void AddDoubleToMessage(string key, double value)
+        public void AddDoubleToMessage(char key, double value)
         {
             AddStringToMessage(key, value.ToString());
         }
 
-        public void AddStringToMessage(string key, string value)
+        public void AddStringToMessage(char key, string value)
         {
-            if (message.Length + key.Length > Properties.Settings.Default.DefaultMaxLengthDataToSend)
-            {
-                SendData();
-            }
-
             int dataPacketLength = 1 + value.Length;
             int dataPacketTotalLength = dataPacketLength + 5;
 
@@ -64,6 +59,11 @@ namespace HardSense.DataStreamingServer
 
         public void SendData()
         {
+            if (message.Length == 0)
+            {
+                return;
+            }
+                
             dataLock.WaitOne();
             StringBuilder tmpSB = new StringBuilder(message.ToString());
             message.Clear();
@@ -73,7 +73,6 @@ namespace HardSense.DataStreamingServer
             tmpSB.Append(ProtocolKeys.TRANSMISSION_KEYS["TRANS__ETX"]);
 
             byte[] byteData = Encoding.ASCII.GetBytes(tmpSB.ToString());
-            
 
             socketToStreamTo.Send(byteData, 0, byteData.Length, 0);
         }
