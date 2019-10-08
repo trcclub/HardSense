@@ -50,7 +50,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataStreamingServer\DataStreamer.cs" />
     <Compile Include="DataStreamingServer\DataStreamingServer.cs" />
+    <Compile Include="DataStreamingServer\ProtocolKeys.cs" />
     <Compile Include="GUI\AboutBox.cs">
       <SubType>Form</SubType>
     </Compile>
