@@ -52,7 +52,11 @@ namespace HardSense.DataStreamingServer
         public void StopStreaming()
         {
             continueRunning = false;
-            monitorThread.Join();
+            if (monitorThread.IsAlive)
+            {
+                monitorThread.Join();
+            }
+            
         }
 
         public void AddSensorToStream(string[] dataItem)

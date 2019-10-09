@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Net;
+using System.Timers;
 using System.Net.Sockets;
 using System.Threading;
 using HardSense.MemFile;
@@ -35,6 +36,10 @@ namespace HardSense.DataStreamingServer
         private Sender dataToSend;
         private SensorDataStreamer sdStreamer;
 
+        int heartbeatsMissed = 0;
+        System.Timers.Timer heartbeatTimer = new System.Timers.Timer();
+
+
         public DataStreamer(Socket socket)
         {
             socketToStreamTo = socket;
@@ -43,15 +48,28 @@ namespace HardSense.DataStreamingServer
 
             readThread = new Thread(readThreadProc);
             writeThread = new Thread(writeThreadProc);
+            heartbeatTimer.Interval = 500;
+            heartbeatTimer.Elapsed += HeatbeatFunc;
+            heartbeatTimer.AutoReset = true;
         }
 
+        private void HeatbeatFunc(Object source, System.Timers.ElapsedEventArgs e)
+        {
+            if(heartbeatsMissed >= 3)
+            {
+                Stop();
+                return;
+            }
+            dataToSend.AddKeyToMessage(ProtocolKeys.TRANSMISSION_KEYS["TRANS__HEARTBEAT"]);
+            heartbeatsMissed++;
+        }
         
         public void ThreadProc()
         {
             running = true;
             readThread.Start();
             writeThread.Start();
-            //sdStreamer.StartStreaming();
+            heartbeatTimer.Start();
 
             readThread.Join();
             writeThread.Join();
@@ -66,6 +84,7 @@ namespace HardSense.DataStreamingServer
             {
                 return;
             }
+            heartbeatTimer.Stop();
             running = false;
             sdStreamer.StopStreaming();
             readThread.Join();
@@ -178,6 +197,9 @@ namespace HardSense.DataStreamingServer
                 case (char)TRANS__KEY.TRANS__ADD_SENSORS_SENSOR_LIST:
                     AddSensorListToSDStreamer(value);
                     dataToSend.AddStringToMessage(ProtocolKeys.TRANSMISSION_KEYS["TRANS__CONNECTION_ACK"], "Sensors aded to list");
+                    break;
+                case (char)TRANS__KEY.TRANS__HEARTBEAT_ACK:
+                    heartbeatsMissed = 0;
                     break;
                 default:
                     break;

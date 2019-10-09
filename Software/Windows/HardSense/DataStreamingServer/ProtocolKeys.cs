@@ -19,6 +19,9 @@ namespace HardSense.DataStreamingServer
             TRANSMISSION_KEYS.Add("TRANS__ACK", '\u0006'); // ACK (acknowledge)
             TRANSMISSION_KEYS.Add("TRANS__NACK", '\u0015'); // NAK (negative acknowledge)
 
+            TRANSMISSION_KEYS.Add("TRANS__HEARTBEAT", '\u007D'); // }
+            TRANSMISSION_KEYS.Add("TRANS__HEARTBEAT_ACK", '\u007E'); // ~
+
             TRANSMISSION_KEYS.Add("TRANS__CONNECTION_REQUEST", '\u0005'); // ENQ (enquiry)
             TRANSMISSION_KEYS.Add("TRANS__CONNECTION_ACK", '\u0001'); // SOH (start of heading)
             TRANSMISSION_KEYS.Add("TRANS__DISCONNECT", '\u0004'); // EOT (end of transmission)
@@ -47,6 +50,9 @@ namespace HardSense.DataStreamingServer
         TRANS__PACKET_END = 0X1D, // GS (group separator)
         TRANS__ACK = 0x06, // ACK (acknowledge)
         TRANS__NACK = 0x15, // NAK (negative acknowledge)
+
+        TRANS__HEARTBEAT = 0x7D, // }
+        TRANS__HEARTBEAT_ACK = 0x7E, // ~
 
         TRANS__CONNECTION_REQUEST = 0x05, // ENQ (enquiry)
         TRANS__CONNECTION_ACK = 0x01,   // SOH (start of heading)
