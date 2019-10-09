@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using HardSense.MemFile;
 using HardSense.GUI;
+using HardSense.GUI.Bluetooth;
 using System.Threading;
 
 namespace HardSense
@@ -44,9 +45,65 @@ namespace HardSense
             List<string> tmpSensorExcludeList = new List<string>();
             //tmpSensorExcludeList.Add("/Bluetooth/0/send");
             //tmpSensorExcludeList.Add("/Bluetooth/0/recv");
-            computerMonitor.init(tmpHardwareExludeList,tmpSensorExcludeList);
 
-            /*
+
+            /* Temporarily disable the monitor and socket while working on the other bits.
+            //----------------------------------------//
+            //----------------------------------------//
+            
+            
+           computerMonitor.init(tmpHardwareExludeList,tmpSensorExcludeList);
+           computerMonitor.StartMonitor();
+           DataStreamingServer.DataStreamingServer.StartServer();
+           
+           
+             Be sure to remove this comment stuff to re-enable all the things.
+            //----------------------------------------//
+            //----------------------------------------//
+            */
+
+            //DisplayHardwareDataIntheBox();
+            //DisplaySensorsInTheBox();
+
+        }
+
+        /*
+        private void ThreadProc()
+        {
+            while (true)
+            {
+                tempDisplayBox.Invoke((Action)delegate
+                {
+                    counter++;
+                    String str = "Hello World! - " + counter.ToString() + "\n";
+                    tempDisplayBox.AppendText(str);
+                });
+                Thread.Sleep(250);
+            }
+        }
+        */
+        private void DisplaySensorsInTheBox()
+        {
+            string numSensors = "Total available sensors: " + LocalHardwareMonitor.allAvailableSensors.Count.ToString() + "\n";// computerMonitor.allAvailableSensors.Count.ToString() + "\n";
+            tempDisplayBox.AppendText(numSensors);
+
+            foreach (LocalSensor currSensor in LocalHardwareMonitor.allAvailableSensors)// computerMonitor.allAvailableSensors)
+            {
+                string currSensorString = "Name: " + currSensor.Name + "\n";
+                currSensorString += "ID: " + currSensor.Id + "\n";
+                currSensorString += "Type: " + currSensor.Type + "\n";
+                currSensorString += "Member of: " + currSensor.MemberOf + "\n";
+                currSensorString += "Parent: " + currSensor.Parent + "\n";
+                currSensorString += "Value: " + HardSenseMemFile.GetValueByKey(currSensor.Id) + "\n";
+                tempDisplayBox.AppendText(currSensorString);
+                tempDisplayBox.AppendText("---\n");
+            }
+
+        }
+
+        private void DisplayHardwareDataIntheBox()
+        {
+
             tempDisplayBox.AppendText("\n---\nMotherboard Info\n");
             string s = "Found " + computerMonitor.motherBoardInfo.Count.ToString() + " Motherboards(s)\n";
             tempDisplayBox.AppendText(s);
@@ -68,13 +125,13 @@ namespace HardSense
                 }
             }
 
-            
+
 
             tempDisplayBox.AppendText("\n---\nCPU Info\n");
             s = "Found " + computerMonitor.cpuInfo.Count.ToString() + " CPU(s)\n";
             tempDisplayBox.AppendText(s);
             count = 0;
-            foreach(LocalHardwareItem currItem in computerMonitor.cpuInfo)
+            foreach (LocalHardwareItem currItem in computerMonitor.cpuInfo)
             {
                 count++;
                 s = "\n";
@@ -177,32 +234,11 @@ namespace HardSense
                         tempDisplayBox.AppendText("\n");
                     }
                 }
-            } else
+            }
+            else
             {
                 tempDisplayBox.AppendText("No network connections found\n");
             }
-            */
-            
-            computerMonitor.StartMonitor();
-            DataStreamingServer.DataStreamingServer.StartServer();
-
-            //Thread.Sleep(2000);
-
-            string numSensors = "Total available sensors: " + LocalHardwareMonitor.allAvailableSensors.Count.ToString() + "\n";// computerMonitor.allAvailableSensors.Count.ToString() + "\n";
-            tempDisplayBox.AppendText(numSensors);
-            
-            foreach(LocalSensor currSensor in LocalHardwareMonitor.allAvailableSensors)// computerMonitor.allAvailableSensors)
-            {
-                string currSensorString = "Name: " + currSensor.Name + "\n";
-                currSensorString += "ID: " + currSensor.Id + "\n";
-                currSensorString += "Type: " + currSensor.Type + "\n";
-                currSensorString += "Member of: " + currSensor.MemberOf + "\n";
-                currSensorString += "Parent: " + currSensor.Parent + "\n";
-                currSensorString += "Value: " + HardSenseMemFile.GetValueByKey(currSensor.Id) + "\n";
-                tempDisplayBox.AppendText(currSensorString);
-                tempDisplayBox.AppendText("---\n");
-            }
-
             // NETWORK INTERFACE STUFF //
             /*
             tempDisplayBox.AppendText("\n-------------\n");
@@ -233,22 +269,6 @@ namespace HardSense
 
             */
         }
-
-        /*
-        private void ThreadProc()
-        {
-            while (true)
-            {
-                tempDisplayBox.Invoke((Action)delegate
-                {
-                    counter++;
-                    String str = "Hello World! - " + counter.ToString() + "\n";
-                    tempDisplayBox.AppendText(str);
-                });
-                Thread.Sleep(250);
-            }
-        }
-        */
 
 
         private void DisplaySensorInfo(LocalSensor currSensor)
@@ -317,6 +337,12 @@ namespace HardSense
         {
             AboutBox ab = new AboutBox();
             ab.ShowDialog(this);
+        }
+
+        private void bluetoothConfiguratorToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            BluetoothConfigurator btConfig = new BluetoothConfigurator();
+            btConfig.ShowDialog(this);
         }
     }
 }
