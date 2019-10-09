@@ -31,21 +31,22 @@ namespace HardSense.DataStreamingServer
         public SensorDataStreamer(Sender newSender)
         {
             dataToSend = newSender;
-            AddSensorToStream("/Ethernet/0/recv", 'a');
-            AddSensorToStream("/intelcpu/0/load/0", 'b');
+            monitorThread = new Thread(ThreadProc);
+            //AddSensorToStream("/Ethernet/0/recv", 'a');
+            //AddSensorToStream("/intelcpu/0/load/0", 'b');
 
         }
 
-        public void StartStreaming()
+        public bool StartStreaming()
         {
             if(listOfSensorsToRetrieve.Count == 0)
             {
-                return;
+                return false;
             }
 
             continueRunning = true;
-            monitorThread = new Thread(ThreadProc);
             monitorThread.Start();
+            return true;
         }
 
         public void StopStreaming()
@@ -54,9 +55,12 @@ namespace HardSense.DataStreamingServer
             monitorThread.Join();
         }
 
-        public void AddSensorToStream(string sensorId, char key)
+        public void AddSensorToStream(string[] dataItem)
         {
-            listOfSensorsToRetrieve.Add(new SensorItem(sensorId, key));
+            if (HardSenseMemFile.DoesIdExistInList(dataItem[0]))
+            {
+                listOfSensorsToRetrieve.Add(new SensorItem(dataItem[0], dataItem[1].ToCharArray()[0]));
+            }
         }
 
         public void ClearSensorList()
@@ -73,7 +77,7 @@ namespace HardSense.DataStreamingServer
                     double value = HardSenseMemFile.GetValueByKey(currSensorItem.sensorId);
                     dataToSend.AddDoubleToMessage(currSensorItem.key, value);
                 }
-                Thread.Sleep(500);
+                Thread.Sleep(1000);
             }
         }
 

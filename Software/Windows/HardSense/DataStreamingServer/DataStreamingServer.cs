@@ -73,7 +73,8 @@ namespace HardSense.DataStreamingServer
             }
             catch (Exception e)
             {
-
+                StopServer();
+                StartServer();
             }
         }
                

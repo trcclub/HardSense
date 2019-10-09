@@ -48,6 +48,7 @@ namespace HardSense.DataStreamingServer
         
         public void ThreadProc()
         {
+            running = true;
             readThread.Start();
             writeThread.Start();
             //sdStreamer.StartStreaming();
@@ -59,29 +60,39 @@ namespace HardSense.DataStreamingServer
         }
 
 
-        private void Stop()
+        public void Stop()
         {
             if(!running)
             {
                 return;
             }
+            running = false;
+            sdStreamer.StopStreaming();
             readThread.Join();
             writeThread.Join();
-            running = false;
+
+            socketToStreamTo.Shutdown(SocketShutdown.Both);
+            socketToStreamTo.Close();
         }
         private void readThreadProc()
         {
-            while(DataStreamingServer.continueRunning)
+            try
             {
-                int bytesRead = socketToStreamTo.Receive(state.buffer, 0, StateObject.BufferSize, 0);
-                if (bytesRead > 0)
+                while (running && DataStreamingServer.continueRunning)
                 {
-                    state.sb.Append(Encoding.ASCII.GetString(state.buffer, 0, bytesRead));
-                    string leftOverContent = HandleInput(state.sb.ToString());
-                    state.sb.Clear();
-                    state.sb.Append(leftOverContent);
+                    int bytesRead = socketToStreamTo.Receive(state.buffer, 0, StateObject.BufferSize, 0);
+                    if (bytesRead > 0)
+                    {
+                        state.sb.Append(Encoding.ASCII.GetString(state.buffer, 0, bytesRead));
+                        string leftOverContent = HandleInput(state.sb.ToString());
+                        state.sb.Clear();
+                        state.sb.Append(leftOverContent);
+                    }
+                    Thread.Sleep(20);
                 }
-                Thread.Sleep(20);
+            }
+            catch (Exception e)
+            {
             }
 
         }
@@ -128,7 +139,6 @@ namespace HardSense.DataStreamingServer
                 }
             }
 
-
             parseInput(inputData);
             return ret;
         }
@@ -145,7 +155,6 @@ namespace HardSense.DataStreamingServer
                     DispatchRequest(key, value);
                 }
             }
-
         }
 
         private void DispatchRequest(char key, string value)
@@ -153,26 +162,60 @@ namespace HardSense.DataStreamingServer
             switch (key)
             {
                 case (char)TRANS__KEY.TRANS__START_SENSOR_DATA_STREAM:
-                    sdStreamer.StartStreaming();
-                    dataToSend.AddStringToMessage(ProtocolKeys.TRANSMISSION_KEYS["TRANS__CONNECTION_ACK"], "Started data streaming");
+                    if (sdStreamer.StartStreaming())
+                    {
+                        dataToSend.AddStringToMessage(ProtocolKeys.TRANSMISSION_KEYS["TRANS__CONNECTION_ACK"], "Started data streaming");
+                    } else
+                    {
+                        dataToSend.AddStringToMessage(ProtocolKeys.TRANSMISSION_KEYS["TRANS__CONNECTION_ACK"], "Failed to start data streaming");
+                    }
+
                     break;
                 case (char)TRANS__KEY.TRANS__STOP_SENSOR_DATA_STREAM:
                     sdStreamer.StopStreaming();
                     dataToSend.AddStringToMessage(ProtocolKeys.TRANSMISSION_KEYS["TRANS__CONNECTION_ACK"], "Stoped data streaming");
+                    break;
+                case (char)TRANS__KEY.TRANS__ADD_SENSORS_SENSOR_LIST:
+                    AddSensorListToSDStreamer(value);
+                    dataToSend.AddStringToMessage(ProtocolKeys.TRANSMISSION_KEYS["TRANS__CONNECTION_ACK"], "Sensors aded to list");
                     break;
                 default:
                     break;
             }
         }
 
-        private void writeThreadProc()
+        private void AddSensorListToSDStreamer(string rawSensorList)
         {
-            while (DataStreamingServer.continueRunning)
+            // rawSensorList format:
+            // <string>sensorID,<char>key|<string>sensorID,<char>key|...
+            //
+
+            string[] tokens = rawSensorList.Split('|');
+            foreach(string currItem in tokens)
             {
-                dataToSend.SendData();
-                Thread.Sleep(250);
+                string[] currDataItem = currItem.Split(',');
+                if(currDataItem.Length == 2)
+                {
+                    sdStreamer.AddSensorToStream(currDataItem);
+                }
+                
             }
 
+        }
+
+        private void writeThreadProc()
+        {
+            try
+            {
+                while (running && DataStreamingServer.continueRunning)
+                {
+                    dataToSend.SendData();
+                    Thread.Sleep(250);
+                }
+            }
+            catch (Exception e)
+            {
+            }
         }
         
     }

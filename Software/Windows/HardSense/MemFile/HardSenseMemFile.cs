@@ -81,6 +81,17 @@ namespace HardSense.MemFile
             currDataItem.WriteDouble(value);
         }
 
+        public static bool DoesIdExistInList(string needle)
+        {
+            foreach (DataItem currItem in map)
+            {
+                if (currItem.key.Equals(needle))
+                    return true;
+            }
+            return false;
+
+        }
+
         public static double GetValueByKey(string key)
         {
             DataItem currDataItem = FindItemByKey(key);
