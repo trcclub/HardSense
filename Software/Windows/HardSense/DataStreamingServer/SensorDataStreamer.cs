@@ -23,17 +23,15 @@ namespace HardSense.DataStreamingServer
     }
     public class SensorDataStreamer
     {
-        private Sender dataToSend;
+        private Sender sender;
         private Thread monitorThread;
         private bool continueRunning = false;
         private List<SensorItem> listOfSensorsToRetrieve = new List<SensorItem>();
 
         public SensorDataStreamer(Sender newSender)
         {
-            dataToSend = newSender;
+            sender = newSender;
             monitorThread = new Thread(ThreadProc);
-            //AddSensorToStream("/Ethernet/0/recv", 'a');
-            //AddSensorToStream("/intelcpu/0/load/0", 'b');
 
         }
 
@@ -79,7 +77,9 @@ namespace HardSense.DataStreamingServer
                 foreach(SensorItem currSensorItem in listOfSensorsToRetrieve)
                 {
                     double value = HardSenseMemFile.GetValueByKey(currSensorItem.sensorId);
-                    dataToSend.AddDoubleToMessage(currSensorItem.key, value);
+                    string tmp = currSensorItem.key + "," + value.ToString();
+                    //sender.AddDoubleToMessage(ProtocolKeys.TRANSMISSION_KEYS["TRANS__UPDATE_SENSOR_VALUE"], value);
+                    sender.AddStringToMessage(ProtocolKeys.TRANSMISSION_KEYS["TRANS__UPDATE_SENSOR_VALUE"], tmp);
                 }
                 Thread.Sleep(1000);
             }

@@ -70,4 +70,6 @@ namespace HardSense.DataStreamingServer
         TRANS__TEST_KEY = 0x25, // %
         TRANS__TEST_KEY_2 = 0x26, // &
     };
+
+    
 }

@@ -118,5 +118,29 @@ namespace HardSense.Properties {
                 return ((int)(this["DefaultMaxLengthDataToSend"]));
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("5000")]
+        public int DefaultHeartbeatTime {
+            get {
+                return ((int)(this["DefaultHeartbeatTime"]));
+            }
+            set {
+                this["DefaultHeartbeatTime"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("3")]
+        public int DefaultMissedHeartbeatsToDisconnect {
+            get {
+                return ((int)(this["DefaultMissedHeartbeatsToDisconnect"]));
+            }
+            set {
+                this["DefaultMissedHeartbeatsToDisconnect"] = value;
+            }
+        }
     }
 }

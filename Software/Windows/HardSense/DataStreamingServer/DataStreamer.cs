@@ -28,12 +28,11 @@ namespace HardSense.DataStreamingServer
     {
         private Thread readThread;
         private Thread writeThread;
-
         private bool running = false;
 
-        private Socket socketToStreamTo;
+        private Socket clientSocket;
         private StateObject state = new StateObject();
-        private Sender dataToSend;
+        private Sender sender;
         private SensorDataStreamer sdStreamer;
 
         int heartbeatsMissed = 0;
@@ -42,25 +41,26 @@ namespace HardSense.DataStreamingServer
 
         public DataStreamer(Socket socket)
         {
-            socketToStreamTo = socket;
-            dataToSend = new Sender(socket);
-            sdStreamer = new SensorDataStreamer(dataToSend);
+            clientSocket = socket;
+            sender = new Sender(socket);
+            sdStreamer = new SensorDataStreamer(sender);
 
             readThread = new Thread(readThreadProc);
             writeThread = new Thread(writeThreadProc);
-            heartbeatTimer.Interval = 500;
+
+            heartbeatTimer.Interval = Properties.Settings.Default.DefaultHeartbeatTime;
             heartbeatTimer.Elapsed += HeatbeatFunc;
             heartbeatTimer.AutoReset = true;
         }
 
         private void HeatbeatFunc(Object source, System.Timers.ElapsedEventArgs e)
         {
-            if(heartbeatsMissed >= 3)
+            if(heartbeatsMissed >= Properties.Settings.Default.DefaultMissedHeartbeatsToDisconnect)
             {
                 Stop();
                 return;
             }
-            dataToSend.AddKeyToMessage(ProtocolKeys.TRANSMISSION_KEYS["TRANS__HEARTBEAT"]);
+            sender.AddKeyToMessage(ProtocolKeys.TRANSMISSION_KEYS["TRANS__HEARTBEAT"]);
             heartbeatsMissed++;
         }
         
@@ -80,18 +80,21 @@ namespace HardSense.DataStreamingServer
 
         public void Stop()
         {
-            if(!running)
-            {
-                return;
-            }
-            heartbeatTimer.Stop();
             running = false;
+            heartbeatTimer.Stop();
             sdStreamer.StopStreaming();
-            readThread.Join();
-            writeThread.Join();
+            if (readThread.IsAlive)
+            {
+                readThread.Join();
+            }
+            if (writeThread.IsAlive)
+            {
+                writeThread.Join();
+            }
+            
 
-            socketToStreamTo.Shutdown(SocketShutdown.Both);
-            socketToStreamTo.Close();
+            clientSocket.Shutdown(SocketShutdown.Both);
+            clientSocket.Close();
         }
         private void readThreadProc()
         {
@@ -99,7 +102,7 @@ namespace HardSense.DataStreamingServer
             {
                 while (running && DataStreamingServer.continueRunning)
                 {
-                    int bytesRead = socketToStreamTo.Receive(state.buffer, 0, StateObject.BufferSize, 0);
+                    int bytesRead = clientSocket.Receive(state.buffer, 0, StateObject.BufferSize, 0);
                     if (bytesRead > 0)
                     {
                         state.sb.Append(Encoding.ASCII.GetString(state.buffer, 0, bytesRead));
@@ -183,20 +186,20 @@ namespace HardSense.DataStreamingServer
                 case (char)TRANS__KEY.TRANS__START_SENSOR_DATA_STREAM:
                     if (sdStreamer.StartStreaming())
                     {
-                        dataToSend.AddStringToMessage(ProtocolKeys.TRANSMISSION_KEYS["TRANS__CONNECTION_ACK"], "Started data streaming");
+                        sender.AddStringToMessage(ProtocolKeys.TRANSMISSION_KEYS["TRANS__CONNECTION_ACK"], "Started data streaming");
                     } else
                     {
-                        dataToSend.AddStringToMessage(ProtocolKeys.TRANSMISSION_KEYS["TRANS__CONNECTION_ACK"], "Failed to start data streaming");
+                        sender.AddStringToMessage(ProtocolKeys.TRANSMISSION_KEYS["TRANS__CONNECTION_ACK"], "Failed to start data streaming");
                     }
 
                     break;
                 case (char)TRANS__KEY.TRANS__STOP_SENSOR_DATA_STREAM:
                     sdStreamer.StopStreaming();
-                    dataToSend.AddStringToMessage(ProtocolKeys.TRANSMISSION_KEYS["TRANS__CONNECTION_ACK"], "Stoped data streaming");
+                    sender.AddStringToMessage(ProtocolKeys.TRANSMISSION_KEYS["TRANS__CONNECTION_ACK"], "Stoped data streaming");
                     break;
                 case (char)TRANS__KEY.TRANS__ADD_SENSORS_SENSOR_LIST:
                     AddSensorListToSDStreamer(value);
-                    dataToSend.AddStringToMessage(ProtocolKeys.TRANSMISSION_KEYS["TRANS__CONNECTION_ACK"], "Sensors aded to list");
+                    sender.AddStringToMessage(ProtocolKeys.TRANSMISSION_KEYS["TRANS__CONNECTION_ACK"], "Sensors aded to list");
                     break;
                 case (char)TRANS__KEY.TRANS__HEARTBEAT_ACK:
                     heartbeatsMissed = 0;
@@ -231,8 +234,8 @@ namespace HardSense.DataStreamingServer
             {
                 while (running && DataStreamingServer.continueRunning)
                 {
-                    dataToSend.SendData();
-                    Thread.Sleep(250);
+                    sender.SendData();
+                    Thread.Sleep(50);
                 }
             }
             catch (Exception e)

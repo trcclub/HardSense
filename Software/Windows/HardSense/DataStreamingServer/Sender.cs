@@ -12,12 +12,12 @@ namespace HardSense.DataStreamingServer
     public class Sender
     {
         private StringBuilder message = new StringBuilder();
-        private Socket socketToStreamTo;
+        private Socket clientSocket;
         private Mutex dataLock = new Mutex();
 
         public Sender(Socket socket)
         {
-            socketToStreamTo = socket;
+            clientSocket = socket;
         }
         
         public void AddKeyToMessage(char key)
@@ -74,7 +74,7 @@ namespace HardSense.DataStreamingServer
 
             byte[] byteData = Encoding.ASCII.GetBytes(tmpSB.ToString());
 
-            socketToStreamTo.Send(byteData, 0, byteData.Length, 0);
+            clientSocket.Send(byteData, 0, byteData.Length, 0);
         }
     }
 }

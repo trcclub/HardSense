@@ -17,7 +17,6 @@ namespace HardSense.MemFile
         private int fileLength = 0;
         private static MemoryMappedFile mmFile = null;
         
-        //private double counter = 4;
         public HardSenseMemFile(bool creatorRequest = false)
         {
             if (creatorRequest)
@@ -74,6 +73,8 @@ namespace HardSense.MemFile
             DataItem currDataItem = FindItemByKey(key);
             if (currDataItem == null)
                 return;
+
+            value = Convert.ToDouble(value.ToString("F4"));
 
             if(value.ToString().Length > mmFileItemMaxLength)
                 value = Convert.ToDouble(value.ToString().Substring(0,mmFileItemMaxLength));
