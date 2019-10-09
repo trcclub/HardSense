@@ -6,6 +6,8 @@
 
 #include <SPI.h>
 #include <TFT_eSPI.h>
+#include <FS.h>
+#include <SPIFFS.h>
 
 #include "Bluetooth/BTConfigurator.h"
 
@@ -21,14 +23,17 @@ void setup() {
 
 	Serial.begin(115200);
 	pinMode(btButton, INPUT_PULLUP);
-	delay(10);
-
-	tftDisplay.setCursor(20, 20);
 	
+	tftDisplay.setCursor(20, 20);
+	if (!SystemChecks()) {
+		Spin();
+	}
+
 	if (!digitalRead(btButton))
 	{
 		tftDisplay.print("Entering Bluetooth Configurator");
 		btConfig = new BTConfigurator();
+
 	}
 	else
 	{
@@ -36,10 +41,27 @@ void setup() {
 	}
 
 
-	btConfig->HandleBluetooth
 }
 
 
 void loop() {
   
+}
+
+
+bool SystemChecks()
+{
+	if (!SPIFFS.begin()) {
+		tftDisplay.print("SPIFFS is not available.");
+		return false;
+	}
+
+	return true;
+}
+
+void Spin()
+{
+	while (true) {
+		delay(100);
+	}
 }

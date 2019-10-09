@@ -3,5 +3,5 @@
 
 void BTConfigurator::HandleBluetooth()
 {
-	// TODO: Add your implementation code here.
+	btSerial.begin("HardSenseESP");
 }
