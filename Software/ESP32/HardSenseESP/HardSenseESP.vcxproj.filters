@@ -24,7 +24,7 @@
     <ClInclude Include="Bluetooth\BTConfigurator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="CommonSerialInterface\SerialInterface.h">
+    <ClInclude Include="SerialProtocolKeys.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
