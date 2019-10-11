@@ -115,12 +115,8 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Bluetooth\BTConfigurator.h" />
     <ClInclude Include="SerialProtocolKeys.h" />
     <ClInclude Include="__vm\.HardSenseESP.vsarduino.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="Bluetooth\BTConfigurator.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

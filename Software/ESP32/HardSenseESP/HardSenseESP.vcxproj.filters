@@ -21,16 +21,8 @@
     <ClInclude Include="__vm\.HardSenseESP.vsarduino.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Bluetooth\BTConfigurator.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="SerialProtocolKeys.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="Bluetooth\BTConfigurator.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
 </Project>
