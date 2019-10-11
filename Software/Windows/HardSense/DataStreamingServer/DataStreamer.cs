@@ -60,7 +60,7 @@ namespace HardSense.DataStreamingServer
                 Stop();
                 return;
             }
-            sender.AddKeyToMessage(ProtocolKeys.TRANSMISSION_KEYS["TRANS__HEARTBEAT"]);
+            sender.AddKeyToMessage(ProtocolKeys.TRANSMISSION_KEYS["HEARTBEAT"]);
             heartbeatsMissed++;
         }
         
@@ -145,13 +145,13 @@ namespace HardSense.DataStreamingServer
             }
 
 
-            int endMarkerLocation = inputData.IndexOf(ProtocolKeys.TRANSMISSION_KEYS["TRANS__ETX"]);
+            int endMarkerLocation = inputData.IndexOf(ProtocolKeys.TRANSMISSION_KEYS["ETX"]);
             if (endMarkerLocation != inputData.Length)
             {
                 if (endMarkerLocation > 0)
                 {
-                    string tmpContent = inputData.Substring(0, inputData.IndexOf(ProtocolKeys.TRANSMISSION_KEYS["TRANS__ETX"]) + 1);
-                    ret = inputData.Substring(inputData.IndexOf(ProtocolKeys.TRANSMISSION_KEYS["TRANS__ETX"]) + 1);
+                    string tmpContent = inputData.Substring(0, inputData.IndexOf(ProtocolKeys.TRANSMISSION_KEYS["ETX"]) + 1);
+                    ret = inputData.Substring(inputData.IndexOf(ProtocolKeys.TRANSMISSION_KEYS["ETX"]) + 1);
                     parseInput(tmpContent);
                     return HandleInput(ret);
                 }
@@ -168,7 +168,7 @@ namespace HardSense.DataStreamingServer
         private void parseInput(string inputData)
         {
             string strippedData = inputData.Substring(1, inputData.Length - 3);
-            string[] tokens = strippedData.Split(ProtocolKeys.TRANSMISSION_KEYS["TRANS__PACKET_END"]);
+            string[] tokens = strippedData.Split(ProtocolKeys.TRANSMISSION_KEYS["PACKET_END"]);
             {
                 foreach(string currItem in tokens)
                 {
@@ -183,25 +183,25 @@ namespace HardSense.DataStreamingServer
         {
             switch (key)
             {
-                case (char)TRANS__KEY.TRANS__START_SENSOR_DATA_STREAM:
+                case (char)TRANS__KEY.START_SENSOR_DATA_STREAM:
                     if (sdStreamer.StartStreaming())
                     {
-                        sender.AddStringToMessage(ProtocolKeys.TRANSMISSION_KEYS["TRANS__CONNECTION_ACK"], "Started data streaming");
+                        sender.AddStringToMessage(ProtocolKeys.TRANSMISSION_KEYS["ACK"], "Started data streaming");
                     } else
                     {
-                        sender.AddStringToMessage(ProtocolKeys.TRANSMISSION_KEYS["TRANS__CONNECTION_ACK"], "Failed to start data streaming");
+                        sender.AddStringToMessage(ProtocolKeys.TRANSMISSION_KEYS["ACK"], "Failed to start data streaming");
                     }
 
                     break;
-                case (char)TRANS__KEY.TRANS__STOP_SENSOR_DATA_STREAM:
+                case (char)TRANS__KEY.STOP_SENSOR_DATA_STREAM:
                     sdStreamer.StopStreaming();
-                    sender.AddStringToMessage(ProtocolKeys.TRANSMISSION_KEYS["TRANS__CONNECTION_ACK"], "Stoped data streaming");
+                    sender.AddStringToMessage(ProtocolKeys.TRANSMISSION_KEYS["ACK"], "Stoped data streaming");
                     break;
-                case (char)TRANS__KEY.TRANS__ADD_SENSORS_SENSOR_LIST:
+                case (char)TRANS__KEY.ADD_SENSORS_TO_SENSOR_LIST:
                     AddSensorListToSDStreamer(value);
-                    sender.AddStringToMessage(ProtocolKeys.TRANSMISSION_KEYS["TRANS__CONNECTION_ACK"], "Sensors aded to list");
+                    sender.AddStringToMessage(ProtocolKeys.TRANSMISSION_KEYS["ACK"], "Sensors aded to list");
                     break;
-                case (char)TRANS__KEY.TRANS__HEARTBEAT_ACK:
+                case (char)TRANS__KEY.HEARTBEAT_ACK:
                     heartbeatsMissed = 0;
                     break;
                 default:

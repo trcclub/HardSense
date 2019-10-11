@@ -339,7 +339,7 @@ namespace HardSense
             ab.ShowDialog(this);
         }
 
-        private void bluetoothConfiguratorToolStripMenuItem_Click(object sender, EventArgs e)
+        private void bluetoothConfiguratorToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             BluetoothConfigurator btConfig = new BluetoothConfigurator();
             btConfig.ShowDialog(this);

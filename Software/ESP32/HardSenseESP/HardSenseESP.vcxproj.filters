@@ -24,6 +24,9 @@
     <ClInclude Include="Bluetooth\BTConfigurator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="CommonSerialInterface\SerialInterface.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Bluetooth\BTConfigurator.cpp">

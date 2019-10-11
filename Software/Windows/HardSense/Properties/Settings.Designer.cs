@@ -142,5 +142,50 @@ namespace HardSense.Properties {
                 this["DefaultMissedHeartbeatsToDisconnect"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string DefaultBTSerialPort {
+            get {
+                return ((string)(this["DefaultBTSerialPort"]));
+            }
+            set {
+                this["DefaultBTSerialPort"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0, 0")]
+        public global::System.Drawing.Point BluetoothConfiguratorFormLastPosition {
+            get {
+                return ((global::System.Drawing.Point)(this["BluetoothConfiguratorFormLastPosition"]));
+            }
+            set {
+                this["BluetoothConfiguratorFormLastPosition"] = value;
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("3")]
+        public int DefaultBTConnectMaxFailures {
+            get {
+                return ((int)(this["DefaultBTConnectMaxFailures"]));
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool DebugOutput {
+            get {
+                return ((bool)(this["DebugOutput"]));
+            }
+            set {
+                this["DebugOutput"] = value;
+            }
+        }
     }
 }

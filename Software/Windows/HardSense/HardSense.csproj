@@ -67,7 +67,6 @@
     <Compile Include="GUI\Bluetooth\BluetoothConfigurator.Designer.cs">
       <DependentUpon>BluetoothConfigurator.cs</DependentUpon>
     </Compile>
-    <Compile Include="GUI\Bluetooth\BluetoothSerial.cs" />
     <Compile Include="HardSense.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -11,34 +11,25 @@
 
 #include "Bluetooth/BTConfigurator.h"
 
+
 byte btButton = 22;
-BTConfigurator *btConfig;
 
 TFT_eSPI tftDisplay = TFT_eSPI();
+BTConfigurator* btConfig;
 
 void setup() {
-	tftDisplay.init();
-	tftDisplay.setRotation(1);
-	tftDisplay.fillScreen(TFT_BLACK);
-
 	Serial.begin(115200);
-	pinMode(btButton, INPUT_PULLUP);
+	InitDisplay();
+	InitButtons();
+	CheckForBluetoothConfigRequest();
+
 	
-	tftDisplay.setCursor(20, 20);
-	if (!SystemChecks()) {
-		Spin();
-	}
+	
+	//if (!SystemChecks()) {
+	//	Spin();
+	//}
 
-	if (!digitalRead(btButton))
-	{
-		tftDisplay.print("Entering Bluetooth Configurator");
-		btConfig = new BTConfigurator();
-
-	}
-	else
-	{
-		tftDisplay.print("Entering Normal Run Mode");
-	}
+	tftDisplay.print("Entering Normal Run Mode");
 
 
 }
@@ -48,7 +39,7 @@ void loop() {
   
 }
 
-
+/*
 bool SystemChecks()
 {
 	if (!SPIFFS.begin()) {
@@ -57,6 +48,30 @@ bool SystemChecks()
 	}
 
 	return true;
+}
+*/
+void CheckForBluetoothConfigRequest()
+{
+	if (!digitalRead(btButton))
+	{
+		tftDisplay.print("Entering Bluetooth Configurator");
+		delay(2000);
+		btConfig = new BTConfigurator(tftDisplay);
+		btConfig->HandleBluetooth();
+	}
+}
+
+void InitButtons()
+{
+	pinMode(btButton, INPUT_PULLUP);
+}
+
+void InitDisplay()
+{
+	tftDisplay.init();
+	tftDisplay.setRotation(1);
+	tftDisplay.fillScreen(TFT_BLACK);
+	tftDisplay.setCursor(20, 20);
 }
 
 void Spin()

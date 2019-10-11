@@ -37,12 +37,13 @@
             this.mainboardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.bluetoothConfiguratorToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.listView1 = new System.Windows.Forms.ListView();
             this.Component_Column = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.Name_Column = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ID_Column = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.Sensor_Column = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.bluetoothConfiguratorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -62,9 +63,9 @@
             // menuStrip1
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.bluetoothConfiguratorToolStripMenuItem,
             this.hardwareToolStripMenuItem,
-            this.helpToolStripMenuItem});
+            this.helpToolStripMenuItem,
+            this.settingsToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(1393, 24);
@@ -82,7 +83,7 @@
             // mainboardToolStripMenuItem
             // 
             this.mainboardToolStripMenuItem.Name = "mainboardToolStripMenuItem";
-            this.mainboardToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.mainboardToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
             this.mainboardToolStripMenuItem.Text = "Mainboard";
             // 
             // helpToolStripMenuItem
@@ -99,6 +100,21 @@
             this.aboutToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
             this.aboutToolStripMenuItem.Text = "About";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
+            // 
+            // settingsToolStripMenuItem
+            // 
+            this.settingsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.bluetoothConfiguratorToolStripMenuItem1});
+            this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
+            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
+            this.settingsToolStripMenuItem.Text = "Settings";
+            // 
+            // bluetoothConfiguratorToolStripMenuItem1
+            // 
+            this.bluetoothConfiguratorToolStripMenuItem1.Name = "bluetoothConfiguratorToolStripMenuItem1";
+            this.bluetoothConfiguratorToolStripMenuItem1.Size = new System.Drawing.Size(197, 22);
+            this.bluetoothConfiguratorToolStripMenuItem1.Text = "Bluetooth Configurator";
+            this.bluetoothConfiguratorToolStripMenuItem1.Click += new System.EventHandler(this.bluetoothConfiguratorToolStripMenuItem1_Click);
             // 
             // listView1
             // 
@@ -132,13 +148,6 @@
             // Sensor_Column
             // 
             this.Sensor_Column.Text = "Sensor";
-            // 
-            // bluetoothConfiguratorToolStripMenuItem
-            // 
-            this.bluetoothConfiguratorToolStripMenuItem.Name = "bluetoothConfiguratorToolStripMenuItem";
-            this.bluetoothConfiguratorToolStripMenuItem.Size = new System.Drawing.Size(142, 20);
-            this.bluetoothConfiguratorToolStripMenuItem.Text = "Bluetooth Configurator";
-            this.bluetoothConfiguratorToolStripMenuItem.Click += new System.EventHandler(this.bluetoothConfiguratorToolStripMenuItem_Click);
             // 
             // HardSense
             // 
@@ -174,7 +183,8 @@
         private System.Windows.Forms.ColumnHeader Sensor_Column;
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem bluetoothConfiguratorToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem bluetoothConfiguratorToolStripMenuItem1;
     }
 }
 
