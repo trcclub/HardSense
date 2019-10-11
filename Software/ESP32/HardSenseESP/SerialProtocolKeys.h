@@ -26,7 +26,7 @@ enum TRANS__KEY : byte {
         ADD_SENSORS_TO_SENSOR_LIST = 0x14, // DC4 (device control 4)
 
 		REQUESTING_FULL_SENSOR_LIST = 0x21, // !
-		SENDING_FULL_SENSOR_LIST = 0x22, // "
+		SENDING_FULL_SENSOR_LIST = 0x22, // "BTConfigurator.h
 		UPDATE_SENSOR_VALUE = 0x23, // #
 
 		CONFIG_REQUEST_SSID = 0x24, // $
