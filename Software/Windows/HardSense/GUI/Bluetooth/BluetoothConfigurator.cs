@@ -194,8 +194,7 @@ namespace HardSense.GUI.Bluetooth
                 {
                 try
                 {
-                    if (btPort.ReadByte() == (int)TRANS__KEY.SOT)
-                    //if(x==y)
+                    if (btPort.ReadByte() == (int)TRANS__KEY.STX)
                     {
                         string textinput = btPort.ReadTo(ProtocolKeys.TRANSMISSION_KEYS["ETX"].ToString());
                         parseInput(textinput);
@@ -246,11 +245,38 @@ namespace HardSense.GUI.Bluetooth
                 case (char)TRANS__KEY.CONFIG_CURRENT_PASSWORD_IS_SET:
                     Trans_Receive_Is_Password_Set(value);
                     break;
+                case (char)TRANS__KEY.CONFIG_CURRENT_SERVER_HOSTNAME:
+                    Trans_Receive_ServerName(value);
+                    break;
+                case (char)TRANS__KEY.CONFIG_CURRENT_SERVER_PORT:
+                    Trans_Receive_ServerPort(value);
+                    break;
+                case (char)TRANS__KEY.CONFIG_SSID_UPDATE_SUCCESS:
+                    Trans_Receive_SSID_Update_Success(Boolean.Parse(value));
+                    break;
+                case (char)TRANS__KEY.CONFIG_PASSWORD_UPDATE_SUCCESS:
+                    Trans_Receive_Password_Update_Success(Boolean.Parse(value));
+                    break;
+                case (char)TRANS__KEY.CONFIG_SERVER_HOSTNAME_UPDATE_SUCCESS:
+                    Trans_Receive_Server_Hostname_Update_Success(Boolean.Parse(value));
+                    break;
+                case (char)TRANS__KEY.CONFIG_SERVER_PORT_UPDATE_SUCCESS:
+                    Trans_Receive_Server_Port_Update_Success(Boolean.Parse(value));
+                    break;
                 default:
                     break;
             }
+            
+            
         }
 
+        private void Trans_Accept_New_Connect()
+        {
+            AddKeyToMessage(ProtocolKeys.TRANSMISSION_KEYS["CONFIG_REQUEST_SSID"]);
+            AddKeyToMessage(ProtocolKeys.TRANSMISSION_KEYS["CONFIG_REQUEST_IS_PASSWORD_SET"]);
+            AddKeyToMessage(ProtocolKeys.TRANSMISSION_KEYS["CONFIG_REQUEST_SERVER_HOSTNAME"]);
+            AddKeyToMessage(ProtocolKeys.TRANSMISSION_KEYS["CONFIG_REQUEST_SERVER_PORT"]);
+        }
         private void Trans_Receive_SSID(string newSSID)
         {
             if (newSSID == "")
@@ -277,11 +303,80 @@ namespace HardSense.GUI.Bluetooth
                 textBox_CurrentPassword.AppendText(value);
             });
         }
-
-        private void Trans_Accept_New_Connect()
+        private void Trans_Receive_ServerName(string newServerName)
         {
-            AddKeyToMessage(ProtocolKeys.TRANSMISSION_KEYS["CONFIG_REQUEST_SSID"]);
-            AddKeyToMessage(ProtocolKeys.TRANSMISSION_KEYS["CONFIG_REQUEST_IS_PASSWORD_SET"]);
+            if (newServerName == "")
+            {
+                newServerName = "N/A";
+            }
+
+            textBox_CurrentServerName.Invoke((Action)delegate
+            {
+                textBox_CurrentServerName.AppendText(newServerName);
+            });
+
+        }
+        private void Trans_Receive_ServerPort(string newServerPort)
+        {
+            if (newServerPort == "")
+            {
+                newServerPort = "N/A";
+            }
+
+            textBox_CurrentServerPort.Invoke((Action)delegate
+            {
+                textBox_CurrentServerPort.AppendText(newServerPort);
+            });
+
+        }
+        private void Trans_Receive_SSID_Update_Success(bool result)
+        {
+            if (result)
+            {
+                AddKeyToMessage(ProtocolKeys.TRANSMISSION_KEYS["CONFIG_REQUEST_SSID"]);
+            } else
+            {
+                MessageBoxPopUp("HardSenseESP failed to update the SSID", "HardSenseESP Failure");
+            }
+        }
+        private void Trans_Receive_Password_Update_Success(bool result)
+        {
+            if (result)
+            {
+                AddKeyToMessage(ProtocolKeys.TRANSMISSION_KEYS["CONFIG_CURRENT_PASSWORD_IS_SET"]);
+            }
+            else
+            {
+                MessageBoxPopUp("HardSenseESP failed to update the Password", "HardSenseESP Failure");
+            }
+        }
+        private void Trans_Receive_Server_Hostname_Update_Success(bool result)
+        {
+            if (result)
+            {
+                AddKeyToMessage(ProtocolKeys.TRANSMISSION_KEYS["CONFIG_REQUEST_SERVER_HOSTNAME"]);
+            }
+            else
+            {
+                MessageBoxPopUp("HardSenseESP failed to update the Server Hostname", "HardSenseESP Failure");
+            }
+        }
+        private void Trans_Receive_Server_Port_Update_Success(bool result)
+        {
+            if (result)
+            {
+                AddKeyToMessage(ProtocolKeys.TRANSMISSION_KEYS["CONFIG_REQUEST_SERVER_PORT"]);
+            }
+            else
+            {
+                MessageBoxPopUp("HardSenseESP failed to update the Server Port", "HardSenseESP Failure");
+            }
+        }
+
+        private void MessageBoxPopUp(string message, string caption)
+        {
+            MessageBoxButtons buttons = MessageBoxButtons.OK;
+            MessageBox.Show(message, caption, buttons);
         }
 
         public void AddKeyToMessage(char key)
@@ -318,7 +413,7 @@ namespace HardSense.GUI.Bluetooth
             message.Clear();
             dataLock.ReleaseMutex();
 
-            tmpSB.Insert(0, ProtocolKeys.TRANSMISSION_KEYS["SOT"]);
+            tmpSB.Insert(0, ProtocolKeys.TRANSMISSION_KEYS["STX"]);
             tmpSB.Append(ProtocolKeys.TRANSMISSION_KEYS["ETX"]);
 
             byte[] byteData = Encoding.ASCII.GetBytes(tmpSB.ToString());
@@ -331,6 +426,33 @@ namespace HardSense.GUI.Bluetooth
             GetAvailablePorts();
         }
 
+        private void button_UpdateNetworkInfoToESP_Click(object sender, EventArgs e)
+        {
+            string newSSID = textBox_NewSSID.Text;
+            string newPassword = textBox_NewPassword.Text;
+            string newPasswordConfirm = textBox_NewPasswordConfirm.Text;
+            if(!newPassword.Equals(newPasswordConfirm))
+            {
+                string message = "The passwords do not match.\nPlease try again.";
+                string caption = "Password Mis-Match";
+                MessageBoxButtons buttons = MessageBoxButtons.OK;
+                MessageBox.Show(message, caption, buttons);
+                return;
+            }
+            AddStringToMessage(ProtocolKeys.TRANSMISSION_KEYS["CONFIG_SET_SSID"], newSSID);
+            AddStringToMessage(ProtocolKeys.TRANSMISSION_KEYS["CONFIG_SET_PASSWORD"], newPassword);
+            textBox_NewSSID.Clear();
+            textBox_NewPassword.Clear();
+            textBox_NewPasswordConfirm.Clear();
+        }
+
+        private void button_UpdateServerInfoToESP_Click(object sender, EventArgs e)
+        {
+            AddStringToMessage(ProtocolKeys.TRANSMISSION_KEYS["CONFIG_SET_SERVER_HOSTNAME"], textBox_ServerName.Text);
+            AddStringToMessage(ProtocolKeys.TRANSMISSION_KEYS["CONFIG_CURRENT_SERVER_PORT"], textBox_ServerPort.Text);
+            textBox_ServerName.Clear();
+            textBox_ServerPort.Clear();
+        }
     }
 }
 

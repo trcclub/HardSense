@@ -18,10 +18,10 @@ namespace HardSense.DataStreamingServer
             }
             initiated = true;
 
-            TRANSMISSION_KEYS.Add("SOT", '\u0002');  // STX (start of text)
+            TRANSMISSION_KEYS.Add("STX", '\u0002');  // STX (start of text)
             TRANSMISSION_KEYS.Add("ETX", '\u0003'); //ETX (end of text)
-            TRANSMISSION_KEYS.Add("DATA_SIZE_END", '\u001F'); // US (unit separator)
-            TRANSMISSION_KEYS.Add("PACKET_SIZE_END", '\u001E'); // RS (record separator)
+            //TRANSMISSION_KEYS.Add("DATA_SIZE_END", '\u001F'); // US (unit separator)
+            //TRANSMISSION_KEYS.Add("PACKET_SIZE_END", '\u001E'); // RS (record separator)
             TRANSMISSION_KEYS.Add("PACKET_END", '\u001D'); // GS (group separator)
             TRANSMISSION_KEYS.Add("ACK", '\u0006'); // ACK (acknowledge)
             TRANSMISSION_KEYS.Add("NACK", '\u0015'); // NAK (negative acknowledge)
@@ -44,20 +44,33 @@ namespace HardSense.DataStreamingServer
 
             TRANSMISSION_KEYS.Add("CONFIG_REQUEST_SSID", '\u0024'); // $
             TRANSMISSION_KEYS.Add("CONFIG_SET_SSID", '\u0025'); // %
+            TRANSMISSION_KEYS.Add("CONFIG_SSID_UPDATE_SUCCESS", '\u0032'); // 2
             TRANSMISSION_KEYS.Add("CURRENT_SSID", '\u0026'); // &
+            
             TRANSMISSION_KEYS.Add("CONFIG_REQUEST_IS_PASSWORD_SET", '\u0028'); // (
             TRANSMISSION_KEYS.Add("CONFIG_SET_PASSWORD", '\u0029'); // )
-            TRANSMISSION_KEYS.Add("CONFIG_CURRENT_PASSWORD_IS_SET", '\u002A'); // )*
+            TRANSMISSION_KEYS.Add("CONFIG_PASSWORD_UPDATE_SUCCESS", '\u0033'); // 3
+            TRANSMISSION_KEYS.Add("CONFIG_CURRENT_PASSWORD_IS_SET", '\u002A'); // )
+            
+            TRANSMISSION_KEYS.Add("CONFIG_REQUEST_SERVER_HOSTNAME", '\u002B'); // +
+            TRANSMISSION_KEYS.Add("CONFIG_CURRENT_SERVER_HOSTNAME", '\u002C'); // ,
+            TRANSMISSION_KEYS.Add("CONFIG_SET_SERVER_HOSTNAME", '\u002D'); // -
+            TRANSMISSION_KEYS.Add("CONFIG_SERVER_HOSTNAME_UPDATE_SUCCESS", '\u0034'); // 4
+
+            TRANSMISSION_KEYS.Add("CONFIG_REQUEST_SERVER_PORT", '\u002E'); // 
+            TRANSMISSION_KEYS.Add("CONFIG_CURRENT_SERVER_PORT", '\u0030'); // 
+            TRANSMISSION_KEYS.Add("CONFIG_SET_SERVER_PORT", '\u0031'); // 
+            TRANSMISSION_KEYS.Add("CONFIG_SERVER_PORT_UPDATE_SUCCESS", '\u0035'); // 5
 
         }
     }
 
     enum TRANS__KEY : byte
     {
-        SOT = 0x02, // STX (start of text)
+        STX = 0x02, // STX (start of text)
         ETX = 0x03, //ETX (end of text)
-        DATA_SIZE_END = 0x1F, // US (unit separator)
-        PACKET_SIZE_END = 0x1E, // RS (record separator)
+        //DATA_SIZE_END = 0x1F, // US (unit separator)
+        //PACKET_SIZE_END = 0x1E, // RS (record separator)
         PACKET_END = 0X1D, // GS (group separator)
         ACK = 0x06, // ACK (acknowledge)
         NACK = 0x15, // NAK (negative acknowledge)
@@ -80,14 +93,23 @@ namespace HardSense.DataStreamingServer
 
         CONFIG_REQUEST_SSID = 0x24, // $
         CONFIG_SET_SSID = 0X25, // %
+        CONFIG_SSID_UPDATE_SUCCESS = 0X32, // 2
         CURRENT_SSID = 0X26, // &
+
         CONFIG_REQUEST_IS_PASSWORD_SET = 0X28, // {
         CONFIG_SET_PASSWORD = 0X29, // )
+        CONFIG_PASSWORD_UPDATE_SUCCESS = 0X33, // 3
         CONFIG_CURRENT_PASSWORD_IS_SET = 0X2A, // *
-        //TRANS__CONFIG_ 0X27, // '
-        //TRANS__CONFIG_ 0X28, // (
-        //TRANS__CONFIG_ 0X29, // )
-        //TRANS__CONFIG_ 0X2a, // *
+        
+        CONFIG_REQUEST_SERVER_HOSTNAME = 0X2B, // +
+        CONFIG_CURRENT_SERVER_HOSTNAME = 0X2C, // ,
+        CONFIG_SET_SERVER_HOSTNAME = 0X2D, // -
+        CONFIG_SERVER_HOSTNAME_UPDATE_SUCCESS = 0X34, // 4
+
+        CONFIG_REQUEST_SERVER_PORT = 0X2E, // .
+        CONFIG_CURRENT_SERVER_PORT = 0X30, // 0
+        CONFIG_SET_SERVER_PORT = 0X31, // 1
+        CONFIG_SERVER_PORT_UPDATE_SUCCESS = 0X35, // 5
     };
 
     

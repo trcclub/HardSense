@@ -2,12 +2,15 @@
 #include "../CommonSerialInterface/SerialInterface.h"
 
 
+
 BTConfigurator::BTConfigurator(TFT_eSPI inDisplay)
 {
 	connected = false;
 	tftDisplay = &inDisplay;
 	btSerial.setTimeout(500);
 	btSerial.begin("HardSenseESP");
+
+
 }
 
 void BTConfigurator::DrawBackground()
@@ -82,7 +85,7 @@ void BTConfigurator::HandleOutput()
 	Serial.print("Sending:  ");
 	Serial.println(OutputData);
 
-	btSerial.write(TRANS__KEY::SOT);
+	btSerial.write(TRANS__KEY::STX);
 	for (int x = 0; x < OutputDataLength; x++) {
 		btSerial.write(OutputData[x]);
 	}
@@ -96,7 +99,7 @@ void BTConfigurator::HandleInput() {
 	if (!btSerial.available())
 		return;
 
-	while (btSerial.read() != TRANS__KEY::SOT) {}
+	while (btSerial.read() != TRANS__KEY::STX) {}
 	
 	String input = btSerial.readStringUntil(TRANS__KEY::ETX);
 	Serial.print("INPUT: '");
@@ -138,6 +141,30 @@ void BTConfigurator::DispatchCommand(char key, String val) {
 	case TRANS__KEY::CONFIG_REQUEST_IS_PASSWORD_SET:
 		Serial.println("TRANS__KEY::CONFIG_REQUEST_IS_PASSWORD_SET");
 		addBoolToOutput(TRANS__KEY::CONFIG_CURRENT_PASSWORD_IS_SET, true);
+		break;
+	case TRANS__KEY::CONFIG_REQUEST_SERVER_HOSTNAME:
+		Serial.println("TRANS__KEY::CONFIG_REQUEST_SERVER_HOSTNAME");
+		addCharArrayToOutput(TRANS__KEY::CONFIG_CURRENT_SERVER_HOSTNAME, "Aerie", 5);
+		break;
+	case TRANS__KEY::CONFIG_REQUEST_SERVER_PORT:
+		Serial.println("TRANS__KEY::CONFIG_REQUEST_SERVER_PORT");
+		addCharArrayToOutput(TRANS__KEY::CONFIG_CURRENT_SERVER_PORT, "4121", 4);
+		break;
+	case TRANS__KEY::CONFIG_SET_SSID:
+		Serial.println("TRANS__KEY::CONFIG_SET_SSID");
+		addBoolToOutput(TRANS__KEY::CONFIG_SSID_UPDATE_SUCCESS, true);
+		break;
+	case TRANS__KEY::CONFIG_SET_PASSWORD:
+		Serial.println("TRANS__KEY::CONFIG_SET_PASSWORD");
+		addBoolToOutput(TRANS__KEY::CONFIG_PASSWORD_UPDATE_SUCCESS, true);
+		break;
+	case TRANS__KEY::CONFIG_SET_SERVER_HOSTNAME:
+		Serial.println("TRANS__KEY::CONFIG_SET_SERVER_HOSTNAME");
+		addBoolToOutput(TRANS__KEY::CONFIG_SERVER_HOSTNAME_UPDATE_SUCCESS, true);
+		break;
+	case TRANS__KEY::CONFIG_SET_SERVER_PORT:
+		Serial.println("TRANS__KEY::CONFIG_SET_SERVER_PORT");
+		addBoolToOutput(TRANS__KEY::CONFIG_SERVER_PORT_UPDATE_SUCCESS, true);
 		break;
 	default:
 		Serial.print("Unknown Command: '");

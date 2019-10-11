@@ -6,11 +6,8 @@
 
 #include <SPI.h>
 #include <TFT_eSPI.h>
-#include <FS.h>
-#include <SPIFFS.h>
 
 #include "Bluetooth/BTConfigurator.h"
-
 
 byte btButton = 22;
 
@@ -21,17 +18,14 @@ void setup() {
 	Serial.begin(115200);
 	InitDisplay();
 	InitButtons();
-	CheckForBluetoothConfigRequest();
 
-	
+	CheckForBluetoothConfigRequest();
 	
 	//if (!SystemChecks()) {
 	//	Spin();
 	//}
 
 	tftDisplay.print("Entering Normal Run Mode");
-
-
 }
 
 

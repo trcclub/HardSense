@@ -37,8 +37,8 @@
             this.button_ConnectToPort = new System.Windows.Forms.Button();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.groupBox_HardSenseESPCurrentInfo = new System.Windows.Forms.GroupBox();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.textBox_CurrentServerPort = new System.Windows.Forms.TextBox();
+            this.textBox_CurrentServerName = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.textBox_CurrentSSID = new System.Windows.Forms.TextBox();
@@ -117,8 +117,8 @@
             // 
             // groupBox_HardSenseESPCurrentInfo
             // 
-            this.groupBox_HardSenseESPCurrentInfo.Controls.Add(this.textBox2);
-            this.groupBox_HardSenseESPCurrentInfo.Controls.Add(this.textBox1);
+            this.groupBox_HardSenseESPCurrentInfo.Controls.Add(this.textBox_CurrentServerPort);
+            this.groupBox_HardSenseESPCurrentInfo.Controls.Add(this.textBox_CurrentServerName);
             this.groupBox_HardSenseESPCurrentInfo.Controls.Add(this.label8);
             this.groupBox_HardSenseESPCurrentInfo.Controls.Add(this.label9);
             this.groupBox_HardSenseESPCurrentInfo.Controls.Add(this.textBox_CurrentSSID);
@@ -132,21 +132,21 @@
             this.groupBox_HardSenseESPCurrentInfo.TabStop = false;
             this.groupBox_HardSenseESPCurrentInfo.Text = "HardSenseESP";
             // 
-            // textBox2
+            // textBox_CurrentServerPort
             // 
-            this.textBox2.Location = new System.Drawing.Point(71, 105);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.ReadOnly = true;
-            this.textBox2.Size = new System.Drawing.Size(100, 20);
-            this.textBox2.TabIndex = 14;
+            this.textBox_CurrentServerPort.Location = new System.Drawing.Point(71, 105);
+            this.textBox_CurrentServerPort.Name = "textBox_CurrentServerPort";
+            this.textBox_CurrentServerPort.ReadOnly = true;
+            this.textBox_CurrentServerPort.Size = new System.Drawing.Size(100, 20);
+            this.textBox_CurrentServerPort.TabIndex = 14;
             // 
-            // textBox1
+            // textBox_CurrentServerName
             // 
-            this.textBox1.Location = new System.Drawing.Point(72, 79);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.ReadOnly = true;
-            this.textBox1.Size = new System.Drawing.Size(100, 20);
-            this.textBox1.TabIndex = 13;
+            this.textBox_CurrentServerName.Location = new System.Drawing.Point(72, 79);
+            this.textBox_CurrentServerName.Name = "textBox_CurrentServerName";
+            this.textBox_CurrentServerName.ReadOnly = true;
+            this.textBox_CurrentServerName.Size = new System.Drawing.Size(100, 20);
+            this.textBox_CurrentServerName.TabIndex = 13;
             // 
             // label8
             // 
@@ -229,6 +229,7 @@
             this.button_UpdateServerInfoToESP.TabIndex = 13;
             this.button_UpdateServerInfoToESP.Text = "Update Server Info";
             this.button_UpdateServerInfoToESP.UseVisualStyleBackColor = true;
+            this.button_UpdateServerInfoToESP.Click += new System.EventHandler(this.button_UpdateServerInfoToESP_Click);
             // 
             // textBox_ServerPort
             // 
@@ -270,6 +271,7 @@
             this.button_UpdateNetworkInfoToESP.TabIndex = 8;
             this.button_UpdateNetworkInfoToESP.Text = "Update Network Info";
             this.button_UpdateNetworkInfoToESP.UseVisualStyleBackColor = true;
+            this.button_UpdateNetworkInfoToESP.Click += new System.EventHandler(this.button_UpdateNetworkInfoToESP_Click);
             // 
             // label5
             // 
@@ -381,8 +383,8 @@
         private System.Windows.Forms.Button button_Exit;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.TextBox textBox2;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox textBox_CurrentServerPort;
+        private System.Windows.Forms.TextBox textBox_CurrentServerName;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Button button_UpdateServerInfoToESP;
