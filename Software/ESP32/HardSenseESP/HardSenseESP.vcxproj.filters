@@ -21,7 +21,7 @@
     <ClInclude Include="__vm\.HardSenseESP.vsarduino.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="SerialProtocolKeys.h">
+    <ClInclude Include="SerialInterface\SerialInterface.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -8,24 +8,28 @@
 #include <BluetoothSerial.h>
 #include <SPI.h>
 #include <TFT_eSPI.h>
-#include "SerialProtocolKeys.h"
-
-//#include "Bluetooth/BTConfigurator.h"
+#include "SerialInterface.h"
 
 TaskHandle_t TFT_Core_Handle;
+TFT_eSPI tftDisplay = TFT_eSPI();
+
+
+WiFiClient client;
+BluetoothSerial btSerial;
+
+bool connectedToSomething = false;
+
+int(*InputAvailable)();
+int(*ReadInputByte)();
+String(*ReadInputStringUntil)(char);
+int(*PrintMessageToOutput)(String);
+
+String OutputData;
 
 byte btButton = 22;
 
-TFT_eSPI tftDisplay = TFT_eSPI();
-WiFiClient client;
-BluetoothSerial btSerial;
-//BTConfigurator* btConfig;
 
 int counter = 0;
-
-int(*inputAvailable)();
-int(*readInputByte)();
-String(*readInputStringUntil)(char);
 
 
 void setup() {
@@ -34,28 +38,29 @@ void setup() {
 	InitDisplay();
 	InitButtons();
 	
-
-	xTaskCreatePinnedToCore(
-		TFT_Core_Proc,                  /* pvTaskCode */
-		"DisplayHandler",            /* pcName */
-		1000,                   /* usStackDepth */
-		NULL,                   /* pvParameters */
-		1,                      /* uxPriority */
-		&TFT_Core_Handle,                 /* pxCreatedTask */
-		0);
+	//xTaskCreatePinnedToCore(
+	//	TFT_Core_Proc,                  /* pvTaskCode */
+	//	"DisplayHandler",            /* pcName */
+	//	1000,                   /* usStackDepth */
+	//	NULL,                   /* pvParameters */
+	//	1,                      /* uxPriority */
+	//	&TFT_Core_Handle,                 /* pxCreatedTask */
+	//	0);
 
 	CheckForBluetoothConfigRequest();
 
-	inputAvailable = WiFi_Available;
-	readInputByte = WiFi_Read;;
-	readInputStringUntil = WiFi_ReadStringUntil;
-	
-
+	InputAvailable = WiFi_Available;
+	ReadInputByte = WiFi_Read;;
+	ReadInputStringUntil = WiFi_ReadStringUntil;
+	PrintMessageToOutput = WiFi_PrintString;
 }
 
 
 void loop() {
-	
+	//HandleInput();
+
+
+	//HandleOutput();
 
 	delay(10);
 }
@@ -66,7 +71,7 @@ void TFT_Core_Proc(void* parameter){
 		counter++;
 		tftDisplay.fillRect(0, 20, tftDisplay.width(), 40, TFT_BLUE);
 		tftDisplay.setTextSize(2);
-		tftDisplay.setCursor(30, 22);
+		tftDisplay.setCursor(40, 22);
 		tftDisplay.print(counter);
 		tftDisplay.print(" times in a loop");
 		delay(500);
@@ -77,15 +82,66 @@ void CheckForBluetoothConfigRequest()
 {
 	if (!digitalRead(btButton))
 	{
-		inputAvailable = BT_Available;
-		readInputByte = BT_Read;;
-		readInputStringUntil = BT_ReadStringUntil;
+		InputAvailable = BT_Available;
+		ReadInputByte = BT_Read;;
+		ReadInputStringUntil = BT_ReadStringUntil;
+		PrintMessageToOutput = BT_PrintString;
 
-		//tftDisplay.print("Entering Bluetooth Configurator");
-		//delay(2000);
-//		btConfig = new BTConfigurator(tftDisplay);
-//		btConfig->HandleBluetooth();
+		btSerial.setTimeout(500);
+		btSerial.begin("HardSenseESP");
+
+		while (true)
+		{
+			WaitForBTConnection();
+			while (connectedToSomething)
+			{
+				HandleInput();
+
+				HandleOutput();
+
+				delay(20);
+			}
+		}
 	}
+}
+
+bool WaitForBTConnection()
+{
+	DrawBackground();
+	tftDisplay.setTextSize(1);
+	String str = "Waiting for connection...";
+	tftDisplay.drawString(str, 10, 60);
+
+	while (!connectedToSomething)
+	{
+		HandleInput();
+		if (connectedToSomething)
+		{
+			break;
+		}
+
+		HandleOutput();
+		delay(20);
+	}
+}
+
+void AcceptNewConnection()
+{
+	AddKeyToOutputMessage(TRANS__KEY::CONNECTION_ACK);
+	connectedToSomething = true;
+	DrawBackground();
+	tftDisplay.setTextSize(1);
+	String str = "Bluetooth conection established.";
+	tftDisplay.drawString(str, 10, 60);
+}
+void DrawBackground()
+{
+	tftDisplay.fillScreen(TFT_NAVY);
+	tftDisplay.fillRect(6, 6, tftDisplay.width() - 12, tftDisplay.height() - 12, TFT_LIGHTGREY);
+	tftDisplay.setTextColor(TFT_BLACK);
+	tftDisplay.setTextSize(2);
+	String str = "Bluetooth Configurator";
+	tftDisplay.drawString(str, 10, 20);
 }
 
 void InitButtons()
@@ -110,7 +166,7 @@ int BT_Read() {
 	return btSerial.read();
 }
 
-int BT_Print(String s) {
+int BT_PrintString(String s) {
 	return btSerial.print(s);
 }
 
@@ -130,52 +186,63 @@ String WiFi_ReadStringUntil(char terminator) {
 	return client.readStringUntil(terminator);
 }
 
-int WiFi_Print(String s) {
-	return btSerial.print(s);
+int WiFi_PrintString(String s) {
+	return client.print(s);
 }
 
-inline const String BoolToString(bool b)
+void AddKeyToOutputMessage(byte key)
 {
-	return b ? "1" : "0";
-}
-
-void AddKeyToOutoutMessage(byte key) {
 	AddStringToOutputMessage(key, "");
 }
 
-void AddBoolToOutputMessage(byte key, bool value) {
-	AddStringToOutputMessage(key, BoolToString(value));
-	String s = "";
-
+void AddBoolToOutputMessage(byte key, bool value) 
+{
+	value ? AddStringToOutputMessage(key, "1") : AddStringToOutputMessage(key, "0");
 }
 
-void AddStringToOutputMessage(byte key, String value) {
-
+void AddStringToOutputMessage(byte key, String value)
+{
+	OutputData += key;
+	OutputData += value;
+	OutputData += TRANS__KEY::PACKET_END;
 }
 
 void HandleOutput() {
+	if (OutputData.length() == 1) {
+		return;
+	}
+	OutputData += TRANS__KEY::ETX;
+	
+	PrintMessageToOutput(OutputData);
 
+	OutputData = "";
+	OutputData += TRANS__KEY::STX;
 }
 
+
 void HandleInput() {
-	if (!inputAvailable)
+	if (!InputAvailable())
 		return;
 
-	while (readInputByte() != TRANS__KEY::STX) {}
+	while (ReadInputByte() != TRANS__KEY::STX) {}
 
-	String input = readInputStringUntil(TRANS__KEY::ETX);
-	Serial.print("INPUT: '");
-	Serial.print(input);
+	String str = ReadInputStringUntil(TRANS__KEY::ETX);
+	Serial.print("HandleInput: '");
+	Serial.print(str);
 	Serial.println("'");
+	ParseInput(str);
+	//ParseInput(ReadInputStringUntil(TRANS__KEY::ETX));
+}
 
+void ParseInput(String input)
+{
 	int currIndex = input.indexOf(TRANS__KEY::PACKET_END);
 	int start = 0;
 	while (currIndex != -1) {
 		String currToken = input.substring(start, currIndex);
 
 		char key = currToken.charAt(0);
-		String value = "";
-		value = currToken.substring(1);
+		String value = currToken.substring(1);
 
 		DispatchCommand(key, value);
 
@@ -194,7 +261,7 @@ void DispatchCommand(char key, String val) {
 		break;
 	case TRANS__KEY::CONNECTION_REQUEST:
 		Serial.println("TRANS__KEY::CONNECTION_REQUEST");
-		//AcceptNewBTConnection();
+		AcceptNewConnection();
 		break;
 	case TRANS__KEY::CONFIG_REQUEST_SSID:
 		Serial.println("TRANS__KEY::CONFIG_REQUEST_SSID");
@@ -240,14 +307,4 @@ void Spin()
 	while (true) {
 		delay(100);
 	}
-}
-
-void AcceptNewConnection()
-{
-	AddKeyToOutoutMessage(TRANS__KEY::CONNECTION_ACK);
-	//connected = true;
-	//DrawBackground();
-	//tftDisplay->setTextSize(1);
-	//String str = "Bluetooth conection established.";
-	//tftDisplay->drawString(str, GetXForCenteredText(str), 60);
 }
