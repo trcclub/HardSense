@@ -26,8 +26,8 @@ private:
 public:
 	HSFileSystem();
 	~HSFileSystem();
-	bool init();
-	bool getSettings(S_SETTNGS& newSettings);
-	bool writeSettings(S_SETTNGS& newSettings);
+	static bool init();
+	static bool getSettings(S_SETTNGS& newSettings);
+	static bool writeSettings(S_SETTNGS& newSettings);
 };
 

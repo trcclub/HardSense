@@ -96,7 +96,7 @@ namespace HardSense.DataStreamingServer
         CONFIG_SSID_UPDATE_SUCCESS = 0X32, // 2
         CURRENT_SSID = 0X26, // &
 
-        CONFIG_REQUEST_IS_PASSWORD_SET = 0X28, // {
+        CONFIG_REQUEST_IS_PASSWORD_SET = 0X28, // (
         CONFIG_SET_PASSWORD = 0X29, // )
         CONFIG_PASSWORD_UPDATE_SUCCESS = 0X33, // 3
         CONFIG_CURRENT_PASSWORD_IS_SET = 0X2A, // *

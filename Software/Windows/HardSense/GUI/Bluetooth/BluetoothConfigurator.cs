@@ -18,7 +18,7 @@ namespace HardSense.GUI.Bluetooth
         SerialPort btPort = null;
         bool connected = false;
         bool running = false;
-        Thread readThread;
+        private Thread readThread;
         private Thread writeThread;
 
         private StringBuilder message = new StringBuilder();
@@ -65,7 +65,18 @@ namespace HardSense.GUI.Bluetooth
         private void Start()
         {
             running = true;
-            readThread.Start();
+            try
+            {
+                readThread.Start();
+            }
+            catch (Exception e)
+            {
+                string message = "ReadThread Exception: " + e.Message;
+                string caption = "ReadThread Exception";
+                MessageBoxButtons buttons = MessageBoxButtons.OK;
+                MessageBox.Show(message, caption, buttons);
+            }
+
             writeThread.Start();
         }
 
@@ -206,7 +217,7 @@ namespace HardSense.GUI.Bluetooth
                 {
                     if (e is InvalidOperationException || e is TimeoutException)
                     { 
-                        return;
+                        continue;
                     }
                     string message = "ERROR: " + e.Message;
                     string caption = "ERROR";
@@ -243,7 +254,7 @@ namespace HardSense.GUI.Bluetooth
                     Trans_Receive_SSID(value);
                     break;
                 case (char)TRANS__KEY.CONFIG_CURRENT_PASSWORD_IS_SET:
-                    Trans_Receive_Is_Password_Set(value);
+                    Trans_Receive_Is_Password_Set(Boolean.Parse(value));
                     break;
                 case (char)TRANS__KEY.CONFIG_CURRENT_SERVER_HOSTNAME:
                     Trans_Receive_ServerName(value);
@@ -286,21 +297,21 @@ namespace HardSense.GUI.Bluetooth
 
             textBox_CurrentSSID.Invoke((Action)delegate
             {
-                textBox_CurrentSSID.AppendText(newSSID);
+                textBox_CurrentSSID.Text = newSSID;
             });
 
         }
-        private void Trans_Receive_Is_Password_Set(string val)
+        private void Trans_Receive_Is_Password_Set(bool val)
         {
             string value = "N/A";
-            if(val == "1")
+            if(val)
             {
                 value = "******";
             }
 
             textBox_CurrentPassword.Invoke((Action)delegate
             {
-                textBox_CurrentPassword.AppendText(value);
+                textBox_CurrentPassword.Text = value;
             });
         }
         private void Trans_Receive_ServerName(string newServerName)
@@ -312,20 +323,20 @@ namespace HardSense.GUI.Bluetooth
 
             textBox_CurrentServerName.Invoke((Action)delegate
             {
-                textBox_CurrentServerName.AppendText(newServerName);
+                textBox_CurrentServerName.Text = newServerName;
             });
 
         }
         private void Trans_Receive_ServerPort(string newServerPort)
         {
-            if (newServerPort == "")
+            if (newServerPort == "0")
             {
                 newServerPort = "N/A";
             }
 
             textBox_CurrentServerPort.Invoke((Action)delegate
             {
-                textBox_CurrentServerPort.AppendText(newServerPort);
+                textBox_CurrentServerPort.Text = newServerPort;
             });
 
         }
@@ -343,7 +354,7 @@ namespace HardSense.GUI.Bluetooth
         {
             if (result)
             {
-                AddKeyToMessage(ProtocolKeys.TRANSMISSION_KEYS["CONFIG_CURRENT_PASSWORD_IS_SET"]);
+                AddKeyToMessage(ProtocolKeys.TRANSMISSION_KEYS["CONFIG_REQUEST_IS_PASSWORD_SET"]);
             }
             else
             {
@@ -449,7 +460,7 @@ namespace HardSense.GUI.Bluetooth
         private void button_UpdateServerInfoToESP_Click(object sender, EventArgs e)
         {
             AddStringToMessage(ProtocolKeys.TRANSMISSION_KEYS["CONFIG_SET_SERVER_HOSTNAME"], textBox_ServerName.Text);
-            AddStringToMessage(ProtocolKeys.TRANSMISSION_KEYS["CONFIG_CURRENT_SERVER_PORT"], textBox_ServerPort.Text);
+            AddStringToMessage(ProtocolKeys.TRANSMISSION_KEYS["CONFIG_SET_SERVER_PORT"], textBox_ServerPort.Text);
             textBox_ServerName.Clear();
             textBox_ServerPort.Clear();
         }

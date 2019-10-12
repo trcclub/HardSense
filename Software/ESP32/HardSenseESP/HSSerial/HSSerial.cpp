@@ -19,6 +19,70 @@ HSSerial::~HSSerial()
 	}
 }
 
+bool HSSerial::init()
+{
+	HSFileSystem hsFS;
+	if (!hsFS.init()) {
+		Serial.println("Failed to init SPIFFS");
+		return false;
+	}
+	
+	if (!hsFS.getSettings(hardsenseSettings))
+	{
+		Serial.println("Failed to retrieve settings from SPIFFS!");
+		return false;
+	}
+	
+	return true;
+}
+
+bool HSSerial::IsPasswordSet()
+{
+	if (strlen(hardsenseSettings.password) == 0)
+	{
+		return false;
+	}
+	return true;
+}
+
+bool HSSerial::UpdateSetting(char key, String value)
+{
+	switch (key) {
+	case TRANS__KEY::CONFIG_SET_SSID:
+		value.toCharArray(hardsenseSettings.ssid, FIELD_MAX_LENGTH);
+		break;
+	case TRANS__KEY::CONFIG_SET_PASSWORD:
+		value.toCharArray(hardsenseSettings.password, FIELD_MAX_LENGTH);
+		break;
+	case TRANS__KEY::CONFIG_SET_SERVER_HOSTNAME:
+		value.toCharArray(hardsenseSettings.serverName, FIELD_MAX_LENGTH);
+		break;
+	case TRANS__KEY::CONFIG_SET_SERVER_PORT:
+		hardsenseSettings.serverPort = value.toInt();
+		break;
+	default:
+		return false;
+	}
+	return SaveSettingsToFS();
+}
+
+bool HSSerial::SaveSettingsToFS()
+{
+	HSFileSystem hsFS;
+	if (!hsFS.init()) {
+		Serial.println("Failed to init SPIFFS");
+		return false;
+	}
+
+	if (!hsFS.writeSettings(hardsenseSettings))
+	{
+		Serial.println("Failed to write settings to SPIFFS!");
+		return false;
+	}
+
+	return true;
+}
+
 void HSSerial::HandleBluetoothConnection()
 {
 	btSerial = new BluetoothSerial();
@@ -27,7 +91,7 @@ void HSSerial::HandleBluetoothConnection()
 	ReadInputStringUntil = &HSSerial::BT_ReadStringUntil;
 	PrintMessageToOutput = &HSSerial::BT_PrintChar;
 
-	btSerial->setTimeout(500);
+	btSerial->setTimeout(50);
 	btSerial->begin("HardSenseESP");
 
 	while (true)
@@ -65,9 +129,6 @@ void HSSerial::HandleWiFiSocketConnection()
 	ReadInputByte = &HSSerial::WiFi_Read;;
 	ReadInputStringUntil = &HSSerial::WiFi_ReadStringUntil;
 	PrintMessageToOutput = &HSSerial::WiFi_PrintChar;
-
-
-
 }
 
 void HSSerial::AcceptNewConnection()
@@ -113,9 +174,16 @@ void HSSerial::AddKeyToOutputMessage(byte key)
 	AddStringToOutputMessage(key, "");
 }
 
+void HSSerial::AddIntToOutputMessage(byte key, int val)
+{
+	char newVal[FIELD_MAX_LENGTH];
+	sprintf(newVal, "%i", hardsenseSettings.serverPort);
+	AddStringToOutputMessage(key, newVal);
+}
+
 void HSSerial::AddBoolToOutputMessage(byte key, bool value)
 {
-	value ? AddStringToOutputMessage(key, "1") : AddStringToOutputMessage(key, "0");
+	value ? AddStringToOutputMessage(key, "true") : AddStringToOutputMessage(key, "false");
 }
 
 void HSSerial::AddStringToOutputMessage(byte key, char *value)
@@ -145,9 +213,6 @@ void HSSerial::AddStringToOutputMessage(byte key, char *value)
 }
 
 void HSSerial::HandleOutput() {
-	if (!connectedToSomething) {
-		return;
-	}
 	if (OutputDataLength == 0) {
 		return;
 	}
@@ -159,18 +224,15 @@ void HSSerial::HandleOutput() {
 	(this->*PrintMessageToOutput)((char)TRANS__KEY::ETX);
 	delete[] OutputData;
 	OutputDataLength = 0;
-
 }
 
 
 void HSSerial::HandleInput() {
-	if (!connectedToSomething) {
-		return;
-	}
 	if (!(this->*InputAvailable)())
 		return;
 
-	while ((this->*ReadInputByte)() != TRANS__KEY::STX) {}
+	while (btSerial->available() && (this->*ReadInputByte)() != TRANS__KEY::STX) {}
+
 	ParseInput((this->*ReadInputStringUntil)(TRANS__KEY::ETX));
 }
 
@@ -195,44 +257,34 @@ void HSSerial::DispatchCommand(char key, String val) {
 
 	switch (key) {
 	case TRANS__KEY::DISCONNECT:
-		//Serial.println("TRANS__KEY::DISCONNECT");
 		connectedToSomething = false;
 		break;
 	case TRANS__KEY::CONNECTION_REQUEST:
-		//Serial.println("TRANS__KEY::CONNECTION_REQUEST");
 		AcceptNewConnection();
 		break;
 	case TRANS__KEY::CONFIG_REQUEST_SSID:
-		//Serial.println("TRANS__KEY::CONFIG_REQUEST_SSID");
-		AddStringToOutputMessage(TRANS__KEY::CURRENT_SSID, "Starside");
+		AddStringToOutputMessage(TRANS__KEY::CURRENT_SSID, hardsenseSettings.ssid);
 		break;
 	case TRANS__KEY::CONFIG_REQUEST_IS_PASSWORD_SET:
-		//Serial.println("TRANS__KEY::CONFIG_REQUEST_IS_PASSWORD_SET");
-		AddBoolToOutputMessage(TRANS__KEY::CONFIG_CURRENT_PASSWORD_IS_SET, true);
+		AddBoolToOutputMessage(TRANS__KEY::CONFIG_CURRENT_PASSWORD_IS_SET, IsPasswordSet());
 		break;
 	case TRANS__KEY::CONFIG_REQUEST_SERVER_HOSTNAME:
-		//Serial.println("TRANS__KEY::CONFIG_REQUEST_SERVER_HOSTNAME");
-		AddStringToOutputMessage(TRANS__KEY::CONFIG_CURRENT_SERVER_HOSTNAME, "Aerie");
+		AddStringToOutputMessage(TRANS__KEY::CONFIG_CURRENT_SERVER_HOSTNAME, hardsenseSettings.serverName);
 		break;
 	case TRANS__KEY::CONFIG_REQUEST_SERVER_PORT:
-		//Serial.println("TRANS__KEY::CONFIG_REQUEST_SERVER_PORT");
-		AddStringToOutputMessage(TRANS__KEY::CONFIG_CURRENT_SERVER_PORT, "4121");
+		AddIntToOutputMessage(TRANS__KEY::CONFIG_CURRENT_SERVER_PORT, hardsenseSettings.serverPort);
 		break;
 	case TRANS__KEY::CONFIG_SET_SSID:
-		//Serial.println("TRANS__KEY::CONFIG_SET_SSID");
-		AddBoolToOutputMessage(TRANS__KEY::CONFIG_SSID_UPDATE_SUCCESS, true);
+		AddBoolToOutputMessage(TRANS__KEY::CONFIG_SSID_UPDATE_SUCCESS, UpdateSetting(key,val));
 		break;
 	case TRANS__KEY::CONFIG_SET_PASSWORD:
-		//Serial.println("TRANS__KEY::CONFIG_SET_PASSWORD");
-		AddBoolToOutputMessage(TRANS__KEY::CONFIG_PASSWORD_UPDATE_SUCCESS, true);
+		AddBoolToOutputMessage(TRANS__KEY::CONFIG_PASSWORD_UPDATE_SUCCESS, UpdateSetting(key, val));
 		break;
 	case TRANS__KEY::CONFIG_SET_SERVER_HOSTNAME:
-		//Serial.println("TRANS__KEY::CONFIG_SET_SERVER_HOSTNAME");
-		AddBoolToOutputMessage(TRANS__KEY::CONFIG_SERVER_HOSTNAME_UPDATE_SUCCESS, true);
+		AddBoolToOutputMessage(TRANS__KEY::CONFIG_SERVER_HOSTNAME_UPDATE_SUCCESS, UpdateSetting(key, val));
 		break;
 	case TRANS__KEY::CONFIG_SET_SERVER_PORT:
-		//Serial.println("TRANS__KEY::CONFIG_SET_SERVER_PORT");
-		AddBoolToOutputMessage(TRANS__KEY::CONFIG_SERVER_PORT_UPDATE_SUCCESS, true);
+		AddBoolToOutputMessage(TRANS__KEY::CONFIG_SERVER_PORT_UPDATE_SUCCESS, UpdateSetting(key, val));
 		break;
 	default:
 		//Serial.print("Unknown Command: '");

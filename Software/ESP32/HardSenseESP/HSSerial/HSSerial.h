@@ -10,6 +10,7 @@ class HSSerial
 private:
 	WiFiClient *client;
 	BluetoothSerial *btSerial;
+	S_SETTNGS hardsenseSettings;
 
 	int(HSSerial::*InputAvailable)();
 	int(HSSerial::*ReadInputByte)();
@@ -28,17 +29,22 @@ private:
 	String WiFi_ReadStringUntil(char terminator);
 	int WiFi_PrintChar(char c);
 	void AddKeyToOutputMessage(byte key);
+	void AddIntToOutputMessage(byte key, int val);
 	void AddBoolToOutputMessage(byte key, bool value);
 	void AddStringToOutputMessage(byte key, char *value);
 	void ParseInput(String input);
 	void DispatchCommand(char key, String val);
 
+	bool IsPasswordSet();
+	bool UpdateSetting(char key, String value);
+	bool SaveSettingsToFS();
 	char* OutputData;
 	int OutputDataLength = 0;
 
 public:
 	HSSerial();
 	~HSSerial();
+	bool init();
 
 	bool connectedToSomething = false;
 

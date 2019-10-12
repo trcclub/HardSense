@@ -25,6 +25,12 @@ void setup() {
 	InitButtons();
 	delay(10);
 
+	if (!hsSerial.init())
+	{
+		Serial.println("Failed to init SPIFFS");
+		Spin();
+	}
+
 	if (IsBTButtonPressed())
 	{
 		Serial.println("Starting bluetooth...");
@@ -47,13 +53,13 @@ void setup() {
 
 
 void loop() {
-
+	/*
 	if (hsSerial.connectedToSomething)
 	{
 		hsSerial.HandleInput();
 		hsSerial.HandleOutput();
 	}
-
+	*/
 	delay(10);
 }
 
