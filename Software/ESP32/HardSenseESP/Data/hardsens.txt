@@ -1,0 +1,4 @@
+ssid=
+password=
+servername=
+serverport=

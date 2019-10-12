@@ -115,8 +115,14 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="SerialInterface.h" />
+    <ClInclude Include="HSFileSystem\HSFileSystem.h" />
+    <ClInclude Include="HSSerial\HSSerial.h" />
+    <ClInclude Include="HSSerial\SerialInterface.h" />
     <ClInclude Include="__vm\.HardSenseESP.vsarduino.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="HSFileSystem\HSFileSystem.cpp" />
+    <ClCompile Include="HSSerial\HSSerial.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
