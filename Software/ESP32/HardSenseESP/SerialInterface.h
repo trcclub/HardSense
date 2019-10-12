@@ -2,7 +2,7 @@
 #define FIRMWARE_NAME "HARDSENSE_ESP"
 #define FIRMWARE_VERSION "0.1"
 
-#define SERIAL_READ_TIMEOUT 1000 //milliseconds
+#define SERIAL_READ_TIMEOUT 500 //milliseconds
 
 enum TRANS__KEY : byte {
         STX = 0x02, // STX (start of text)
@@ -49,4 +49,3 @@ enum TRANS__KEY : byte {
 		CONFIG_SET_SERVER_PORT = 0X31, // 1
 		CONFIG_SERVER_PORT_UPDATE_SUCCESS = 0X35, // 5
 };
-
