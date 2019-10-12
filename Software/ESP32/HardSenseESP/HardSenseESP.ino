@@ -8,7 +8,7 @@
 #include <BluetoothSerial.h>
 #include <SPI.h>
 #include <TFT_eSPI.h>
-#include "SerialInterface/SerialInterface.h"
+#include "SerialInterface.h"
 
 TaskHandle_t TFT_Core_Handle;
 TFT_eSPI tftDisplay = TFT_eSPI();
