@@ -133,16 +133,21 @@ void HSSerial::HandleWiFiSocketConnection()
 
 	Serial.print("\n Connecting to Wifi: ");
 	Serial.print(hardsenseSettings.ssid);
-	Serial.print(":");
-	Serial.println(hardsenseSettings.password);
+	//Serial.print(":");
+	//Serial.print(hardsenseSettings.password);
+	Serial.println("");
 
+	WiFi.begin();
+	WiFi.setHostname("HardSenseESP");
 	WiFi.begin(hardsenseSettings.ssid, hardsenseSettings.password);
+	
 
 	while (WiFi.status() != WL_CONNECTED) {
 		delay(500);
 		Serial.print(".");
 	}
 
+	Serial.printf("Hostname 1: %s\n", WiFi.getHostname());
 	Serial.println("");
 	Serial.println("WiFi connected");
 	Serial.println("IP address: ");
@@ -163,8 +168,8 @@ void HSSerial::HandleWiFiSocketConnection()
 
 	char buffer[128];
 	int size = sprintf(buffer, "/Ethernet/0/recv,a|/intelcpu/0/load/0,b");
-	AddStringToOutputMessage(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, buffer);
-	AddKeyToOutputMessage(TRANS__KEY::START_SENSOR_DATA_STREAM);
+	//AddStringToOutputMessage(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, buffer);
+	//AddKeyToOutputMessage(TRANS__KEY::START_SENSOR_DATA_STREAM);
 }
 
 void HSSerial::AcceptNewConnection()
@@ -274,10 +279,6 @@ void HSSerial::HandleInput() {
 
 void HSSerial::ParseInput(String input)
 {
-	Serial.print("Parse Input: '");
-	Serial.print(input);
-	Serial.println("'");
-
 	int currIndex = input.indexOf(TRANS__KEY::PACKET_END);
 	int start = 0;
 	while (currIndex != -1) {

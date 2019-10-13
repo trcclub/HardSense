@@ -19,21 +19,21 @@ int counter = 0;
 
 void setup() {
 	Serial.begin(115200);
-
 	
 	InitDisplay();
 	InitButtons();
 	delay(10);
 
-	//xTaskCreatePinnedToCore(
-	//	TFT_Core_Proc,                  /* pvTaskCode */
-	//	"DisplayHandler",            /* pcName */
-	//	1000,                   /* usStackDepth */
-	//	NULL,                   /* pvParameters */
-	//	1,                      /* uxPriority */
-	//	&TFT_Core_Handle,                 /* pxCreatedTask */
-	//	0);
 
+
+	xTaskCreatePinnedToCore(
+		TFT_Core_Proc,                  /* pvTaskCode */
+		"DisplayHandler",            /* pcName */
+		4000,                   /* usStackDepth */
+		NULL,                   /* pvParameters */
+		1,                      /* uxPriority */
+		&TFT_Core_Handle,                 /* pxCreatedTask */
+		0);
 
 	if (!hsSerial.init())
 	{
@@ -49,7 +49,6 @@ void setup() {
 
 	Serial.println("Passed the button check");
 	hsSerial.HandleWiFiSocketConnection();
-
 }
 
 
@@ -61,20 +60,28 @@ void loop() {
 		hsSerial.HandleOutput();
 	}
 	
-	delay(10);
+	delay(20);
 }
 
-void TFT_Core_Proc(void* parameter){
+void TFT_Core_Proc(void* parameter)
+{
 	while (true)
 	{
+		/*
 		counter++;
-		tftDisplay.fillRect(0, 20, tftDisplay.width(), 40, TFT_BLUE);
+		tftDisplay.fillRect(6, 20, tftDisplay.width()-12, 40, TFT_LIGHTGREY);
 		tftDisplay.setTextSize(2);
 		tftDisplay.setCursor(40, 22);
+		tftDisplay.setTextColor(TFT_BLACK);
 		tftDisplay.print(counter);
 		tftDisplay.print(" times in a loop");
-		delay(500);
+
+		Serial.printf("%i times in a loop\n",counter);
+		*/
+		delay(100);
 	}
+	
+	delay(20);
 }
 
 
@@ -84,7 +91,7 @@ void DrawBackground()
 	tftDisplay.fillRect(6, 6, tftDisplay.width() - 12, tftDisplay.height() - 12, TFT_LIGHTGREY);
 	tftDisplay.setTextColor(TFT_BLACK);
 	tftDisplay.setTextSize(2);
-	String str = "Bluetooth Configurator";
+	String str = "Doin stuff here...";
 	tftDisplay.drawString(str, 10, 20);
 }
 
@@ -98,7 +105,7 @@ void InitDisplay()
 	tftDisplay.init();
 	tftDisplay.setRotation(1);
 	tftDisplay.fillScreen(TFT_BLACK);
-	tftDisplay.setCursor(20, 20);
+	DrawBackground();
 }
 
 bool IsBTButtonPressed()
