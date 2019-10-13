@@ -24,8 +24,6 @@ void setup() {
 	InitButtons();
 	delay(10);
 
-
-
 	xTaskCreatePinnedToCore(
 		TFT_Core_Proc,                  /* pvTaskCode */
 		"DisplayHandler",            /* pcName */
@@ -47,7 +45,6 @@ void setup() {
 		hsSerial.HandleBluetoothConnection();
 	}
 
-	Serial.println("Passed the button check");
 	hsSerial.HandleWiFiSocketConnection();
 }
 
@@ -67,7 +64,6 @@ void TFT_Core_Proc(void* parameter)
 {
 	while (true)
 	{
-		/*
 		counter++;
 		tftDisplay.fillRect(6, 20, tftDisplay.width()-12, 40, TFT_LIGHTGREY);
 		tftDisplay.setTextSize(2);
@@ -76,8 +72,8 @@ void TFT_Core_Proc(void* parameter)
 		tftDisplay.print(counter);
 		tftDisplay.print(" times in a loop");
 
-		Serial.printf("%i times in a loop\n",counter);
-		*/
+		//Serial.printf("%i times in a loop\n",counter);
+		
 		delay(100);
 	}
 	
