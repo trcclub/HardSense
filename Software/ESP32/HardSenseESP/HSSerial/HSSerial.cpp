@@ -3,15 +3,15 @@
 HSSerial::HSSerial()
 {
 	connectedToSomething = false;
-	client = NULL;
+	wifiSerial = NULL;
 	btSerial = NULL;
 }
 
 HSSerial::~HSSerial()
 {
-	if (client != NULL)
+	if (wifiSerial != NULL)
 	{
-		delete(client);
+		delete(wifiSerial);
 	}
 	if (btSerial != NULL)
 	{
@@ -125,10 +125,46 @@ bool HSSerial::WaitForBTConnection()
 
 void HSSerial::HandleWiFiSocketConnection()
 {
+	wifiSerial = new WiFiClient();
 	InputAvailable = &HSSerial::WiFi_Available;
 	ReadInputByte = &HSSerial::WiFi_Read;;
 	ReadInputStringUntil = &HSSerial::WiFi_ReadStringUntil;
 	PrintMessageToOutput = &HSSerial::WiFi_PrintChar;
+
+	Serial.print("\n Connecting to Wifi: ");
+	Serial.print(hardsenseSettings.ssid);
+	Serial.print(":");
+	Serial.println(hardsenseSettings.password);
+
+	WiFi.begin(hardsenseSettings.ssid, hardsenseSettings.password);
+
+	while (WiFi.status() != WL_CONNECTED) {
+		delay(500);
+		Serial.print(".");
+	}
+
+	Serial.println("");
+	Serial.println("WiFi connected");
+	Serial.println("IP address: ");
+	Serial.println(WiFi.localIP());
+
+	Serial.print("\n Connecting to socket on ");
+	Serial.print(hardsenseSettings.serverName);
+	Serial.print(":");
+	Serial.println(hardsenseSettings.serverPort);
+
+	if (!wifiSerial->connect(hardsenseSettings.serverName, hardsenseSettings.serverPort)) {
+		Serial.println("connection failed");
+		//Spin();
+	}
+	connectedToSomething = true;
+	Serial.print("Connected to: ");
+	Serial.println(hardsenseSettings.serverName);
+
+	char buffer[128];
+	int size = sprintf(buffer, "/Ethernet/0/recv,a|/intelcpu/0/load/0,b");
+	AddStringToOutputMessage(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, buffer);
+	AddKeyToOutputMessage(TRANS__KEY::START_SENSOR_DATA_STREAM);
 }
 
 void HSSerial::AcceptNewConnection()
@@ -154,19 +190,19 @@ String HSSerial::BT_ReadStringUntil(char terminator) {
 }
 
 int HSSerial::WiFi_Available() {
-	return client->available();
+	return wifiSerial->available();
 }
 
 int HSSerial::WiFi_Read() {
-	return client->read();
+	return wifiSerial->read();
 }
 
 String HSSerial::WiFi_ReadStringUntil(char terminator) {
-	return client->readStringUntil(terminator);
+	return wifiSerial->readStringUntil(terminator);
 }
 
 int HSSerial::WiFi_PrintChar(char c) {
-	return client->print(c);
+	return wifiSerial->print(c);
 }
 
 void HSSerial::AddKeyToOutputMessage(byte key)
@@ -231,13 +267,17 @@ void HSSerial::HandleInput() {
 	if (!(this->*InputAvailable)())
 		return;
 
-	while (btSerial->available() && (this->*ReadInputByte)() != TRANS__KEY::STX) {}
+	while ((this->*InputAvailable)() && (this->*ReadInputByte)() != TRANS__KEY::STX) {}
 
 	ParseInput((this->*ReadInputStringUntil)(TRANS__KEY::ETX));
 }
 
 void HSSerial::ParseInput(String input)
 {
+	Serial.print("Parse Input: '");
+	Serial.print(input);
+	Serial.println("'");
+
 	int currIndex = input.indexOf(TRANS__KEY::PACKET_END);
 	int start = 0;
 	while (currIndex != -1) {

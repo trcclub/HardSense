@@ -46,6 +46,9 @@ namespace HardSense
             //tmpSensorExcludeList.Add("/Bluetooth/0/send");
             //tmpSensorExcludeList.Add("/Bluetooth/0/recv");
 
+            computerMonitor.init(tmpHardwareExludeList, tmpSensorExcludeList);
+            computerMonitor.StartMonitor();
+            DataStreamingServer.DataStreamingServer.StartServer();
 
             /* Temporarily disable the monitor and socket while working on the other bits.
             //----------------------------------------//

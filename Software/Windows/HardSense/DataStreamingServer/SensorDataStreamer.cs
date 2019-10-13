@@ -78,8 +78,8 @@ namespace HardSense.DataStreamingServer
                 {
                     double value = HardSenseMemFile.GetValueByKey(currSensorItem.sensorId);
                     string tmp = currSensorItem.key + "," + value.ToString();
-                    //sender.AddDoubleToMessage(ProtocolKeys.TRANSMISSION_KEYS["TRANS__UPDATE_SENSOR_VALUE"], value);
-                    sender.AddStringToMessage(ProtocolKeys.TRANSMISSION_KEYS["TRANS__UPDATE_SENSOR_VALUE"], tmp);
+                    //sender.AddDoubleToMessage(ProtocolKeys.TRANSMISSION_KEYS["UPDATE_SENSOR_VALUE"], value);
+                    sender.AddStringToMessage(ProtocolKeys.TRANSMISSION_KEYS["UPDATE_SENSOR_VALUE"], tmp);
                 }
                 Thread.Sleep(1000);
             }

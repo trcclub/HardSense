@@ -37,20 +37,17 @@ namespace HardSense.DataStreamingServer
 
         public void AddStringToMessage(char key, string value)
         {
-            int dataPacketLength = 1 + value.Length;
-            int dataPacketTotalLength = dataPacketLength + 5;
+            int dataPacketLength = 2 + value.Length;
 
-            if (dataPacketTotalLength + message.Length > Properties.Settings.Default.DefaultMaxLengthDataToSend)
+            if (dataPacketLength + message.Length > Properties.Settings.Default.DefaultMaxLengthDataToSend)
             {
                 SendData();
             }
 
             StringBuilder tmpSB = new StringBuilder();
-            tmpSB.Append(dataPacketTotalLength.ToString());
-            tmpSB.Append(ProtocolKeys.TRANSMISSION_KEYS["TRANS__PACKET_SIZE_END"]);
             tmpSB.Append(key);
             tmpSB.Append(value);
-            tmpSB.Append(ProtocolKeys.TRANSMISSION_KEYS["TRANS__PACKET_END"]);
+            tmpSB.Append(ProtocolKeys.TRANSMISSION_KEYS["PACKET_END"]);
 
             dataLock.WaitOne();
             message.Append(tmpSB.ToString());
@@ -69,8 +66,8 @@ namespace HardSense.DataStreamingServer
             message.Clear();
             dataLock.ReleaseMutex();
 
-            tmpSB.Insert(0, ProtocolKeys.TRANSMISSION_KEYS["TRANS_START"]);
-            tmpSB.Append(ProtocolKeys.TRANSMISSION_KEYS["TRANS__ETX"]);
+            tmpSB.Insert(0, ProtocolKeys.TRANSMISSION_KEYS["STX"]);
+            tmpSB.Append(ProtocolKeys.TRANSMISSION_KEYS["ETX"]);
 
             byte[] byteData = Encoding.ASCII.GetBytes(tmpSB.ToString());
 

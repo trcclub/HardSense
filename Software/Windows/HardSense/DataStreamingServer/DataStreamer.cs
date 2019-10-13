@@ -69,7 +69,7 @@ namespace HardSense.DataStreamingServer
             running = true;
             readThread.Start();
             writeThread.Start();
-            heartbeatTimer.Start();
+            //heartbeatTimer.Start();
 
             readThread.Join();
             writeThread.Join();
@@ -126,17 +126,17 @@ namespace HardSense.DataStreamingServer
                 return ret;
             }
 
-            int firstInstanceOfStart = inputData.IndexOf(ProtocolKeys.TRANSMISSION_KEYS["TRANS_START"]);
+            int firstInstanceOfStart = inputData.IndexOf(ProtocolKeys.TRANSMISSION_KEYS["STX"]);
             if (firstInstanceOfStart > 0)
             {
                 inputData = inputData.Substring(firstInstanceOfStart);
             }
 
-            if (!inputData.StartsWith(ProtocolKeys.TRANSMISSION_KEYS["TRANS_START"].ToString()))
+            if (!inputData.StartsWith(ProtocolKeys.TRANSMISSION_KEYS["STX"].ToString()))
             {
-                if (inputData.IndexOf(ProtocolKeys.TRANSMISSION_KEYS["TRANS_START"]) > 0)
+                if (inputData.IndexOf(ProtocolKeys.TRANSMISSION_KEYS["STX"]) > 0)
                 {
-                    inputData = inputData.Substring(inputData.IndexOf(ProtocolKeys.TRANSMISSION_KEYS["TRANS_START"]));
+                    inputData = inputData.Substring(inputData.IndexOf(ProtocolKeys.TRANSMISSION_KEYS["STX"]));
                 }
                 else
                 {

@@ -25,6 +25,16 @@ void setup() {
 	InitButtons();
 	delay(10);
 
+	//xTaskCreatePinnedToCore(
+	//	TFT_Core_Proc,                  /* pvTaskCode */
+	//	"DisplayHandler",            /* pcName */
+	//	1000,                   /* usStackDepth */
+	//	NULL,                   /* pvParameters */
+	//	1,                      /* uxPriority */
+	//	&TFT_Core_Handle,                 /* pxCreatedTask */
+	//	0);
+
+
 	if (!hsSerial.init())
 	{
 		Serial.println("Failed to init SPIFFS");
@@ -40,26 +50,17 @@ void setup() {
 	Serial.println("Passed the button check");
 	hsSerial.HandleWiFiSocketConnection();
 
-	//xTaskCreatePinnedToCore(
-	//	TFT_Core_Proc,                  /* pvTaskCode */
-	//	"DisplayHandler",            /* pcName */
-	//	1000,                   /* usStackDepth */
-	//	NULL,                   /* pvParameters */
-	//	1,                      /* uxPriority */
-	//	&TFT_Core_Handle,                 /* pxCreatedTask */
-	//	0);
-
 }
 
 
 void loop() {
-	/*
+	
 	if (hsSerial.connectedToSomething)
 	{
 		hsSerial.HandleInput();
 		hsSerial.HandleOutput();
 	}
-	*/
+	
 	delay(10);
 }
 

@@ -8,7 +8,7 @@
 class HSSerial
 {
 private:
-	WiFiClient *client;
+	WiFiClient *wifiSerial;
 	BluetoothSerial *btSerial;
 	S_SETTNGS hardsenseSettings;
 
