@@ -187,5 +187,17 @@ namespace HardSense.Properties {
                 this["DebugOutput"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("500")]
+        public int DefaultSensorDataStreamer_UpdateTime {
+            get {
+                return ((int)(this["DefaultSensorDataStreamer_UpdateTime"]));
+            }
+            set {
+                this["DefaultSensorDataStreamer_UpdateTime"] = value;
+            }
+        }
     }
 }

@@ -83,7 +83,7 @@
             // mainboardToolStripMenuItem
             // 
             this.mainboardToolStripMenuItem.Name = "mainboardToolStripMenuItem";
-            this.mainboardToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
+            this.mainboardToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.mainboardToolStripMenuItem.Text = "Mainboard";
             // 
             // helpToolStripMenuItem

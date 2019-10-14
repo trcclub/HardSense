@@ -19,8 +19,9 @@ HSSerial::~HSSerial()
 	}
 }
 
-bool HSSerial::init()
+bool HSSerial::init(DataQueue<QUEUE_ITEM>* newQueue)
 {
+	outputDataQueue = newQueue;
 	HSFileSystem hsFS;
 	if (!hsFS.init()) {
 		Serial.println("Failed to init SPIFFS");
@@ -227,8 +228,17 @@ void HSSerial::AddBoolToOutputMessage(byte key, bool value)
 	value ? AddStringToOutputMessage(key, "true") : AddStringToOutputMessage(key, "false");
 }
 
+void HSSerial::AddStringToOutputMessage(byte key, String value)
+{
+	char buf[128];
+	value.toCharArray(buf, 128);
+	AddStringToOutputMessage(key, buf);
+}
+
 void HSSerial::AddStringToOutputMessage(byte key, char *value)
 {
+	return;
+
 	int valueLength = strlen(value);
 	int newLength = OutputDataLength + valueLength + 3;
 	char tmp[newLength];
@@ -269,6 +279,13 @@ void HSSerial::HandleOutput() {
 
 
 void HSSerial::HandleInput() {
+	while (!outputDataQueue->isEmpty())
+	{
+		QUEUE_ITEM currItem = outputDataQueue->dequeue();
+		AddStringToOutputMessage(currItem.key, currItem.value);
+	}
+
+
 	if (!(this->*InputAvailable)())
 		return;
 
@@ -326,6 +343,9 @@ void HSSerial::DispatchCommand(char key, String val) {
 		break;
 	case TRANS__KEY::CONFIG_SET_SERVER_PORT:
 		AddBoolToOutputMessage(TRANS__KEY::CONFIG_SERVER_PORT_UPDATE_SUCCESS, UpdateSetting(key, val));
+		break;
+	case TRANS__KEY::HEARTBEAT:
+		AddKeyToOutputMessage(TRANS__KEY::HEARTBEAT_ACK);
 		break;
 	default:
 		//Serial.print("Unknown Command: '");

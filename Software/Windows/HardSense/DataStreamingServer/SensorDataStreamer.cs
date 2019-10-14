@@ -37,11 +37,12 @@ namespace HardSense.DataStreamingServer
 
         public bool StartStreaming()
         {
+            /*
             if(listOfSensorsToRetrieve.Count == 0)
             {
                 return false;
             }
-
+            */
             continueRunning = true;
             monitorThread.Start();
             return true;
@@ -78,10 +79,11 @@ namespace HardSense.DataStreamingServer
                 {
                     double value = HardSenseMemFile.GetValueByKey(currSensorItem.sensorId);
                     string tmp = currSensorItem.key + "," + value.ToString();
+                    //string tmp = currSensorItem.key + "," + value.ToString("F4");
                     //sender.AddDoubleToMessage(ProtocolKeys.TRANSMISSION_KEYS["UPDATE_SENSOR_VALUE"], value);
                     sender.AddStringToMessage(ProtocolKeys.TRANSMISSION_KEYS["UPDATE_SENSOR_VALUE"], tmp);
                 }
-                Thread.Sleep(1000);
+                Thread.Sleep(Properties.Settings.Default.DefaultSensorDataStreamer_UpdateTime);
             }
         }
 

@@ -4,6 +4,8 @@
 #include <BluetoothSerial.h>
 #include "SerialInterface.h"
 #include "../HSFileSystem/HSFileSystem.h"
+#include <Queue.h>
+#include "../QueueItem.h"
 
 class HSSerial
 {
@@ -28,10 +30,6 @@ private:
 	int WiFi_Read();
 	String WiFi_ReadStringUntil(char terminator);
 	int WiFi_PrintChar(char c);
-	void AddKeyToOutputMessage(byte key);
-	void AddIntToOutputMessage(byte key, int val);
-	void AddBoolToOutputMessage(byte key, bool value);
-	void AddStringToOutputMessage(byte key, char *value);
 	void ParseInput(String input);
 	void DispatchCommand(char key, String val);
 
@@ -41,12 +39,20 @@ private:
 	char* OutputData;
 	int OutputDataLength = 0;
 
+	DataQueue<QUEUE_ITEM>* outputDataQueue;
+
 public:
 	HSSerial();
 	~HSSerial();
-	bool init();
+	bool init(DataQueue<QUEUE_ITEM> *newQueue);
 
 	bool connectedToSomething = false;
+
+	void AddKeyToOutputMessage(byte key);
+	void AddIntToOutputMessage(byte key, int val);
+	void AddBoolToOutputMessage(byte key, bool value);
+	void AddStringToOutputMessage(byte key, String value);
+	void AddStringToOutputMessage(byte key, char *value);
 
 	void HandleBluetoothConnection();
 	void HandleWiFiSocketConnection();

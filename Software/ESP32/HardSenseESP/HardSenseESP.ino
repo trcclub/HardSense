@@ -4,12 +4,16 @@
  Author:	Kitecraft
 */
 
-#include <SPI.h>
-#include <TFT_eSPI.h>
+#include "DisplayHandler/DisplayHandler.h"
 #include "HSSerial/HSSerial.h"
+#include <Queue.h>
+#include "QueueItem.h"
 
 TaskHandle_t TFT_Core_Handle;
-TFT_eSPI tftDisplay = TFT_eSPI();
+DataQueue<QUEUE_ITEM> displayQueue(20);
+DataQueue<QUEUE_ITEM> outputQueue(5);
+
+DisplayHandler displayHandler;
 HSSerial hsSerial;
 
 byte btButton = 22;
@@ -19,21 +23,22 @@ int counter = 0;
 
 void setup() {
 	Serial.begin(115200);
+	displayHandler.Init(&displayQueue);
 	
-	InitDisplay();
 	InitButtons();
-	delay(10);
 
 	xTaskCreatePinnedToCore(
 		TFT_Core_Proc,                  /* pvTaskCode */
-		"DisplayHandler",            /* pcName */
+		"DisplayHandlerTask",            /* pcName */
 		4000,                   /* usStackDepth */
 		NULL,                   /* pvParameters */
 		1,                      /* uxPriority */
 		&TFT_Core_Handle,                 /* pxCreatedTask */
 		0);
 
-	if (!hsSerial.init())
+	delay(10);
+
+	if (!hsSerial.init(&outputQueue))
 	{
 		Serial.println("Failed to init SPIFFS");
 		Spin();
@@ -64,44 +69,16 @@ void TFT_Core_Proc(void* parameter)
 {
 	while (true)
 	{
-		counter++;
-		tftDisplay.fillRect(6, 20, tftDisplay.width()-12, 40, TFT_LIGHTGREY);
-		tftDisplay.setTextSize(2);
-		tftDisplay.setCursor(40, 22);
-		tftDisplay.setTextColor(TFT_BLACK);
-		tftDisplay.print(counter);
-		tftDisplay.print(" times in a loop");
-
-		//Serial.printf("%i times in a loop\n",counter);
-		
+		displayHandler.UpdateDisplay();
 		delay(100);
 	}
 	
 	delay(20);
 }
 
-
-void DrawBackground()
-{
-	tftDisplay.fillScreen(TFT_NAVY);
-	tftDisplay.fillRect(6, 6, tftDisplay.width() - 12, tftDisplay.height() - 12, TFT_LIGHTGREY);
-	tftDisplay.setTextColor(TFT_BLACK);
-	tftDisplay.setTextSize(2);
-	String str = "Doin stuff here...";
-	tftDisplay.drawString(str, 10, 20);
-}
-
 void InitButtons()
 {
 	pinMode(btButton, INPUT_PULLUP);
-}
-
-void InitDisplay()
-{
-	tftDisplay.init();
-	tftDisplay.setRotation(1);
-	tftDisplay.fillScreen(TFT_BLACK);
-	DrawBackground();
 }
 
 bool IsBTButtonPressed()
