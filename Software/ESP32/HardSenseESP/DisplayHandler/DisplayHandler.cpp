@@ -1,6 +1,5 @@
 #include "DisplayHandler.h"
 
-
 DisplayHandler::DisplayHandler()
 {
 	counter = 0;
@@ -14,11 +13,21 @@ DisplayHandler::~DisplayHandler()
 void DisplayHandler::Init(DataQueue<QUEUE_ITEM>* newQueue)
 {
 	displayDataQueue = newQueue;
-	UpdateScreen = &DisplayHandler::DrawWelcomeScreen;
 
 	tftDisplay.init();
 	tftDisplay.setRotation(1);
 	tftDisplay.fillScreen(TFT_BLACK);
+}
+
+void DisplayHandler::Run()
+{
+	while (true)
+	{
+		//HandleButtons();
+		UpdateDisplay();
+		delay(20);
+	}
+
 }
 
 void DisplayHandler::UpdateDisplay()
@@ -34,7 +43,7 @@ void DisplayHandler::UpdateDisplay()
 		}
 	}
 
-	(this->*UpdateScreen)();
+	//(this->*UpdateScreen)();
 }
 
 void DisplayHandler::DrawBackground()

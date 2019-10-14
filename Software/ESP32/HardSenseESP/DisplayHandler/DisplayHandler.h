@@ -1,5 +1,5 @@
 #pragma once
-
+#include "Arduino.h"
 #include <SPI.h>
 #include <TFT_eSPI.h>
 #include "../HSSerial/HSSerial.h"
@@ -16,18 +16,16 @@ private:
 	int counter;
 
 	void DrawWelcomeScreen();
-	void(DisplayHandler::* UpdateScreen)();
 
 	//void AddStringToOutputMessage(byte key, char* value);
 	//void(* AddStringToOutputMessage)(byte, char*);
+	void UpdateDisplay();
 
 public:
 	DisplayHandler();
 	~DisplayHandler();
 	void Init(DataQueue<QUEUE_ITEM>* newQueue);
+	void Run();
 
-	//Call UpdateDisplay() to, well, update the display.
-	void UpdateDisplay();
-	//void SetAddStringFunction(void (*func)(byte key, char* value));
 };
 

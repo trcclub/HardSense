@@ -7,7 +7,23 @@
 #include "DisplayHandler/DisplayHandler.h"
 #include "HSSerial/HSSerial.h"
 #include <Queue.h>
+#include <Bounce2.h>
 #include "QueueItem.h"
+
+typedef struct infoButtons_s {
+	int pin;
+	Bounce* debouncer;
+	void(*handle)();
+}infoButtons;
+#define BUTTON_DEBOUNCE_TIME 25
+
+//const infoButtons buttonsTable[] = {
+//	{ 23, new Bounce(), navInfoButton_Action },
+//	{ 21, new Bounce(), jobInfoButton_Action },
+//	{ 22, new Bounce(), truckInfoButton_Action }
+//};
+
+//int NUM_INFO_BUTTONS = (sizeof(infoButtonsTable) / sizeof(infoButtons_s));
 
 TaskHandle_t TFT_Core_Handle;
 DataQueue<QUEUE_ITEM> displayQueue(20);
@@ -16,9 +32,11 @@ DataQueue<QUEUE_ITEM> outputQueue(5);
 DisplayHandler displayHandler;
 HSSerial hsSerial;
 
-byte btButton = 22;
+byte btButton = 23;
 
 int counter = 0;
+
+
 
 
 void setup() {
@@ -67,19 +85,36 @@ void loop() {
 
 void TFT_Core_Proc(void* parameter)
 {
+	/*
 	while (true)
 	{
+		HandleButtons();
 		displayHandler.UpdateDisplay();
-		delay(100);
+		delay(20);
 	}
-	
+	*/
+
 	delay(20);
 }
+
+
+void HandleButtons() 
+{
+	/*
+	for (int i = 0; i < NUM_INFO_BUTTONS; i++) {
+		infoButtonsTable[i].debouncer->update();
+		if (infoButtonsTable[i].debouncer->fell())
+			infoButtonsTable[i].handle();
+	}
+	*/
+}
+
 
 void InitButtons()
 {
 	pinMode(btButton, INPUT_PULLUP);
 }
+
 
 bool IsBTButtonPressed()
 {
