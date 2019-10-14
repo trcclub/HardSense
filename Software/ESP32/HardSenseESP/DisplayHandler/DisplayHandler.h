@@ -26,20 +26,16 @@ private:
 
 	void DispatchCommand();
 
-	void(*UpdateCureentScreen)(TFT_eSPI TFT, char key, char* value) = NULL;
+	void(*UpdateCureentScreen)(TFT_eSPI TFT, char* value) = NULL;
 	void(*DestoryCurrentScreen)(TFT_eSPI) = NULL;
 
 	void LoadNewScreen(String screenID);
-	void DestroyCurrentScreen();
+	void(*AddItemToOutputQueue)(char key, char* value);
 
-	//void DrawBackground();
-	int counter;
-
-	
 public:
 	DisplayHandler();
 	~DisplayHandler();
-	void Init(DataQueue<QUEUE_ITEM>* newQueue);
+	void Init(DataQueue<QUEUE_ITEM>* newQueue, void(*AddItemToOutputQueue_Func)(char key, char* value));
 	void Run();
 
 };

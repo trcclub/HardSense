@@ -129,12 +129,6 @@ bool HSSerial::WaitForBTConnection()
 
 void HSSerial::HandleWiFiSocketConnection()
 {
-	/*
-	QUEUE_ITEM qi;
-	qi.key = DisplayCommands::ChangeScreen;
-	sprintf(qi.value, "%c", ScreenTypes::ConnectToNetwork);
-	displayQueue->enqueue(qi);
-	*/
 	char buf[2];
 	sprintf(buf, "%c", ScreenTypes::ConnectToNetwork);
 	AddItemToDisplayQueue(DisplayCommands::ChangeScreen, buf);
@@ -160,7 +154,7 @@ void HSSerial::HandleWiFiSocketConnection()
 		delay(500);
 		Serial.print(".");
 	}
-
+		
 	Serial.printf("Hostname 1: %s\n", WiFi.getHostname());
 	Serial.println("");
 	Serial.println("WiFi connected");
@@ -180,10 +174,18 @@ void HSSerial::HandleWiFiSocketConnection()
 	Serial.print("Connected to: ");
 	Serial.println(hardsenseSettings.serverName);
 
-	char buffer[128];
-	int size = sprintf(buffer, "/Ethernet/0/recv,a|/intelcpu/0/load/0,b");
+	AddKeyToOutputMessage(TRANS__KEY::START_SENSOR_DATA_STREAM);
+	HandleOutput();
+
+	buf[2];
+	sprintf(buf, "%c", ScreenTypes::Home);
+	AddItemToDisplayQueue(DisplayCommands::ChangeScreen, buf);
+
+
+
+	//char buffer[128];
+	//int size = sprintf(buffer, "/Ethernet/0/recv,a|/intelcpu/0/load/0,b");
 	//AddStringToOutputMessage(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, buffer);
-	//AddKeyToOutputMessage(TRANS__KEY::START_SENSOR_DATA_STREAM);
 }
 
 void HSSerial::AcceptNewConnection()
@@ -250,8 +252,6 @@ void HSSerial::AddStringToOutputMessage(byte key, String value)
 
 void HSSerial::AddStringToOutputMessage(byte key, char *value)
 {
-	return;
-
 	int valueLength = strlen(value);
 	int newLength = OutputDataLength + valueLength + 3;
 	char tmp[newLength];
@@ -281,6 +281,8 @@ void HSSerial::HandleOutput() {
 		return;
 	}
 
+	Serial.printf("HandleOutput: %s\n", OutputData);
+
 	(this->*PrintMessageToOutput)((char)TRANS__KEY::STX);
 	for (int x = 0; x < OutputDataLength; x++) {
 		(this->*PrintMessageToOutput)(OutputData[x]);
@@ -295,6 +297,7 @@ void HSSerial::HandleInput() {
 	while (!outputDataQueue->isEmpty())
 	{
 		QUEUE_ITEM currItem = outputDataQueue->dequeue();
+		Serial.printf("Handleinput:  Got data from queue: '%i'\n", currItem.key);
 		AddStringToOutputMessage(currItem.key, currItem.value);
 	}
 
@@ -357,6 +360,9 @@ void HSSerial::DispatchCommand(char key, String val) {
 	case TRANS__KEY::CONFIG_SET_SERVER_PORT:
 		AddBoolToOutputMessage(TRANS__KEY::CONFIG_SERVER_PORT_UPDATE_SUCCESS, UpdateSetting(key, val));
 		break;
+	case TRANS__KEY::UPDATE_SENSOR_VALUE:
+		UpdateSensorValuesToDisplay(val);
+		break;
 	case TRANS__KEY::HEARTBEAT:
 		AddKeyToOutputMessage(TRANS__KEY::HEARTBEAT_ACK);
 		break;
@@ -365,4 +371,18 @@ void HSSerial::DispatchCommand(char key, String val) {
 		//Serial.println(key, HEX);
 		break;
 	}
+}
+
+void HSSerial::UpdateSensorValuesToDisplay(String value)
+{
+	// value format:
+	// <key>,<double value as string>
+	//
+	//Serial.print("UpdateSensorValuesToDisplay: ");
+	//Serial.println(value);
+
+	char buf[MAX_QUEUE_ITEM_VALUE_SIZE];
+	value.toCharArray(buf, MAX_QUEUE_ITEM_VALUE_SIZE);
+	AddItemToDisplayQueue(DisplayCommands::UpdateValue, buf);
+	//AddItemToDisplayQueue(value.charAt(0), buf);
 }

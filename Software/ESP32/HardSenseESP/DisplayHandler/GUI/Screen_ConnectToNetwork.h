@@ -11,7 +11,7 @@ void Create_Screen_ConnectToNetwork(TFT_eSPI TFT) {
 	TFT.print("Create_Screen_ConnectToNetwork()");
 }
 
-void Update_Screen_ConnectToNetwork(TFT_eSPI TFT, char key, char* value)
+void Update_Screen_ConnectToNetwork(TFT_eSPI TFT, char* value)
 {
 
 }

@@ -78,6 +78,9 @@ namespace HardSense.DataStreamingServer
                 foreach(SensorItem currSensorItem in listOfSensorsToRetrieve)
                 {
                     double value = HardSenseMemFile.GetValueByKey(currSensorItem.sensorId);
+
+                    //Sensor update format:
+                    //<key>,<value>
                     string tmp = currSensorItem.key + "," + value.ToString();
                     //string tmp = currSensorItem.key + "," + value.ToString("F4");
                     //sender.AddDoubleToMessage(ProtocolKeys.TRANSMISSION_KEYS["UPDATE_SENSOR_VALUE"], value);

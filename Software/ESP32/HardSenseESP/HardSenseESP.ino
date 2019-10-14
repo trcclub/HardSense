@@ -26,7 +26,7 @@ int counter = 0;
 
 void setup() {
 	Serial.begin(115200);
-	displayHandler.Init(&displayQueue);
+	displayHandler.Init(&displayQueue, AddItemToOutputQueue);
 	
 	InitButtons();
 
@@ -76,8 +76,6 @@ void loop() {
 
 void TFT_Core_Proc(void* parameter)
 {
-	
-	
 	displayHandler.Run();
 
 	/*
@@ -116,6 +114,14 @@ void AddItemToDisplayQueue(char key, char* value)
 	qi.key = key;
 	strcpy(qi.value, value);
 	displayQueue.enqueue(qi);
+}
+
+void AddItemToOutputQueue(char key, char* value)
+{
+	QUEUE_ITEM qi;
+	qi.key = key;
+	strcpy(qi.value, value);
+	outputQueue.enqueue(qi);
 }
 
 void Spin()

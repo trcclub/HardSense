@@ -20,7 +20,7 @@ void Create_SplashScreen(TFT_eSPI TFT) {
 	delay(2000);
 }
 
-void Update_SplashScreen(TFT_eSPI TFT, char key, char* value)
+void Update_SplashScreen(TFT_eSPI TFT, char* value)
 {
 
 }

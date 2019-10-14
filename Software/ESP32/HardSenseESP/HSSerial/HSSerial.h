@@ -41,6 +41,7 @@ private:
 
 	DataQueue<QUEUE_ITEM>* outputDataQueue;
 	void(*AddItemToDisplayQueue)(char key, char* value);
+	void UpdateSensorValuesToDisplay(String value);
 
 public:
 	HSSerial();
