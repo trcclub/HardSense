@@ -1,6 +1,6 @@
 #pragma once
 #include "Arduino.h"
 struct QUEUE_ITEM {
-	byte key;
-	String value;
+	char key;
+	char value[64];
 };

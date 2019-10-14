@@ -6,21 +6,36 @@
 #include <Queue.h>
 #include "../QueueItem.h"
 
+enum DisplayCommands {
+	ChangeScreen = 0,
+	UpdateValue,
+};
+
+enum ScreenTypes {
+	SplashScreen = 0,
+	ConnectToNetwork,
+	BluetoothConfigurator,
+	Home,
+};
+
 class DisplayHandler
 {
 private:
 	TFT_eSPI tftDisplay;
 	DataQueue<QUEUE_ITEM>* displayDataQueue;
 
-	void DrawBackground();
+	void DispatchCommand();
+
+	void(*UpdateCureentScreen)(TFT_eSPI TFT, char key, char* value) = NULL;
+	void(*DestoryCurrentScreen)(TFT_eSPI) = NULL;
+
+	void LoadNewScreen(String screenID);
+	void DestroyCurrentScreen();
+
+	//void DrawBackground();
 	int counter;
 
-	void DrawWelcomeScreen();
-
-	//void AddStringToOutputMessage(byte key, char* value);
-	//void(* AddStringToOutputMessage)(byte, char*);
-	void UpdateDisplay();
-
+	
 public:
 	DisplayHandler();
 	~DisplayHandler();

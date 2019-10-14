@@ -1,4 +1,6 @@
 #include "DisplayHandler.h"
+#include "GUI/SplashScreen.h"
+#include "GUI/Screen_ConnectToNetwork.h"
 
 DisplayHandler::DisplayHandler()
 {
@@ -23,29 +25,62 @@ void DisplayHandler::Run()
 {
 	while (true)
 	{
+		DispatchCommand();
 		//HandleButtons();
-		UpdateDisplay();
+		//UpdateDisplay();
 		delay(20);
 	}
 
 }
 
-void DisplayHandler::UpdateDisplay()
+void DisplayHandler::LoadNewScreen(String screenID)
+{
+	if (DestoryCurrentScreen != NULL) {
+		DestoryCurrentScreen(tftDisplay);
+		DestoryCurrentScreen = NULL;
+		UpdateCureentScreen = NULL;
+	}
+
+	char key = screenID.charAt(0);
+	switch (key) {
+	case ScreenTypes::SplashScreen:
+		Create_SplashScreen(tftDisplay);
+		DestoryCurrentScreen = Destroy_SplashScreen;
+		UpdateCureentScreen = Update_SplashScreen;
+		break;
+	case ScreenTypes::ConnectToNetwork:
+		Create_Screen_ConnectToNetwork(tftDisplay);
+		DestoryCurrentScreen = Destroy_Screen_ConnectToNetwork;
+		UpdateCureentScreen = Update_Screen_ConnectToNetwork;
+		break;
+	default:
+		break;
+	}
+}
+
+void DisplayHandler::DispatchCommand()
 {
 	while (!displayDataQueue->isEmpty())
 	{
 		QUEUE_ITEM currItem = displayDataQueue->dequeue();
 		switch (currItem.key) {
-		case 'a':
+		case DisplayCommands::ChangeScreen:
+			LoadNewScreen(currItem.value);
+			break;
+		case DisplayCommands::UpdateValue:
+			if (UpdateCureentScreen != NULL) {
+				UpdateCureentScreen(tftDisplay, currItem.key, currItem.value);
+			}
 			break;
 		default:
 			break;
 		}
 	}
-
-	//(this->*UpdateScreen)();
 }
 
+
+
+/*
 void DisplayHandler::DrawBackground()
 {
 	tftDisplay.fillScreen(TFT_NAVY);
@@ -67,4 +102,4 @@ void DisplayHandler::DrawWelcomeScreen()
 	tftDisplay.print(" times in a loop");
 
 }
-
+*/

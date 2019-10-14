@@ -40,11 +40,12 @@ private:
 	int OutputDataLength = 0;
 
 	DataQueue<QUEUE_ITEM>* outputDataQueue;
+	void(*AddItemToDisplayQueue)(char key, char* value);
 
 public:
 	HSSerial();
 	~HSSerial();
-	bool init(DataQueue<QUEUE_ITEM> *newQueue);
+	bool Init(DataQueue<QUEUE_ITEM> *newDataQueue, void(*AddItemToDisplayQueue_Func)(char key, char* value));
 
 	bool connectedToSomething = false;
 

@@ -7,23 +7,8 @@
 #include "DisplayHandler/DisplayHandler.h"
 #include "HSSerial/HSSerial.h"
 #include <Queue.h>
-#include <Bounce2.h>
 #include "QueueItem.h"
 
-typedef struct infoButtons_s {
-	int pin;
-	Bounce* debouncer;
-	void(*handle)();
-}infoButtons;
-#define BUTTON_DEBOUNCE_TIME 25
-
-//const infoButtons buttonsTable[] = {
-//	{ 23, new Bounce(), navInfoButton_Action },
-//	{ 21, new Bounce(), jobInfoButton_Action },
-//	{ 22, new Bounce(), truckInfoButton_Action }
-//};
-
-//int NUM_INFO_BUTTONS = (sizeof(infoButtonsTable) / sizeof(infoButtons_s));
 
 TaskHandle_t TFT_Core_Handle;
 DataQueue<QUEUE_ITEM> displayQueue(20);
@@ -32,7 +17,7 @@ DataQueue<QUEUE_ITEM> outputQueue(5);
 DisplayHandler displayHandler;
 HSSerial hsSerial;
 
-byte btButton = 23;
+byte btButton = 22;
 
 int counter = 0;
 
@@ -45,6 +30,11 @@ void setup() {
 	
 	InitButtons();
 
+	QUEUE_ITEM qi;
+	qi.key = DisplayCommands::ChangeScreen;
+	sprintf(qi.value, "%c", ScreenTypes::SplashScreen);
+	displayQueue.enqueue(qi);
+
 	xTaskCreatePinnedToCore(
 		TFT_Core_Proc,                  /* pvTaskCode */
 		"DisplayHandlerTask",            /* pcName */
@@ -54,9 +44,9 @@ void setup() {
 		&TFT_Core_Handle,                 /* pxCreatedTask */
 		0);
 
-	delay(10);
+	delay(2000);
 
-	if (!hsSerial.init(&outputQueue))
+	if (!hsSerial.Init(&outputQueue, AddItemToDisplayQueue))
 	{
 		Serial.println("Failed to init SPIFFS");
 		Spin();
@@ -69,6 +59,7 @@ void setup() {
 	}
 
 	hsSerial.HandleWiFiSocketConnection();
+
 }
 
 
@@ -85,6 +76,10 @@ void loop() {
 
 void TFT_Core_Proc(void* parameter)
 {
+	
+	
+	displayHandler.Run();
+
 	/*
 	while (true)
 	{
@@ -98,16 +93,6 @@ void TFT_Core_Proc(void* parameter)
 }
 
 
-void HandleButtons() 
-{
-	/*
-	for (int i = 0; i < NUM_INFO_BUTTONS; i++) {
-		infoButtonsTable[i].debouncer->update();
-		if (infoButtonsTable[i].debouncer->fell())
-			infoButtonsTable[i].handle();
-	}
-	*/
-}
 
 
 void InitButtons()
@@ -123,6 +108,14 @@ bool IsBTButtonPressed()
 		return true;
 	}
 	return false;
+}
+
+void AddItemToDisplayQueue(char key, char* value)
+{
+	QUEUE_ITEM qi;
+	qi.key = key;
+	strcpy(qi.value, value);
+	displayQueue.enqueue(qi);
 }
 
 void Spin()

@@ -1,4 +1,5 @@
 #include "HSSerial.h"
+#include "../DisplayHandler/DisplayHandler.h"
 
 HSSerial::HSSerial()
 {
@@ -19,9 +20,11 @@ HSSerial::~HSSerial()
 	}
 }
 
-bool HSSerial::init(DataQueue<QUEUE_ITEM>* newQueue)
+bool HSSerial::Init(DataQueue<QUEUE_ITEM>* newDataQueue, void(*AddItemToDisplayQueue_Func)(char key, char* value))
 {
-	outputDataQueue = newQueue;
+	outputDataQueue = newDataQueue;
+	AddItemToDisplayQueue = AddItemToDisplayQueue_Func;
+
 	HSFileSystem hsFS;
 	if (!hsFS.init()) {
 		Serial.println("Failed to init SPIFFS");
@@ -126,6 +129,16 @@ bool HSSerial::WaitForBTConnection()
 
 void HSSerial::HandleWiFiSocketConnection()
 {
+	/*
+	QUEUE_ITEM qi;
+	qi.key = DisplayCommands::ChangeScreen;
+	sprintf(qi.value, "%c", ScreenTypes::ConnectToNetwork);
+	displayQueue->enqueue(qi);
+	*/
+	char buf[2];
+	sprintf(buf, "%c", ScreenTypes::ConnectToNetwork);
+	AddItemToDisplayQueue(DisplayCommands::ChangeScreen, buf);
+
 	wifiSerial = new WiFiClient();
 	InputAvailable = &HSSerial::WiFi_Available;
 	ReadInputByte = &HSSerial::WiFi_Read;;
