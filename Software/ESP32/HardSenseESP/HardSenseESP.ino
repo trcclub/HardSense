@@ -50,7 +50,7 @@ void setup() {
 		&TFT_Core_Handle,                 /* pxCreatedTask */
 		0);
 
-	delay(2000);
+	//delay(2000);
 
 	if (!hsSerial.Init(&outputQueue, outputQueueMux, AddItemToDisplayQueue, HeartbeatTimerEnabled))
 	{

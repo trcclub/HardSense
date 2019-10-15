@@ -17,7 +17,7 @@ void Create_SplashScreen(TFT_eSPI TFT) {
 	dial = new TFT_eSprite(&TFT);
 	needle = new TFT_eSprite(&TFT);
 
-	delay(2000);
+	//delay(2000);
 }
 
 void Update_SplashScreen(TFT_eSPI TFT, char* value)
