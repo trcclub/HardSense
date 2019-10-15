@@ -1,16 +1,32 @@
 #pragma once
 #include <SPI.h>
 #include <TFT_eSPI.h>
+#include "Widgets/HS_Dial_Widget.h"
 
 void Create_Screen_Home(TFT_eSPI TFT);
 char* Screen_Home_SensorList();
 void Update_Screen_Home(TFT_eSPI TFT, char* value);
 void Update_Screen_Home_Ethernet_Recv(TFT_eSPI TFT, double value);
 void Destroy_Screen_Home(TFT_eSPI TFT);
+void Update_Screen_Home_CPU_Total_Load(TFT_eSPI TFT, double percentage);
+
+HS_Dial_Widget* cpuLoadWidget;
+
+#define SCREEN_HOME_CPU_LOAD_DIAL_MIN -120
+#define SCREEN_HOME_CPU_LOAD_DIAL_MAX 120
+uint16_t Home_Screen_cpuLoadDial_CurrentRingColor = TFT_GREEN;
 
 void Create_Screen_Home(TFT_eSPI TFT) {
 	Serial.println("Create_Screen_Home() !!!");
-	TFT.fillScreen(TFT_WHITE);
+	cpuLoadWidget = new HS_Dial_Widget(TFT);
+	TFT.fillScreen(TFT_BLACK);
+
+	TFT.fillRect(0, 0, 160, 90, TFT_DARKGREY);
+	TFT.fillRect(2, 2, 156, 86, TFT_NAVY);
+	cpuLoadWidget->DrawDialScale(TFT, SCREEN_HOME_CPU_LOAD_DIAL_MIN, SCREEN_HOME_CPU_LOAD_DIAL_MAX, 30, Home_Screen_cpuLoadDial_CurrentRingColor);
+	Update_Screen_Home_CPU_Total_Load(TFT, 0.0);
+
+	/*
 
 	TFT.setTextSize(2);
 	TFT.setTextColor(TFT_BLACK, TFT_WHITE);
@@ -24,16 +40,41 @@ void Create_Screen_Home(TFT_eSPI TFT) {
 	TFT.print(str);
 
 	Update_Screen_Home_Ethernet_Recv(TFT, 0.0);
+	*/
 }
 
-char* Screen_Home_SensorList() {
-	//return "/Ethernet/0/recv,a|/intelcpu/0/load/0,b";
-	return "/Ethernet/0/recv,a";
+void Update_Screen_Home_CPU_Total_Load(TFT_eSPI TFT, double percentage)
+{
+	int angle = map(percentage, 0, 100, SCREEN_HOME_CPU_LOAD_DIAL_MIN, SCREEN_HOME_CPU_LOAD_DIAL_MAX);
 
+	uint16_t ringColor;
+	if (percentage > 94)
+	{
+		ringColor = TFT_RED;
+	}
+	else if (percentage > 82)
+	{
+		ringColor = TFT_ORANGE;
+	}
+	else if (percentage > 61)
+	{
+		ringColor = TFT_YELLOW;
+	}
+	else
+	{
+		ringColor = TFT_GREEN;
+	}
+	if (ringColor != Home_Screen_cpuLoadDial_CurrentRingColor)
+	{
+		Home_Screen_cpuLoadDial_CurrentRingColor = ringColor;
+		cpuLoadWidget->DrawDialScale(TFT, SCREEN_HOME_CPU_LOAD_DIAL_MIN, SCREEN_HOME_CPU_LOAD_DIAL_MAX, 30, Home_Screen_cpuLoadDial_CurrentRingColor);
+	}
+	cpuLoadWidget->PlotDial(0, 0, angle, "CPU", percentage);	
 }
 
 void Update_Screen_Home_Ethernet_Recv(TFT_eSPI TFT, double value)
 {
+	
 	String str = "";
 	if (value > 1000) {
 		value = value / 1000;
@@ -54,6 +95,12 @@ void Update_Screen_Home_Ethernet_Recv(TFT_eSPI TFT, double value)
 	
 }
 
+
+char* Screen_Home_SensorList() {
+	//return "/Ethernet/0/recv,a|/intelcpu/0/load/0,b";
+	//return "/Ethernet/0/recv,a";
+	return "/intelcpu/0/load/0,b";
+}
 void Update_Screen_Home(TFT_eSPI TFT, char* value)
 {
 
@@ -69,6 +116,7 @@ void Update_Screen_Home(TFT_eSPI TFT, char* value)
 		Update_Screen_Home_Ethernet_Recv(TFT, dValue);
 		break;
 	case 'b':
+		Update_Screen_Home_CPU_Total_Load(TFT, dValue);
 		break;
 	default:
 		break;

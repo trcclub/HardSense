@@ -48,6 +48,9 @@
     <ClInclude Include="DisplayHandler\GUI\Screen_BluetoothConfigurator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="DisplayHandler\GUI\Widgets\HS_Dial_Widget.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="HSFileSystem\HSFileSystem.cpp">
@@ -57,6 +60,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="DisplayHandler\DisplayHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DisplayHandler\GUI\Widgets\HS_Dial_Widget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
