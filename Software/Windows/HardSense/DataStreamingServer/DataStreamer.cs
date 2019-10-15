@@ -69,7 +69,7 @@ namespace HardSense.DataStreamingServer
             running = true;
             readThread.Start();
             writeThread.Start();
-            //heartbeatTimer.Start();
+            heartbeatTimer.Start();
 
             readThread.Join();
             writeThread.Join();
@@ -83,6 +83,7 @@ namespace HardSense.DataStreamingServer
             running = false;
             heartbeatTimer.Stop();
             sdStreamer.StopStreaming();
+            Thread.Sleep(100);
             if (readThread.IsAlive)
             {
                 readThread.Join();
@@ -91,9 +92,12 @@ namespace HardSense.DataStreamingServer
             {
                 writeThread.Join();
             }
-            
 
-            clientSocket.Shutdown(SocketShutdown.Both);
+            if (clientSocket.Connected)
+            {
+                clientSocket.Shutdown(SocketShutdown.Both);
+            }
+            
             clientSocket.Close();
         }
         private void readThreadProc()
@@ -183,6 +187,9 @@ namespace HardSense.DataStreamingServer
         {
             switch (key)
             {
+                case (char)TRANS__KEY.REQUEST_NEW_CONNECTION:
+                    sender.AddKeyToMessage(ProtocolKeys.TRANSMISSION_KEYS["NEW_CONNECTION_APPROVED"]);
+                    break;
                 case (char)TRANS__KEY.START_SENSOR_DATA_STREAM:
                     if (sdStreamer.StartStreaming())
                     {

@@ -24,12 +24,16 @@ int counter = 0;
 portMUX_TYPE displayQueueMux = portMUX_INITIALIZER_UNLOCKED;
 portMUX_TYPE outputQueueMux = portMUX_INITIALIZER_UNLOCKED;
 
+hw_timer_t* heartbeatTimer = NULL;
 
 void setup() {
 	Serial.begin(115200);
 	displayHandler.Init(&displayQueue, AddItemToOutputQueue, displayQueueMux);
 	
 	InitButtons();
+	heartbeatTimer = timerBegin(0, 80, true);
+	timerAttachInterrupt(heartbeatTimer, &onTimer, true);
+	timerAlarmWrite(heartbeatTimer, 5000000, true);
 
 	QUEUE_ITEM qi;
 	qi.key = DisplayCommands::ChangeScreen;
@@ -59,22 +63,21 @@ void setup() {
 		hsSerial.HandleBluetoothConnection();
 	}
 
-	hsSerial.HandleWiFiSocketConnection();
+	timerAlarmEnable(heartbeatTimer);
+	hsSerial.HandleWiFiConnection();
 
 }
 
 
 void loop() {
-	
-	if (hsSerial.connectedToSomething)
-	{
-		hsSerial.HandleInput();
-		hsSerial.HandleOutput();
-	} else 
-	{
-		//hsSerial.HandleWiFiSocketConnection();
+	if (!hsSerial.connectedToSomething) {
+		hsSerial.ConnectToHardsenseServer();
 	}
-	
+
+
+	hsSerial.HandleInput();
+	hsSerial.HandleOutput();
+
 	delay(20);
 }
 
@@ -131,6 +134,12 @@ void AddItemToOutputQueue(char key, char* value)
 	portENTER_CRITICAL(&outputQueueMux);
 	outputQueue.enqueue(qi);
 	portEXIT_CRITICAL(&outputQueueMux);
+}
+
+
+void IRAM_ATTR onTimer()
+{
+	hsSerial.FireHeartbeat();
 }
 
 void Spin()

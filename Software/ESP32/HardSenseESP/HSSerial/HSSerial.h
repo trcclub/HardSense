@@ -7,6 +7,8 @@
 #include <Queue.h>
 #include "../QueueItem.h"
 
+#define MAX_HEARTBEATS_MISSED 3
+
 class HSSerial
 {
 private:
@@ -14,10 +16,6 @@ private:
 	BluetoothSerial *btSerial;
 	S_SETTNGS hardsenseSettings;
 	
-	hw_timer_t* heartbeatTimer;
-	int heartBeatsMissed;
-	portMUX_TYPE heartbeatMux;
-
 	DataQueue<QUEUE_ITEM>* outputDataQueue;
 	portMUX_TYPE outputDataMux;
 	portMUX_TYPE outputQueueMux;
@@ -31,7 +29,8 @@ private:
 	int(HSSerial::*PrintMessageToOutput)(char);
 
 	bool WaitForBTConnection();
-	void AcceptNewConnection();
+	void AcceptNewBTConnection();
+	void NewSocketRequestAccepted();
 
 	int BT_Available();
 	int BT_Read();
@@ -51,14 +50,17 @@ private:
 	void UpdateSensorValuesToDisplay(String value);
 
 	void(*AddItemToDisplayQueue)(char key, char* value);
-	void IRAM_ATTR onTimer();
+
+	portMUX_TYPE heartbeatMux;
+	int heartbeatCounter;
+	void ClearHeartbeatCounter();
+	bool IncrementHeartbeatCounter();
 
 public:
 	HSSerial();
 	~HSSerial();
 	bool Init(DataQueue<QUEUE_ITEM> *newDataQueue, void(*AddItemToDisplayQueue_Func)(char key, char* value), portMUX_TYPE &newOutputQueueMux);
 
-	bool connectedToSomething = false;
 
 	void AddKeyToOutputMessage(byte key);
 	void AddIntToOutputMessage(byte key, int val);
@@ -66,9 +68,14 @@ public:
 	void AddStringToOutputMessage(byte key, String value);
 	void AddStringToOutputMessage(byte key, char *value);
 
+	bool ConnectedToWifi;
+	bool connectedToSomething = false;
 	void HandleBluetoothConnection();
-	void HandleWiFiSocketConnection();
+	void ConnectToHardsenseServer();
+	void HandleWiFiConnection();
 	void HandleInput();
 	void HandleOutput();
+
+	void FireHeartbeat();
 };
 

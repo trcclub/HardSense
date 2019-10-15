@@ -7,8 +7,8 @@
 enum TRANS__KEY : byte {
         STX = 0x02, // STX (start of text)
         ETX = 0x03, //ETX (end of text)
-        //DATA_SIZE_END = 0x1F, // US (unit separator)
-        //PACKET_SIZE_END = 0x1E, // RS (record separator)
+        REQUEST_NEW_CONNECTION = 0x1F, // US (unit separator)
+        NEW_CONNECTION_APPROVED = 0x1E, // RS (record separator)
         PACKET_END = 0X1D, // GS (group separator)
         ACK = 0x06, // ACK (acknowledge)
         NACK = 0x15, // NAK (negative acknowledge)

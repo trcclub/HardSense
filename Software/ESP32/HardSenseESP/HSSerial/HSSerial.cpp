@@ -4,11 +4,12 @@
 HSSerial::HSSerial()
 {
 	connectedToSomething = false;
+	ConnectedToWifi = false;
 	wifiSerial = NULL;
 	btSerial = NULL;
 	outputDataMux = portMUX_INITIALIZER_UNLOCKED;
+	heartbeatCounter = 0;
 	heartbeatMux = portMUX_INITIALIZER_UNLOCKED;
-	heartbeatTimer = timerBegin(0, 80, true);
 }
 
 HSSerial::~HSSerial()
@@ -131,7 +132,7 @@ bool HSSerial::WaitForBTConnection()
 	}
 }
 
-void HSSerial::HandleWiFiSocketConnection()
+void HSSerial::HandleWiFiConnection()
 {
 	char buf[2];
 	sprintf(buf, "%c", ScreenTypes::ConnectToNetwork);
@@ -158,22 +159,49 @@ void HSSerial::HandleWiFiSocketConnection()
 		delay(500);
 		Serial.print(".");
 	}
-		
+	
+	if (!WiFi.isConnected()) {
+		return;
+	}
+	ConnectedToWifi = true;
 	Serial.printf("Hostname 1: %s\n", WiFi.getHostname());
 	Serial.println("");
 	Serial.println("WiFi connected");
 	Serial.println("IP address: ");
 	Serial.println(WiFi.localIP());
 
+}
+
+void HSSerial::ConnectToHardsenseServer()
+{
+	if (!ConnectedToWifi) {
+		HandleWiFiConnection();
+		return;
+	}
+	char buf[2];
+	sprintf(buf, "%c", ScreenTypes::ConnectToNetwork);
+	AddItemToDisplayQueue(DisplayCommands::ChangeScreen, buf);
+
 	Serial.print("\n Connecting to socket on ");
 	Serial.print(hardsenseSettings.serverName);
 	Serial.print(":");
 	Serial.println(hardsenseSettings.serverPort);
+	connectedToSomething = false;
+	wifiSerial->connect(hardsenseSettings.serverName, hardsenseSettings.serverPort);
+	AddKeyToOutputMessage(TRANS__KEY::REQUEST_NEW_CONNECTION);
+	HandleOutput();
 
-	if (!wifiSerial->connect(hardsenseSettings.serverName, hardsenseSettings.serverPort)) {
-		Serial.println("connection failed");
-		//Spin();
+	unsigned long now = millis();
+	while(!connectedToSomething && (millis() - now) < 5000) 
+	{
+		HandleInput();
+		delay(50);
 	}
+}
+
+void HSSerial::NewSocketRequestAccepted()
+{
+	Serial.println("NewSocketRequestAccepted()");
 	connectedToSomething = true;
 	Serial.print("Connected to: ");
 	Serial.println(hardsenseSettings.serverName);
@@ -181,22 +209,17 @@ void HSSerial::HandleWiFiSocketConnection()
 	AddKeyToOutputMessage(TRANS__KEY::START_SENSOR_DATA_STREAM);
 	HandleOutput();
 
-	buf[2];
+	char buf[2];
 	sprintf(buf, "%c", ScreenTypes::Home);
 	AddItemToDisplayQueue(DisplayCommands::ChangeScreen, buf);
-
-
-
-	//char buffer[128];
-	//int size = sprintf(buffer, "/Ethernet/0/recv,a|/intelcpu/0/load/0,b");
-	//AddStringToOutputMessage(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, buffer);
 }
 
-void HSSerial::AcceptNewConnection()
+void HSSerial::AcceptNewBTConnection()
 {
 	AddKeyToOutputMessage(TRANS__KEY::CONNECTION_ACK);
 	connectedToSomething = true;
 }
+
 
 int HSSerial::BT_Available() {
 	return btSerial->available();
@@ -353,11 +376,15 @@ void HSSerial::ParseInput(String input)
 void HSSerial::DispatchCommand(char key, String val) {
 
 	switch (key) {
+	case TRANS__KEY::NEW_CONNECTION_APPROVED:
+		Serial.println("NEW_CONNECTION_APPROVED");
+		NewSocketRequestAccepted();
+		break;
 	case TRANS__KEY::DISCONNECT:
 		connectedToSomething = false;
 		break;
 	case TRANS__KEY::CONNECTION_REQUEST:
-		AcceptNewConnection();
+		AcceptNewBTConnection();
 		break;
 	case TRANS__KEY::CONFIG_REQUEST_SSID:
 		AddStringToOutputMessage(TRANS__KEY::CURRENT_SSID, hardsenseSettings.ssid);
@@ -388,9 +415,11 @@ void HSSerial::DispatchCommand(char key, String val) {
 		break;
 	case TRANS__KEY::HEARTBEAT:
 		AddKeyToOutputMessage(TRANS__KEY::HEARTBEAT_ACK);
-		portENTER_CRITICAL(&heartbeatMux);
-		heartBeatsMissed = 0;
-		portEXIT_CRITICAL(&heartbeatMux);
+		Serial.println("Sent heartbeat ack");
+		break;
+	case TRANS__KEY::HEARTBEAT_ACK:
+		Serial.println("Received heartbeat ack");
+		ClearHeartbeatCounter();
 		break;
 	default:
 		//Serial.print("Unknown Command: '");
@@ -399,18 +428,40 @@ void HSSerial::DispatchCommand(char key, String val) {
 	}
 }
 
-void IRAM_ATTR HSSerial::onTimer()
+void HSSerial::FireHeartbeat()
 {
-	if (heartBeatsMissed >= 3) {
-		//connectedToSomething = false;
+	if (!connectedToSomething) {
 		return;
-	} 
+	}
+	if (IncrementHeartbeatCounter())
+	{
+		//connectedToSomething = false;
+	}
+
+	//portENTER_CRITICAL(&outputQueueMux);
 	AddKeyToOutputMessage(TRANS__KEY::HEARTBEAT);
+	//portEXIT_CRITICAL(&outputQueueMux);
+
+}
+
+bool HSSerial::IncrementHeartbeatCounter()
+{
+	if (heartbeatCounter > MAX_HEARTBEATS_MISSED) {
+		connectedToSomething = false;
+		ClearHeartbeatCounter();
+		return false;
+	}
 	portENTER_CRITICAL(&heartbeatMux);
-	heartBeatsMissed++;
+	heartbeatCounter++;
 	portEXIT_CRITICAL(&heartbeatMux);
 }
 
+void HSSerial::ClearHeartbeatCounter()
+{
+	portENTER_CRITICAL(&heartbeatMux);
+	heartbeatCounter = 0;
+	portEXIT_CRITICAL(&heartbeatMux);
+}
 
 void HSSerial::UpdateSensorValuesToDisplay(String value)
 {

@@ -20,8 +20,8 @@ namespace HardSense.DataStreamingServer
 
             TRANSMISSION_KEYS.Add("STX", '\u0002');  // STX (start of text)
             TRANSMISSION_KEYS.Add("ETX", '\u0003'); //ETX (end of text)
-            //TRANSMISSION_KEYS.Add("DATA_SIZE_END", '\u001F'); // US (unit separator)
-            //TRANSMISSION_KEYS.Add("PACKET_SIZE_END", '\u001E'); // RS (record separator)
+            TRANSMISSION_KEYS.Add("REQUEST_NEW_CONNECTION", '\u001F'); // US (unit separator)
+            TRANSMISSION_KEYS.Add("NEW_CONNECTION_APPROVED", '\u001E'); // RS (record separator)
             TRANSMISSION_KEYS.Add("PACKET_END", '\u001D'); // GS (group separator)
             TRANSMISSION_KEYS.Add("ACK", '\u0006'); // ACK (acknowledge)
             TRANSMISSION_KEYS.Add("NACK", '\u0015'); // NAK (negative acknowledge)
@@ -69,8 +69,8 @@ namespace HardSense.DataStreamingServer
     {
         STX = 0x02, // STX (start of text)
         ETX = 0x03, //ETX (end of text)
-        //DATA_SIZE_END = 0x1F, // US (unit separator)
-        //PACKET_SIZE_END = 0x1E, // RS (record separator)
+        REQUEST_NEW_CONNECTION = 0x1F, // US (unit separator)
+        NEW_CONNECTION_APPROVED = 0x1E, // RS (record separator)
         PACKET_END = 0X1D, // GS (group separator)
         ACK = 0x06, // ACK (acknowledge)
         NACK = 0x15, // NAK (negative acknowledge)
