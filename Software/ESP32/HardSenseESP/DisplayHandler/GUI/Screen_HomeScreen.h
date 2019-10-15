@@ -29,6 +29,7 @@ void Create_Screen_Home(TFT_eSPI TFT) {
 char* Screen_Home_SensorList() {
 	//return "/Ethernet/0/recv,a|/intelcpu/0/load/0,b";
 	return "/Ethernet/0/recv,a";
+
 }
 
 void Update_Screen_Home_Ethernet_Recv(TFT_eSPI TFT, double value)
