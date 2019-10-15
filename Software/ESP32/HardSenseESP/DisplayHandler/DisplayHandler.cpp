@@ -3,7 +3,7 @@
 #include "GUI/SplashScreen.h"
 #include "GUI/Screen_ConnectToNetwork.h"
 #include "GUI/Screen_HomeScreen.h"
-
+#include "GUI/Screen_BluetoothConfigurator.h"
 
 DisplayHandler::DisplayHandler()
 {
@@ -14,9 +14,9 @@ DisplayHandler::~DisplayHandler()
 
 }
 
-void DisplayHandler::Init(DataQueue<QUEUE_ITEM>* newQueue, void(*AddItemToOutputQueue_Func)(char key, char* value), portMUX_TYPE& newDisplayQueueMux)
+void DisplayHandler::Init(DataQueue<QUEUE_ITEM>* newDisplayQueue, portMUX_TYPE& newDisplayQueueMux, void(*AddItemToOutputQueue_Func)(char key, char* value))
 {
-	displayDataQueue = newQueue;
+	displayDataQueue = newDisplayQueue;
 	AddItemToOutputQueue = AddItemToOutputQueue_Func;
 	displayQueueMux = newDisplayQueueMux;
 
@@ -63,6 +63,11 @@ void DisplayHandler::LoadNewScreen(char screenID)
 		UpdateCureentScreen = Update_Screen_Home;
 		Create_Screen_Home(tftDisplay);
 		AddItemToOutputQueue(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, Screen_Home_SensorList());
+		break;
+	case ScreenTypes::BluetoothConfigurator:
+		DestoryCurrentScreen = Destroy_Screen_BluetoothConfigurator;
+		UpdateCureentScreen = Update_Screen_BluetoothConfigurator;
+		Create_Screen_BluetoothConfigurator(tftDisplay);
 		break;
 	default:
 		break;

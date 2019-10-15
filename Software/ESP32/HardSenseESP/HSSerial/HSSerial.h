@@ -55,11 +55,12 @@ private:
 	int heartbeatCounter;
 	void ClearHeartbeatCounter();
 	bool IncrementHeartbeatCounter();
+	void(*HeartbeatTimerEnabled)(bool);
 
 public:
 	HSSerial();
 	~HSSerial();
-	bool Init(DataQueue<QUEUE_ITEM> *newDataQueue, void(*AddItemToDisplayQueue_Func)(char key, char* value), portMUX_TYPE &newOutputQueueMux);
+	bool Init(DataQueue<QUEUE_ITEM> *newOutputQueue, portMUX_TYPE &newOutputQueueMux, void(*AddItemToDisplayQueue_Func)(char key, char* value), void(*HeartbeatTimerEnabled_Func)(bool));
 
 
 	void AddKeyToOutputMessage(byte key);

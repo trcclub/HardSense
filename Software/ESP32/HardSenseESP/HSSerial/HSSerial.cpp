@@ -24,11 +24,12 @@ HSSerial::~HSSerial()
 	}
 }
 
-bool HSSerial::Init(DataQueue<QUEUE_ITEM>* newDataQueue, void(*AddItemToDisplayQueue_Func)(char key, char* value), portMUX_TYPE &newOutputQueueMux)
+bool HSSerial::Init(DataQueue<QUEUE_ITEM>* newOutputQueue, portMUX_TYPE& newOutputQueueMux, void(*AddItemToDisplayQueue_Func)(char key, char* value), void(*HeartbeatTimerEnabled_Func)(bool))
 {
-	outputDataQueue = newDataQueue;
+	outputDataQueue = newOutputQueue;
 	AddItemToDisplayQueue = AddItemToDisplayQueue_Func;
 	outputQueueMux = newOutputQueueMux;
+	HeartbeatTimerEnabled = HeartbeatTimerEnabled_Func;
 
 	HSFileSystem hsFS;
 	if (!hsFS.init()) {
@@ -94,6 +95,10 @@ bool HSSerial::SaveSettingsToFS()
 
 void HSSerial::HandleBluetoothConnection()
 {
+	char buf[2];
+	sprintf(buf, "%c", ScreenTypes::BluetoothConfigurator);
+	AddItemToDisplayQueue(DisplayCommands::ChangeScreen, buf);
+
 	btSerial = new BluetoothSerial();
 	InputAvailable = &HSSerial::BT_Available;
 	ReadInputByte = &HSSerial::BT_Read;;
@@ -174,10 +179,12 @@ void HSSerial::HandleWiFiConnection()
 
 void HSSerial::ConnectToHardsenseServer()
 {
-	if (!ConnectedToWifi) {
+	if (!WiFi.isConnected()) {
+		ConnectedToWifi = false;
 		HandleWiFiConnection();
 		return;
 	}
+
 	char buf[2];
 	sprintf(buf, "%c", ScreenTypes::ConnectToNetwork);
 	AddItemToDisplayQueue(DisplayCommands::ChangeScreen, buf);
@@ -212,6 +219,8 @@ void HSSerial::NewSocketRequestAccepted()
 	char buf[2];
 	sprintf(buf, "%c", ScreenTypes::Home);
 	AddItemToDisplayQueue(DisplayCommands::ChangeScreen, buf);
+
+	HeartbeatTimerEnabled(true);
 }
 
 void HSSerial::AcceptNewBTConnection()
@@ -322,10 +331,6 @@ void HSSerial::HandleOutput() {
 
 	portEXIT_CRITICAL(&outputDataMux);
 
-	//Serial.printf("HandleOutput: %s\n", OutputData);
-
-	
-
 	(this->*PrintMessageToOutput)((char)TRANS__KEY::STX);
 	for (int x = 0; x < tmpOutputDataLength; x++) {
 		(this->*PrintMessageToOutput)(tmpOutputData[x]);
@@ -343,7 +348,6 @@ void HSSerial::HandleInput() {
 		QUEUE_ITEM currItem = outputDataQueue->dequeue();
 		portEXIT_CRITICAL(&outputQueueMux);
 
-		//Serial.printf("Handleinput:  Got data from queue: '%i'\n", currItem.key);
 		AddStringToOutputMessage(currItem.key, currItem.value);
 	}
 
@@ -377,11 +381,11 @@ void HSSerial::DispatchCommand(char key, String val) {
 
 	switch (key) {
 	case TRANS__KEY::NEW_CONNECTION_APPROVED:
-		Serial.println("NEW_CONNECTION_APPROVED");
 		NewSocketRequestAccepted();
 		break;
 	case TRANS__KEY::DISCONNECT:
 		connectedToSomething = false;
+		HeartbeatTimerEnabled(false);
 		break;
 	case TRANS__KEY::CONNECTION_REQUEST:
 		AcceptNewBTConnection();
@@ -415,10 +419,8 @@ void HSSerial::DispatchCommand(char key, String val) {
 		break;
 	case TRANS__KEY::HEARTBEAT:
 		AddKeyToOutputMessage(TRANS__KEY::HEARTBEAT_ACK);
-		Serial.println("Sent heartbeat ack");
 		break;
 	case TRANS__KEY::HEARTBEAT_ACK:
-		Serial.println("Received heartbeat ack");
 		ClearHeartbeatCounter();
 		break;
 	default:
@@ -433,15 +435,11 @@ void HSSerial::FireHeartbeat()
 	if (!connectedToSomething) {
 		return;
 	}
+
 	if (IncrementHeartbeatCounter())
 	{
-		//connectedToSomething = false;
+		AddKeyToOutputMessage(TRANS__KEY::HEARTBEAT);
 	}
-
-	//portENTER_CRITICAL(&outputQueueMux);
-	AddKeyToOutputMessage(TRANS__KEY::HEARTBEAT);
-	//portEXIT_CRITICAL(&outputQueueMux);
-
 }
 
 bool HSSerial::IncrementHeartbeatCounter()
@@ -449,11 +447,14 @@ bool HSSerial::IncrementHeartbeatCounter()
 	if (heartbeatCounter > MAX_HEARTBEATS_MISSED) {
 		connectedToSomething = false;
 		ClearHeartbeatCounter();
+		HeartbeatTimerEnabled(false);
 		return false;
 	}
 	portENTER_CRITICAL(&heartbeatMux);
 	heartbeatCounter++;
 	portEXIT_CRITICAL(&heartbeatMux);
+
+	return true;
 }
 
 void HSSerial::ClearHeartbeatCounter()
@@ -474,5 +475,4 @@ void HSSerial::UpdateSensorValuesToDisplay(String value)
 	char buf[MAX_QUEUE_ITEM_VALUE_SIZE];
 	value.toCharArray(buf, MAX_QUEUE_ITEM_VALUE_SIZE);
 	AddItemToDisplayQueue(DisplayCommands::UpdateValue, buf);
-	//AddItemToDisplayQueue(value.charAt(0), buf);
 }

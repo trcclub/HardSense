@@ -9,6 +9,7 @@
 #include <Queue.h>
 #include "QueueItem.h"
 
+#define HEARTBEAT_TIMER_POLL_TIME 2000000
 
 TaskHandle_t TFT_Core_Handle;
 DataQueue<QUEUE_ITEM> displayQueue(20);
@@ -19,7 +20,7 @@ HSSerial hsSerial;
 
 byte btButton = 22;
 
-int counter = 0;
+//int counter = 0;
 
 portMUX_TYPE displayQueueMux = portMUX_INITIALIZER_UNLOCKED;
 portMUX_TYPE outputQueueMux = portMUX_INITIALIZER_UNLOCKED;
@@ -28,12 +29,12 @@ hw_timer_t* heartbeatTimer = NULL;
 
 void setup() {
 	Serial.begin(115200);
-	displayHandler.Init(&displayQueue, AddItemToOutputQueue, displayQueueMux);
+	displayHandler.Init(&displayQueue, displayQueueMux, AddItemToOutputQueue);
 	
 	InitButtons();
 	heartbeatTimer = timerBegin(0, 80, true);
 	timerAttachInterrupt(heartbeatTimer, &onTimer, true);
-	timerAlarmWrite(heartbeatTimer, 5000000, true);
+	timerAlarmWrite(heartbeatTimer, HEARTBEAT_TIMER_POLL_TIME, true);
 
 	QUEUE_ITEM qi;
 	qi.key = DisplayCommands::ChangeScreen;
@@ -51,7 +52,7 @@ void setup() {
 
 	delay(2000);
 
-	if (!hsSerial.Init(&outputQueue, AddItemToDisplayQueue, outputQueueMux))
+	if (!hsSerial.Init(&outputQueue, outputQueueMux, AddItemToDisplayQueue, HeartbeatTimerEnabled))
 	{
 		Serial.println("Failed to init SPIFFS");
 		Spin();
@@ -63,7 +64,6 @@ void setup() {
 		hsSerial.HandleBluetoothConnection();
 	}
 
-	timerAlarmEnable(heartbeatTimer);
 	hsSerial.HandleWiFiConnection();
 
 }
@@ -84,15 +84,6 @@ void loop() {
 void TFT_Core_Proc(void* parameter)
 {
 	displayHandler.Run();
-
-	/*
-	while (true)
-	{
-		HandleButtons();
-		displayHandler.UpdateDisplay();
-		delay(20);
-	}
-	*/
 
 	delay(20);
 }
@@ -115,6 +106,18 @@ bool IsBTButtonPressed()
 	return false;
 }
 
+void HeartbeatTimerEnabled(bool enabled)
+{
+	if (enabled)
+	{
+		timerAlarmEnable(heartbeatTimer);
+
+	}
+	else
+	{
+		timerAlarmDisable(heartbeatTimer);
+	}
+}
 
 void AddItemToDisplayQueue(char key, char* value)
 {

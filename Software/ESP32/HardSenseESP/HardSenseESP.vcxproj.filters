@@ -45,6 +45,9 @@
     <ClInclude Include="DisplayHandler\GUI\Screen_HomeScreen.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="DisplayHandler\GUI\Screen_BluetoothConfigurator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="HSFileSystem\HSFileSystem.cpp">

@@ -116,6 +116,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DisplayHandler\DisplayHandler.h" />
+    <ClInclude Include="DisplayHandler\GUI\Screen_BluetoothConfigurator.h" />
     <ClInclude Include="DisplayHandler\GUI\Screen_ConnectToNetwork.h" />
     <ClInclude Include="DisplayHandler\GUI\Screen_HomeScreen.h" />
     <ClInclude Include="DisplayHandler\GUI\SplashScreen.h" />

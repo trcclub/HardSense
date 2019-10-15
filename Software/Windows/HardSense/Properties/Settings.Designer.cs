@@ -121,7 +121,7 @@ namespace HardSense.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("5000")]
+        [global::System.Configuration.DefaultSettingValueAttribute("2000")]
         public int DefaultHeartbeatTime {
             get {
                 return ((int)(this["DefaultHeartbeatTime"]));
