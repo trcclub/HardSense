@@ -204,6 +204,9 @@ namespace HardSense.DataStreamingServer
                 case (char)TRANS__KEY.HEARTBEAT_ACK:
                     heartbeatsMissed = 0;
                     break;
+                case (char)TRANS__KEY.HEARTBEAT:
+                    sender.AddKeyToMessage(ProtocolKeys.TRANSMISSION_KEYS["HEARTBEAT_ACK"]);
+                    break;
                 default:
                     break;
             }

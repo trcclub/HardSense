@@ -6,6 +6,9 @@ HSSerial::HSSerial()
 	connectedToSomething = false;
 	wifiSerial = NULL;
 	btSerial = NULL;
+	outputDataMux = portMUX_INITIALIZER_UNLOCKED;
+	heartbeatMux = portMUX_INITIALIZER_UNLOCKED;
+	heartbeatTimer = timerBegin(0, 80, true);
 }
 
 HSSerial::~HSSerial()
@@ -20,10 +23,11 @@ HSSerial::~HSSerial()
 	}
 }
 
-bool HSSerial::Init(DataQueue<QUEUE_ITEM>* newDataQueue, void(*AddItemToDisplayQueue_Func)(char key, char* value))
+bool HSSerial::Init(DataQueue<QUEUE_ITEM>* newDataQueue, void(*AddItemToDisplayQueue_Func)(char key, char* value), portMUX_TYPE &newOutputQueueMux)
 {
 	outputDataQueue = newDataQueue;
 	AddItemToDisplayQueue = AddItemToDisplayQueue_Func;
+	outputQueueMux = newOutputQueueMux;
 
 	HSFileSystem hsFS;
 	if (!hsFS.init()) {
@@ -252,10 +256,12 @@ void HSSerial::AddStringToOutputMessage(byte key, String value)
 
 void HSSerial::AddStringToOutputMessage(byte key, char *value)
 {
+	portENTER_CRITICAL(&outputDataMux);
+
 	int valueLength = strlen(value);
 	int newLength = OutputDataLength + valueLength + 3;
 	char tmp[newLength];
-
+	
 	if (OutputDataLength > 0) {
 		strcpy(tmp, OutputData);
 		delete[] OutputData;
@@ -274,6 +280,8 @@ void HSSerial::AddStringToOutputMessage(byte key, char *value)
 	OutputData = new char[newLength];
 	strcpy(OutputData, tmp);
 	OutputDataLength = newLength - 1;
+
+	portEXIT_CRITICAL(&outputDataMux);
 }
 
 void HSSerial::HandleOutput() {
@@ -281,23 +289,38 @@ void HSSerial::HandleOutput() {
 		return;
 	}
 
-	Serial.printf("HandleOutput: %s\n", OutputData);
-
-	(this->*PrintMessageToOutput)((char)TRANS__KEY::STX);
-	for (int x = 0; x < OutputDataLength; x++) {
-		(this->*PrintMessageToOutput)(OutputData[x]);
-	}
-	(this->*PrintMessageToOutput)((char)TRANS__KEY::ETX);
+	portENTER_CRITICAL(&outputDataMux);
+	
+	int tmpOutputDataLength = OutputDataLength;
+	char tmpOutputData[tmpOutputDataLength];
+	strcpy(tmpOutputData, OutputData);
 	delete[] OutputData;
 	OutputDataLength = 0;
+
+	portEXIT_CRITICAL(&outputDataMux);
+
+	//Serial.printf("HandleOutput: %s\n", OutputData);
+
+	
+
+	(this->*PrintMessageToOutput)((char)TRANS__KEY::STX);
+	for (int x = 0; x < tmpOutputDataLength; x++) {
+		(this->*PrintMessageToOutput)(tmpOutputData[x]);
+	}
+	(this->*PrintMessageToOutput)((char)TRANS__KEY::ETX);
+
+	
 }
 
 
 void HSSerial::HandleInput() {
 	while (!outputDataQueue->isEmpty())
 	{
+		portENTER_CRITICAL(&outputQueueMux);
 		QUEUE_ITEM currItem = outputDataQueue->dequeue();
-		Serial.printf("Handleinput:  Got data from queue: '%i'\n", currItem.key);
+		portEXIT_CRITICAL(&outputQueueMux);
+
+		//Serial.printf("Handleinput:  Got data from queue: '%i'\n", currItem.key);
 		AddStringToOutputMessage(currItem.key, currItem.value);
 	}
 
@@ -365,6 +388,9 @@ void HSSerial::DispatchCommand(char key, String val) {
 		break;
 	case TRANS__KEY::HEARTBEAT:
 		AddKeyToOutputMessage(TRANS__KEY::HEARTBEAT_ACK);
+		portENTER_CRITICAL(&heartbeatMux);
+		heartBeatsMissed = 0;
+		portEXIT_CRITICAL(&heartbeatMux);
 		break;
 	default:
 		//Serial.print("Unknown Command: '");
@@ -372,6 +398,19 @@ void HSSerial::DispatchCommand(char key, String val) {
 		break;
 	}
 }
+
+void IRAM_ATTR HSSerial::onTimer()
+{
+	if (heartBeatsMissed >= 3) {
+		//connectedToSomething = false;
+		return;
+	} 
+	AddKeyToOutputMessage(TRANS__KEY::HEARTBEAT);
+	portENTER_CRITICAL(&heartbeatMux);
+	heartBeatsMissed++;
+	portEXIT_CRITICAL(&heartbeatMux);
+}
+
 
 void HSSerial::UpdateSensorValuesToDisplay(String value)
 {

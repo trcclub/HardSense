@@ -21,12 +21,13 @@ byte btButton = 22;
 
 int counter = 0;
 
-
+portMUX_TYPE displayQueueMux = portMUX_INITIALIZER_UNLOCKED;
+portMUX_TYPE outputQueueMux = portMUX_INITIALIZER_UNLOCKED;
 
 
 void setup() {
 	Serial.begin(115200);
-	displayHandler.Init(&displayQueue, AddItemToOutputQueue);
+	displayHandler.Init(&displayQueue, AddItemToOutputQueue, displayQueueMux);
 	
 	InitButtons();
 
@@ -46,7 +47,7 @@ void setup() {
 
 	delay(2000);
 
-	if (!hsSerial.Init(&outputQueue, AddItemToDisplayQueue))
+	if (!hsSerial.Init(&outputQueue, AddItemToDisplayQueue, outputQueueMux))
 	{
 		Serial.println("Failed to init SPIFFS");
 		Spin();
@@ -69,6 +70,9 @@ void loop() {
 	{
 		hsSerial.HandleInput();
 		hsSerial.HandleOutput();
+	} else 
+	{
+		//hsSerial.HandleWiFiSocketConnection();
 	}
 	
 	delay(20);
@@ -108,12 +112,15 @@ bool IsBTButtonPressed()
 	return false;
 }
 
+
 void AddItemToDisplayQueue(char key, char* value)
 {
 	QUEUE_ITEM qi;
 	qi.key = key;
 	strcpy(qi.value, value);
+	portENTER_CRITICAL(&displayQueueMux);
 	displayQueue.enqueue(qi);
+	portEXIT_CRITICAL(&displayQueueMux);
 }
 
 void AddItemToOutputQueue(char key, char* value)
@@ -121,7 +128,9 @@ void AddItemToOutputQueue(char key, char* value)
 	QUEUE_ITEM qi;
 	qi.key = key;
 	strcpy(qi.value, value);
+	portENTER_CRITICAL(&outputQueueMux);
 	outputQueue.enqueue(qi);
+	portEXIT_CRITICAL(&outputQueueMux);
 }
 
 void Spin()

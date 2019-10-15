@@ -14,10 +14,11 @@ DisplayHandler::~DisplayHandler()
 
 }
 
-void DisplayHandler::Init(DataQueue<QUEUE_ITEM>* newQueue, void(*AddItemToOutputQueue_Func)(char key, char* value))
+void DisplayHandler::Init(DataQueue<QUEUE_ITEM>* newQueue, void(*AddItemToOutputQueue_Func)(char key, char* value), portMUX_TYPE& newDisplayQueueMux)
 {
 	displayDataQueue = newQueue;
 	AddItemToOutputQueue = AddItemToOutputQueue_Func;
+	displayQueueMux = newDisplayQueueMux;
 
 	tftDisplay.init();
 	tftDisplay.setRotation(1);
@@ -35,16 +36,17 @@ void DisplayHandler::Run()
 
 }
 
-void DisplayHandler::LoadNewScreen(String screenID)
+void DisplayHandler::LoadNewScreen(char screenID)
 {
-	Serial.println("LoadNewScreen");
+	//Serial.println("LoadNewScreen");
 	if (DestoryCurrentScreen != NULL) {
 		DestoryCurrentScreen(tftDisplay);
 		DestoryCurrentScreen = NULL;
 		UpdateCureentScreen = NULL;
 	}
+	AddItemToOutputQueue(TRANS__KEY::CLEAR_SENSOR_LIST, "");
 
-	char key = screenID.charAt(0);
+	char key = screenID;
 	switch (key) {
 	case ScreenTypes::SplashScreen:
 		DestoryCurrentScreen = Destroy_SplashScreen;
@@ -57,7 +59,6 @@ void DisplayHandler::LoadNewScreen(String screenID)
 		Create_Screen_ConnectToNetwork(tftDisplay);
 		break;
 	case ScreenTypes::Home:
-		Serial.println("LoadNewScreen:: HOME");
 		DestoryCurrentScreen = Destroy_Screen_Home;
 		UpdateCureentScreen = Update_Screen_Home;
 		Create_Screen_Home(tftDisplay);
@@ -72,10 +73,13 @@ void DisplayHandler::DispatchCommand()
 {
 	while (!displayDataQueue->isEmpty())
 	{
+		portENTER_CRITICAL(&displayQueueMux);
 		QUEUE_ITEM currItem = displayDataQueue->dequeue();
+		portEXIT_CRITICAL(&displayQueueMux);
+
 		switch (currItem.key) {
 		case DisplayCommands::ChangeScreen:
-			LoadNewScreen(currItem.value);
+			LoadNewScreen(currItem.value[0]);
 			break;
 		case DisplayCommands::UpdateValue:
 			//Serial.printf("DisplayHandler::DispatchCommand()");

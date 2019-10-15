@@ -23,19 +23,20 @@ class DisplayHandler
 private:
 	TFT_eSPI tftDisplay;
 	DataQueue<QUEUE_ITEM>* displayDataQueue;
+	portMUX_TYPE displayQueueMux;
 
 	void DispatchCommand();
 
 	void(*UpdateCureentScreen)(TFT_eSPI TFT, char* value) = NULL;
 	void(*DestoryCurrentScreen)(TFT_eSPI) = NULL;
 
-	void LoadNewScreen(String screenID);
+	void LoadNewScreen(char screenID);
 	void(*AddItemToOutputQueue)(char key, char* value);
 
 public:
 	DisplayHandler();
 	~DisplayHandler();
-	void Init(DataQueue<QUEUE_ITEM>* newQueue, void(*AddItemToOutputQueue_Func)(char key, char* value));
+	void Init(DataQueue<QUEUE_ITEM>* newQueue, void(*AddItemToOutputQueue_Func)(char key, char* value), portMUX_TYPE& newDisplayQueueMux);
 	void Run();
 
 };

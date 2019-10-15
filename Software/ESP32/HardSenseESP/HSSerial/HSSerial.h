@@ -13,6 +13,17 @@ private:
 	WiFiClient *wifiSerial;
 	BluetoothSerial *btSerial;
 	S_SETTNGS hardsenseSettings;
+	
+	hw_timer_t* heartbeatTimer;
+	int heartBeatsMissed;
+	portMUX_TYPE heartbeatMux;
+
+	DataQueue<QUEUE_ITEM>* outputDataQueue;
+	portMUX_TYPE outputDataMux;
+	portMUX_TYPE outputQueueMux;
+
+	char* OutputData;
+	int OutputDataLength = 0;
 
 	int(HSSerial::*InputAvailable)();
 	int(HSSerial::*ReadInputByte)();
@@ -36,17 +47,16 @@ private:
 	bool IsPasswordSet();
 	bool UpdateSetting(char key, String value);
 	bool SaveSettingsToFS();
-	char* OutputData;
-	int OutputDataLength = 0;
-
-	DataQueue<QUEUE_ITEM>* outputDataQueue;
-	void(*AddItemToDisplayQueue)(char key, char* value);
+	
 	void UpdateSensorValuesToDisplay(String value);
+
+	void(*AddItemToDisplayQueue)(char key, char* value);
+	void IRAM_ATTR onTimer();
 
 public:
 	HSSerial();
 	~HSSerial();
-	bool Init(DataQueue<QUEUE_ITEM> *newDataQueue, void(*AddItemToDisplayQueue_Func)(char key, char* value));
+	bool Init(DataQueue<QUEUE_ITEM> *newDataQueue, void(*AddItemToDisplayQueue_Func)(char key, char* value), portMUX_TYPE &newOutputQueueMux);
 
 	bool connectedToSomething = false;
 
