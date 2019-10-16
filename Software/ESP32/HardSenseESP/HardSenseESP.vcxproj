@@ -121,6 +121,7 @@
     <ClInclude Include="DisplayHandler\GUI\Screen_HomeScreen.h" />
     <ClInclude Include="DisplayHandler\GUI\SplashScreen.h" />
     <ClInclude Include="DisplayHandler\GUI\Widgets\HS_Dial_Widget.h" />
+    <ClInclude Include="GlobalDefinitions.h" />
     <ClInclude Include="HSFileSystem\HSFileSystem.h" />
     <ClInclude Include="HSSerial\HSSerial.h" />
     <ClInclude Include="HSSerial\SerialInterface.h" />
