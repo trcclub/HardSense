@@ -124,10 +124,6 @@
     <ClInclude Include="DisplayHandler\GUI\HS_HomeScreen.h" />
     <ClInclude Include="DisplayHandler\GUI\HS_ScreenBase.h" />
     <ClInclude Include="DisplayHandler\GUI\HS_SplashScreen.h" />
-    <ClInclude Include="DisplayHandler\GUI\Screen_BluetoothConfigurator.h" />
-    <ClInclude Include="DisplayHandler\GUI\Screen_ConnectToNetwork.h" />
-    <ClInclude Include="DisplayHandler\GUI\Screen_HomeScreen.h" />
-    <ClInclude Include="DisplayHandler\GUI\SplashScreen.h" />
     <ClInclude Include="DisplayHandler\GUI\SplashScreen_Functions.h" />
     <ClInclude Include="DisplayHandler\GUI\Widgets\HS_Dial_Widget.h" />
     <ClInclude Include="DisplayHandler\GUI\Widgets\HS_WidgetBase.h" />
