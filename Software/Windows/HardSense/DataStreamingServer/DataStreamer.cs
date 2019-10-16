@@ -71,8 +71,8 @@ namespace HardSense.DataStreamingServer
             writeThread.Start();
             heartbeatTimer.Start();
 
-            readThread.Join();
             writeThread.Join();
+            readThread.Join();
 
             Stop();
         }
@@ -102,9 +102,9 @@ namespace HardSense.DataStreamingServer
         }
         private void readThreadProc()
         {
-            try
+            while (running && DataStreamingServer.continueRunning)
             {
-                while (running && DataStreamingServer.continueRunning)
+                try
                 {
                     int bytesRead = clientSocket.Receive(state.buffer, 0, StateObject.BufferSize, 0);
                     if (bytesRead > 0)
@@ -116,9 +116,9 @@ namespace HardSense.DataStreamingServer
                     }
                     Thread.Sleep(20);
                 }
-            }
-            catch (Exception e)
-            {
+                catch (Exception e)
+                {
+                }
             }
 
         }

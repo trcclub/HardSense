@@ -11,20 +11,29 @@ void Destroy_Screen_Home(TFT_eSPI TFT);
 void Update_Screen_Home_CPU_Total_Load(TFT_eSPI TFT, double percentage);
 
 HS_Dial_Widget* cpuLoadWidget;
+TFT_eSprite* textPrinter;
 
 #define SCREEN_HOME_CPU_LOAD_DIAL_MIN -120
 #define SCREEN_HOME_CPU_LOAD_DIAL_MAX 120
+#define SCREEN_HOME_CPU_LOAD_DIAL_X 0
+#define SCREEN_HOME_CPU_LOAD_DIAL_Y 0
+
+
 uint16_t Home_Screen_cpuLoadDial_CurrentRingColor = TFT_GREEN;
 
 void Create_Screen_Home(TFT_eSPI TFT) {
 	Serial.println("Create_Screen_Home() !!!");
 	cpuLoadWidget = new HS_Dial_Widget(TFT);
+	textPrinter = new TFT_eSprite(&TFT);
+
 	TFT.fillScreen(TFT_BLACK);
 
-	TFT.fillRect(0, 0, 160, 90, TFT_DARKGREY);
-	TFT.fillRect(2, 2, 156, 86, TFT_NAVY);
+	TFT.fillRect(0, 0, 160, 92, TFT_DARKGREY);
+	TFT.fillRect(2, 2, 156, 88, TFT_NAVY);
 	cpuLoadWidget->DrawDialScale(TFT, SCREEN_HOME_CPU_LOAD_DIAL_MIN, SCREEN_HOME_CPU_LOAD_DIAL_MAX, 30, Home_Screen_cpuLoadDial_CurrentRingColor);
 	Update_Screen_Home_CPU_Total_Load(TFT, 0.0);
+
+
 
 	/*
 
@@ -69,7 +78,7 @@ void Update_Screen_Home_CPU_Total_Load(TFT_eSPI TFT, double percentage)
 		Home_Screen_cpuLoadDial_CurrentRingColor = ringColor;
 		cpuLoadWidget->DrawDialScale(TFT, SCREEN_HOME_CPU_LOAD_DIAL_MIN, SCREEN_HOME_CPU_LOAD_DIAL_MAX, 30, Home_Screen_cpuLoadDial_CurrentRingColor);
 	}
-	cpuLoadWidget->PlotDial(0, 0, angle, "CPU", percentage);	
+	cpuLoadWidget->PlotDial(SCREEN_HOME_CPU_LOAD_DIAL_X, SCREEN_HOME_CPU_LOAD_DIAL_Y, angle, "CPU", percentage);
 }
 
 void Update_Screen_Home_Ethernet_Recv(TFT_eSPI TFT, double value)
@@ -125,5 +134,7 @@ void Update_Screen_Home(TFT_eSPI TFT, char* value)
 
 void Destroy_Screen_Home(TFT_eSPI TFT) {
 	Serial.println("Destroy_Screen_ConnectToNetwork()");
+	delete(textPrinter);
+	delete(cpuLoadWidget);
 }
 

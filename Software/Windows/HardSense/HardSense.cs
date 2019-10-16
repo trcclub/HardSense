@@ -332,7 +332,8 @@ namespace HardSense
             if (e.CloseReason == CloseReason.UserClosing)
             {
                 e.Cancel = true;
-                this.WindowState = FormWindowState.Minimized;
+                Hide();
+                //this.WindowState = FormWindowState.Minimized;
             }
         }
 

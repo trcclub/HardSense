@@ -14,11 +14,13 @@ namespace HardSense.DataStreamingServer
     {
         public string sensorId;
         public char key;
+        public double lastValue;
         
         public SensorItem(string id, char newKey)
         {
             sensorId = id;
             key = newKey;
+            lastValue = 0;
         }
     }
     public class SensorDataStreamer
@@ -45,6 +47,7 @@ namespace HardSense.DataStreamingServer
             */
             continueRunning = true;
             monitorThread.Start();
+
             return true;
         }
 
@@ -75,16 +78,23 @@ namespace HardSense.DataStreamingServer
         {
             while (continueRunning && DataStreamingServer.continueRunning)
             {
-                foreach(SensorItem currSensorItem in listOfSensorsToRetrieve)
+                foreach (SensorItem currSensorItem in listOfSensorsToRetrieve)
                 {
-                    double value = HardSenseMemFile.GetValueByKey(currSensorItem.sensorId);
-
-                    //Sensor update format:
-                    //<key>,<value>
-                    string tmp = currSensorItem.key + "," + value.ToString();
-                    //string tmp = currSensorItem.key + "," + value.ToString("F4");
-                    //sender.AddDoubleToMessage(ProtocolKeys.TRANSMISSION_KEYS["UPDATE_SENSOR_VALUE"], value);
-                    sender.AddStringToMessage(ProtocolKeys.TRANSMISSION_KEYS["UPDATE_SENSOR_VALUE"], tmp);
+                    try
+                    {
+                        double currValue = HardSenseMemFile.GetValueByKey(currSensorItem.sensorId);
+                        if (currValue != currSensorItem.lastValue)
+                        {
+                            currSensorItem.lastValue = currValue;
+                            //Sensor update format:
+                            //<key>,<value>
+                            string tmp = currSensorItem.key + "," + currValue.ToString();
+                            sender.AddStringToMessage(ProtocolKeys.TRANSMISSION_KEYS["UPDATE_SENSOR_VALUE"], tmp);
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                    }
                 }
                 Thread.Sleep(Properties.Settings.Default.DefaultSensorDataStreamer_UpdateTime);
             }

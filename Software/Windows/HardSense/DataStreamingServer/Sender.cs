@@ -70,8 +70,14 @@ namespace HardSense.DataStreamingServer
             tmpSB.Append(ProtocolKeys.TRANSMISSION_KEYS["ETX"]);
 
             byte[] byteData = Encoding.ASCII.GetBytes(tmpSB.ToString());
-
-            clientSocket.Send(byteData, 0, byteData.Length, 0);
+            
+            try
+            {
+                clientSocket.Send(byteData, 0, byteData.Length, 0);
+            }
+            catch (Exception e)
+            {
+            }
         }
     }
 }

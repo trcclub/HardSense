@@ -5,8 +5,8 @@
 class HS_Dial_Widget
 {
 private:
-	TFT_eSprite* cpuLoadDial;
-	TFT_eSprite* cpuLoadNeedle;
+	TFT_eSprite* dial;
+	TFT_eSprite* needle;
 	void CreateNeedle();
 	void DrawEmptyDial(String label, float val);
 
