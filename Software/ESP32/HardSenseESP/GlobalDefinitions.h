@@ -3,8 +3,6 @@
 #define HS_GLOBAL_DEFINITATIONS
 
 
-#define AA_FONT_SMALL "SegoeUI-14"
-#define AA_FONT_LARGE "SegoeUI-18"
 
 
 #endif // !HS_GLOBAL_DEFINITATIONS

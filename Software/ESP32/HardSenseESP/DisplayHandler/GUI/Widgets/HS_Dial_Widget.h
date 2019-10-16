@@ -1,8 +1,7 @@
 #pragma once
-#include <SPI.h>
-#include <TFT_eSPI.h>
+#include "HS_WidgetBase.h"
 
-class HS_Dial_Widget
+class HS_Dial_Widget : HS_WidgetBase
 {
 private:
 	TFT_eSprite* dial;

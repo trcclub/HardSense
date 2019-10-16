@@ -1,33 +1,8 @@
 #include "HS_Dial_Widget.h"
 #include "../../../GlobalDefinitions.h"
-#include "FS.h"
-#include "SPIFFS.h"
-
-void HS_Load_Fonts();
 
 HS_Dial_Widget::HS_Dial_Widget(TFT_eSPI TFT)
 {
-	HS_Load_Fonts();
-
-	/*
-	if (!SPIFFS.begin()) {
-		Serial.println("HS_Dial_Widget:: SPIFFS initialisation failed!");
-		while (1) yield(); // Stay here twiddling thumbs waiting
-	}
-
-	// ESP32 will crash if any of the fonts are missing
-	bool font_missing = false;
-	if (SPIFFS.exists("/SegoeUI-14.vlw") == false) font_missing = true;
-	if (SPIFFS.exists("/SegoeUI-18.vlw") == false) font_missing = true;
-
-	if (font_missing)
-	{
-		Serial.println("\r\nHS_Dial_Widget:: Font missing in SPIFFS, did you upload it?");
-		while (1) yield();
-	}
-	else Serial.println("\r\nHS_Dial_Widget:: Fonts found OK.");
-	*/
-
 	dial = new TFT_eSprite(&TFT);
 	needle = new TFT_eSprite(&TFT);
 	// Create the dial Sprite
@@ -108,25 +83,4 @@ void HS_Dial_Widget::DrawEmptyDial(String label, float val)
 	dial->setTextDatum(TC_DATUM);              // Draw dial text
 	dial->drawString(label, 45, 15, 2);
 	dial->drawFloat(val, 1, 45, 60, 2);
-}
-
-
-void HS_Load_Fonts()
-{
-	if (!SPIFFS.begin()) {
-		Serial.println("HS_Dial_Widget:: SPIFFS initialisation failed!");
-		while (1) yield(); // Stay here twiddling thumbs waiting
-	}
-
-	// ESP32 will crash if any of the fonts are missing
-	bool font_missing = false;
-	if (SPIFFS.exists("/SegoeUI-14.vlw") == false) font_missing = true;
-	if (SPIFFS.exists("/SegoeUI-18.vlw") == false) font_missing = true;
-
-	if (font_missing)
-	{
-		Serial.println("\r\MAIN:: Font missing in SPIFFS, did you upload it?");
-		while (1) yield();
-	}
-	else Serial.println("\r\Fonts found OK.");
 }
