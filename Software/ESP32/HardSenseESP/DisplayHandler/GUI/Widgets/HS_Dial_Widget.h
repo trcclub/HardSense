@@ -1,7 +1,7 @@
 #pragma once
 #include "HS_WidgetBase.h"
 
-class HS_Dial_Widget : HS_WidgetBase
+class HS_Dial_Widget : public HS_WidgetBase
 {
 private:
 	TFT_eSprite* dial;

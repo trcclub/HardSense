@@ -1,9 +1,11 @@
 #include "DisplayHandler.h"
 #include "../HSSerial/SerialInterface.h"
-#include "GUI/SplashScreen.h"
-#include "GUI/Screen_ConnectToNetwork.h"
-#include "GUI/Screen_HomeScreen.h"
-#include "GUI/Screen_BluetoothConfigurator.h"
+
+#include "GUI/HomeScreen_Functions.h"
+#include "GUI//SplashScreen_Functions.h"
+#include "GUI//ConnectToNetworkScreen_Functions.h"
+#include "GUI/BluetoothConfiguratorScreen_Functions.h"
+
 
 DisplayHandler::DisplayHandler()
 {
@@ -27,9 +29,19 @@ void DisplayHandler::Init(DataQueue<QUEUE_ITEM>* newDisplayQueue, portMUX_TYPE& 
 
 void DisplayHandler::Run()
 {
+
+	unsigned long last = millis();
 	while (true)
 	{
 		DispatchCommand();
+
+		/*
+		if (millis() - last > 1000)
+		{
+			Serial.println(ESP.getFreeHeap());
+			last = millis();
+		}
+		*/
 		//HandleButtons();
 		delay(20);
 	}
@@ -38,6 +50,43 @@ void DisplayHandler::Run()
 
 void DisplayHandler::LoadNewScreen(char screenID)
 {
+	//Serial.println("LoadNewScreen");
+	if (DestoryCurrentScreen != NULL) {
+		DestoryCurrentScreen();
+		DestoryCurrentScreen = NULL;
+		UpdateCureentScreen = NULL;
+	}
+	AddItemToOutputQueue(TRANS__KEY::CLEAR_SENSOR_LIST, "");
+
+	char key = screenID;
+	switch (key) {
+	case ScreenTypes::SplashScreen:
+		DestoryCurrentScreen = Destroy_SplashScreen;
+		UpdateCureentScreen = Update_SplashScreen;
+		Create_SplashScreen(&tftDisplay);
+		break;
+	case ScreenTypes::ConnectToNetwork:
+		DestoryCurrentScreen = Destroy_ConnectToNetworkScreen;
+		UpdateCureentScreen = Update_ConnectToNetworkScreen;
+		Create_ConnectToNetworkScreen(&tftDisplay);
+		break;
+	case ScreenTypes::BluetoothConfigurator:
+		DestoryCurrentScreen = Destroy_BluetoothConfiguratorScreen;
+		UpdateCureentScreen = Update_BluetoothConfiguratorScreen;
+		Create_BluetoothConfiguratorScreen(&tftDisplay);
+		break;
+	case ScreenTypes::Home:
+		DestoryCurrentScreen = Destroy_HomeScreen;
+		UpdateCureentScreen = Update_HomeScreen;
+		Create_HomeScreen(&tftDisplay);
+		AddItemToOutputQueue(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, Home_Screen_SensorList());
+		break;
+	default:
+		break;
+	}
+
+
+	/*
 	//Serial.println("LoadNewScreen");
 	if (DestoryCurrentScreen != NULL) {
 		DestoryCurrentScreen(tftDisplay);
@@ -72,6 +121,7 @@ void DisplayHandler::LoadNewScreen(char screenID)
 	default:
 		break;
 	}
+	*/
 }
 
 void DisplayHandler::DispatchCommand()
@@ -90,7 +140,8 @@ void DisplayHandler::DispatchCommand()
 			//Serial.printf("DisplayHandler::DispatchCommand()");
 			if (UpdateCureentScreen != NULL) {
 				//Serial.printf("Updateing Screen with sensor data: '%s'\n",currItem.value);
-				UpdateCureentScreen(tftDisplay, currItem.value);
+				//UpdateCureentScreen(tftDisplay, currItem.value);
+				UpdateCureentScreen(currItem.value);
 			}
 			break;
 		default:

@@ -1,4 +1,7 @@
 #pragma once
+
+
+
 #include <SPI.h>
 #include <TFT_eSPI.h>
 #include "Widgets/HS_Dial_Widget.h"
@@ -108,6 +111,7 @@ char* Screen_Home_SensorList() {
 	//return "/Ethernet/0/recv,a";
 	return "/intelcpu/0/load/0,b";
 }
+
 void Update_Screen_Home(TFT_eSPI TFT, char* value)
 {
 

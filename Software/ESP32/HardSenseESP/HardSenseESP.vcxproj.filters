@@ -57,6 +57,33 @@
     <ClInclude Include="DisplayHandler\GUI\Widgets\HS_WidgetBase.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="DisplayHandler\GUI\HS_ScreenBase.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DisplayHandler\GUI\HS_HomeScreen.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DisplayHandler\GUI\HomeScreen_Functions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DisplayHandler\GUI\HS_SplashScreen.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DisplayHandler\GUI\SplashScreen_Functions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DisplayHandler\GUI\HS_ConnectToNetworkScreen.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DisplayHandler\GUI\ConnectToNetworkScreen_Functions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DisplayHandler\GUI\HS_BluetoothConfiguratorScreen.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DisplayHandler\GUI\BluetoothConfiguratorScreen_Functions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="HSFileSystem\HSFileSystem.cpp">
@@ -72,6 +99,21 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="DisplayHandler\GUI\Widgets\HS_WidgetBase.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DisplayHandler\GUI\HS_ScreenBase.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DisplayHandler\GUI\HS_HomeScreen.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DisplayHandler\GUI\HS_SplashScreen.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DisplayHandler\GUI\HS_ConnectToNetworkScreen.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DisplayHandler\GUI\HS_BluetoothConfiguratorScreen.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

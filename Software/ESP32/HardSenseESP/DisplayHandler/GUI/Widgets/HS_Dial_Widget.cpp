@@ -17,7 +17,7 @@ HS_Dial_Widget::HS_Dial_Widget(TFT_eSPI TFT)
 HS_Dial_Widget::~HS_Dial_Widget()
 {
 	delete(dial);
-	delete(dial);
+	delete(needle);
 }
 
 void HS_Dial_Widget::DrawDialScale(TFT_eSPI TFT, int16_t start_angle, int16_t end_angle, int16_t increment, uint16_t ringColor)
@@ -67,7 +67,6 @@ void HS_Dial_Widget::PlotDial(int16_t x, int16_t y, int16_t angle, String label,
 {
 	DrawEmptyDial(label, val);
 
-	// Push a rotated needle Sprite to the dial Sprite, with black as transparent colour
 	needle->pushRotated(dial, angle, TFT_BLACK); // dial is the destination Sprite
 
 	// Push the resultant dial Sprite to the screen, with transparent colour

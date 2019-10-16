@@ -27,11 +27,13 @@ private:
 
 	void DispatchCommand();
 
-	void(*UpdateCureentScreen)(TFT_eSPI TFT, char* value) = NULL;
-	void(*DestoryCurrentScreen)(TFT_eSPI) = NULL;
+	void(*UpdateCureentScreen)(char* value) = NULL;
+	void(*DestoryCurrentScreen)() = NULL;
 
 	void LoadNewScreen(char screenID);
 	void(*AddItemToOutputQueue)(char key, char* value);
+
+	void* currentScreen = NULL;
 
 public:
 	DisplayHandler();

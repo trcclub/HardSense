@@ -116,10 +116,19 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DisplayHandler\DisplayHandler.h" />
+    <ClInclude Include="DisplayHandler\GUI\BluetoothConfiguratorScreen_Functions.h" />
+    <ClInclude Include="DisplayHandler\GUI\ConnectToNetworkScreen_Functions.h" />
+    <ClInclude Include="DisplayHandler\GUI\HomeScreen_Functions.h" />
+    <ClInclude Include="DisplayHandler\GUI\HS_BluetoothConfiguratorScreen.h" />
+    <ClInclude Include="DisplayHandler\GUI\HS_ConnectToNetworkScreen.h" />
+    <ClInclude Include="DisplayHandler\GUI\HS_HomeScreen.h" />
+    <ClInclude Include="DisplayHandler\GUI\HS_ScreenBase.h" />
+    <ClInclude Include="DisplayHandler\GUI\HS_SplashScreen.h" />
     <ClInclude Include="DisplayHandler\GUI\Screen_BluetoothConfigurator.h" />
     <ClInclude Include="DisplayHandler\GUI\Screen_ConnectToNetwork.h" />
     <ClInclude Include="DisplayHandler\GUI\Screen_HomeScreen.h" />
     <ClInclude Include="DisplayHandler\GUI\SplashScreen.h" />
+    <ClInclude Include="DisplayHandler\GUI\SplashScreen_Functions.h" />
     <ClInclude Include="DisplayHandler\GUI\Widgets\HS_Dial_Widget.h" />
     <ClInclude Include="DisplayHandler\GUI\Widgets\HS_WidgetBase.h" />
     <ClInclude Include="GlobalDefinitions.h" />
@@ -131,6 +140,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DisplayHandler\DisplayHandler.cpp" />
+    <ClCompile Include="DisplayHandler\GUI\HS_BluetoothConfiguratorScreen.cpp" />
+    <ClCompile Include="DisplayHandler\GUI\HS_ConnectToNetworkScreen.cpp" />
+    <ClCompile Include="DisplayHandler\GUI\HS_HomeScreen.cpp" />
+    <ClCompile Include="DisplayHandler\GUI\HS_ScreenBase.cpp" />
+    <ClCompile Include="DisplayHandler\GUI\HS_SplashScreen.cpp" />
     <ClCompile Include="DisplayHandler\GUI\Widgets\HS_Dial_Widget.cpp" />
     <ClCompile Include="DisplayHandler\GUI\Widgets\HS_WidgetBase.cpp" />
     <ClCompile Include="HSFileSystem\HSFileSystem.cpp" />
