@@ -6,7 +6,7 @@ HS_HomeScreen::HS_HomeScreen(TFT_eSPI *newTFT) : HS_ScreenBase(newTFT)
 	Home_Screen_cpuLoadDial_CurrentRingColor = TFT_GREEN;
 	cpuLoadWidget = new HS_Dial_Widget(*TFT);
 
-	TFT->fillScreen(TFT_DARKGREY);
+	TFT->fillScreen(TFT_WHITE);
 
 	Draw_CPU_Panel();
 
@@ -51,48 +51,48 @@ void HS_HomeScreen::SetSensorList(void(*AddItemToOutputQueue_func)(char key, cha
 	AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/intelcpu/0/load/0,a");
 	AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/intelcpu/0/temperature/6,b");
 	AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/intelcpu/0/clock/1,c");
-
-	/*
-	Serial.println("HS_HomeScreen::GetSensorList()");
-	char* buf = new char[MAX_QUEUE_ITEM_VALUE_SIZE];
-	//char buf[MAX_QUEUE_ITEM_VALUE_SIZE];
-	strcpy(buf, "/intelcpu/0/load/0,a|/intelcpu/0/temperature/6,b|/intelcpu/0/clock/1,c");
-
-	Serial.print("HS_HomeScreen::GetSensorList():  Return buf:");
-	Serial.println(buf);
-	Serial.println("Did we get here?");
-	return buf;
-	//return "/intelcpu/0/load/0,a|/intelcpu/0/temperature/6,b";
-	//return "/intelcpu/0/clock/1,c";
-	*/
 }
 
 void HS_HomeScreen::Draw_CPU_Panel()
 {
+	String printer = "";
 	TFT->loadFont(AA_FONT_LARGE);
+	DrawBoxWithBorderAndDropShadow(0, 0, 22, 94, BOX_BORDER_COLOR, CPU_AREA_BGCOLOR, BOX_DROP_SHADOW);
+		
+	TFT->setTextColor(TFT_WHITE, CPU_AREA_BGCOLOR);
+	TFT->setTextDatum(MC_DATUM);
+	TFT->drawString("C", 11, 25);
+	TFT->drawString("P", 10, 47);
+	TFT->drawString("U", 9, 69);
+
+
 
 	//CPU Package Load Dial Gauge
-	TFT->fillRect(0, 0, 200, 92, TFT_DARKGREY);
-	TFT->fillRect(2, 2, 196, 88, CPU_AREA_BGCOLOR);
+	DrawBoxWithBorderAndDropShadow(20, 0, 188, 94, BOX_BORDER_COLOR,CPU_AREA_BGCOLOR, BOX_DROP_SHADOW);
 	cpuLoadWidget->DrawDialScale(*TFT, SCREEN_HOME_CPU_LOAD_DIAL_MIN, SCREEN_HOME_CPU_LOAD_DIAL_MAX, 30, Home_Screen_cpuLoadDial_CurrentRingColor);
 	Update_CPU_Panel_Load(0.0);
 
 	//CPU Package Temperature
-	TFT->fillRect(90, 5, 67, TFT->fontHeight() + 8, TFT_DARKGREY);
-	TFT->fillRect(92, 7, 63, TFT->fontHeight() + 4, CPU_AREA_BGCOLOR);
+	DrawBoxWithBorderAndDropShadow(123,4,67,26, BOX_BORDER_COLOR, CPU_AREA_BGCOLOR, BOX_DROP_SHADOW);
 
-	TFT->setCursor(135, 10);
-	char d = 0xB0;
-	TFT->print(d);
-	TFT->print("C");
-	Update_CPU_Panel_Tempererature(0.0);
+	TFT->setTextColor(TFT_WHITE, CPU_AREA_BGCOLOR);
+	TFT->setTextDatum(TR_DATUM);
+	TFT->drawString(degreesC, 184, 10);
+
 
 	// CPU Clock Speed
-	TFT->fillRect(90, TFT->fontHeight() + 14, 89, TFT->fontHeight() + 8, TFT_DARKGREY);
-	TFT->fillRect(92, TFT->fontHeight() + 16, 85, TFT->fontHeight() + 4, CPU_AREA_BGCOLOR);
-	TFT->setCursor(138, TFT->fontHeight() + 19);
-	TFT->print("MHz");
-	Update_CPU_Panel_ClockSpeed(0.0);
+	DrawBoxWithBorderAndDropShadow(113, 64, 89, 26, BOX_BORDER_COLOR, CPU_AREA_BGCOLOR, BOX_DROP_SHADOW);
+	TFT->drawString(String("MHz"), 198, 70);
+	
+
+	/*
+	TFT->setTextDatum(ML_DATUM);
+	sd = "CPU";
+	TFT->drawString(sd, 120, 47);
+	*/
+
+	Update_CPU_Panel_Tempererature(55.5);
+	Update_CPU_Panel_ClockSpeed(4444.0);
 }
 
 void HS_HomeScreen::Update_CPU_Panel_Load(double percentage)
@@ -122,28 +122,28 @@ void HS_HomeScreen::Update_CPU_Panel_Load(double percentage)
 		cpuLoadWidget->DrawDialScale(*TFT, SCREEN_HOME_CPU_LOAD_DIAL_MIN, SCREEN_HOME_CPU_LOAD_DIAL_MAX, 30, Home_Screen_cpuLoadDial_CurrentRingColor);
 	}
 
-	cpuLoadWidget->PlotDial(SCREEN_HOME_CPU_LOAD_DIAL_X, SCREEN_HOME_CPU_LOAD_DIAL_Y, angle, "Load", percentage);
+	cpuLoadWidget->PlotDial(SCREEN_HOME_CPU_LOAD_DIAL_X, SCREEN_HOME_CPU_LOAD_DIAL_Y, angle, "Load", percentage, BOX_DROP_SHADOW);
 
 }
 
 void HS_HomeScreen::Update_CPU_Panel_Tempererature(double temp)
 {
 	Serial.println("Update_CPU_Panel_Tempererature 1");
-	TFT->fillRect(93, 9, 40, TFT->fontHeight(), CPU_AREA_BGCOLOR);
+
+	TFT->fillRect(128, 9, 38, 18, CPU_AREA_BGCOLOR);
 	TFT->setTextDatum(TR_DATUM);
 	TFT->setTextColor(TFT_WHITE, CPU_AREA_BGCOLOR);
-	TFT->drawFloat(temp, 1, 128, 9);
+	TFT->drawFloat(temp, 1, 162, 10);
 	Serial.println("Update_CPU_Panel_Tempererature 2");
 }
 
 void HS_HomeScreen::Update_CPU_Panel_ClockSpeed(double clock)
 {
 	Serial.println("Update_CPU_Panel_ClockSpeed 1");
-	TFT->fillRect(93, TFT->fontHeight() + 16, 46, TFT->fontHeight(), CPU_AREA_BGCOLOR);
+	TFT->fillRect(117, 69, 44, 18, CPU_AREA_BGCOLOR);
 	TFT->setTextDatum(TL_DATUM);
 	TFT->setTextColor(TFT_WHITE, CPU_AREA_BGCOLOR);
 	int i = clock;
-	TFT->drawNumber(i, 95, TFT->fontHeight() + 19);
-	//TFT->drawFloat(clock, 0, 95, TFT->fontHeight() + 19);
+	TFT->drawNumber(i, 118, 70);
 	Serial.println("Update_CPU_Panel_ClockSpeed 2");
 }
