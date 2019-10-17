@@ -13,7 +13,7 @@ HS_WidgetBase::~HS_WidgetBase()
 void HS_WidgetBase::HS_Load_Fonts()
 {
 	if (!SPIFFS.begin()) {
-		Serial.println("HS_Load_Fonts:: SPIFFS initialisation failed!");
+		Serial.println("HS_WidgetBase::HS_Load_Fonts:: SPIFFS initialisation failed!");
 		while (1) yield(); // Stay here twiddling thumbs waiting
 	}
 
@@ -24,8 +24,8 @@ void HS_WidgetBase::HS_Load_Fonts()
 
 	if (font_missing)
 	{
-		Serial.println("\r\HS_Load_Fonts:: Font missing in SPIFFS, did you upload it?");
+		Serial.println("\r\HS_WidgetBase::HS_Load_Fonts:: Font missing in SPIFFS, did you upload it?");
 		while (1) yield();
 	}
-	else Serial.println("\r\HS_Load_Fonts:: Fonts found OK.");
+	else Serial.println("\r\HS_WidgetBase::HS_Load_Fonts:: Fonts found OK.");
 }

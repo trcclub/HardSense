@@ -42,11 +42,32 @@ void DisplayHandler::Run()
 			last = millis();
 		}
 		*/
+
 		//HandleButtons();
+		yield();
 		delay(20);
+
 	}
 
 }
+
+/*
+void DisplayHandler::GetSensorData(char* (*sensorFunc)())
+{
+	char buf[MAX_QUEUE_ITEM_VALUE_SIZE];
+	Serial.println("\n--------\nDisplayHandler::LoadNewScreen:  Getting Home Screen sensors: ");
+	char* list = sensorFunc();
+	Serial.println("1");
+	strcpy(buf, list);
+	Serial.println("2");
+	delete(list);
+	Serial.println("DisplayHandler::LoadNewScreen:  Adding Home Screen sensors: ");
+	Serial.println(buf);
+	AddItemToOutputQueue(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, buf);
+	Serial.print("DisplayHandler::LoadNewScreen:  Sensors added: \n-----------");
+
+}
+*/
 
 void DisplayHandler::LoadNewScreen(char screenID)
 {
@@ -79,7 +100,8 @@ void DisplayHandler::LoadNewScreen(char screenID)
 		DestoryCurrentScreen = Destroy_HomeScreen;
 		UpdateCureentScreen = Update_HomeScreen;
 		Create_HomeScreen(&tftDisplay);
-		AddItemToOutputQueue(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, Home_Screen_SensorList());
+		//GetSensorData(Home_Screen_SensorList);
+		Set_Home_Screen_SensorList(AddItemToOutputQueue);
 		break;
 	default:
 		break;
@@ -128,6 +150,7 @@ void DisplayHandler::DispatchCommand()
 {
 	while (!displayDataQueue->isEmpty())
 	{
+		Serial.println("DisplayHandler::DispatchCommand 1");
 		portENTER_CRITICAL(&displayQueueMux);
 		QUEUE_ITEM currItem = displayDataQueue->dequeue();
 		portEXIT_CRITICAL(&displayQueueMux);
@@ -137,15 +160,14 @@ void DisplayHandler::DispatchCommand()
 			LoadNewScreen(currItem.value[0]);
 			break;
 		case DisplayCommands::UpdateValue:
-			//Serial.printf("DisplayHandler::DispatchCommand()");
 			if (UpdateCureentScreen != NULL) {
-				//Serial.printf("Updateing Screen with sensor data: '%s'\n",currItem.value);
-				//UpdateCureentScreen(tftDisplay, currItem.value);
 				UpdateCureentScreen(currItem.value);
 			}
 			break;
 		default:
 			break;
 		}
+		yield();
+		Serial.println("DisplayHandler::DispatchCommand 2");
 	}
 }

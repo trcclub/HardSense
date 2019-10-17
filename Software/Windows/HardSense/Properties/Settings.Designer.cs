@@ -112,7 +112,7 @@ namespace HardSense.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1024")]
+        [global::System.Configuration.DefaultSettingValueAttribute("128")]
         public int DefaultMaxLengthDataToSend {
             get {
                 return ((int)(this["DefaultMaxLengthDataToSend"]));

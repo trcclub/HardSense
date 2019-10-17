@@ -80,6 +80,9 @@ void HS_Dial_Widget::DrawEmptyDial(String label, float val)
 	dial->drawPixel(45, 45, TFT_WHITE);        // For demo only, mark pivot point with a while pixel
 	
 	dial->setTextDatum(TC_DATUM);              // Draw dial text
-	dial->drawString(label, 45, 15, 2);
+	dial->setTextColor(TFT_WHITE, TFT_BLACK);
+	dial->drawString(label, 45, 18, 2);
+	dial->fillRoundRect(27, 57, 39, 16, 8, TFT_LIGHTGREY);
+	dial->setTextColor(TFT_BLACK, TFT_LIGHTGREY);
 	dial->drawFloat(val, 1, 45, 60, 2);
 }

@@ -12,7 +12,9 @@
 
 #define HEARTBEAT_TIMER_POLL_TIME 2000000
 
-TaskHandle_t TFT_Core_Handle;
+TaskHandle_t Display_Core_Task_Handle;
+TaskHandle_t Serial_Core_Task_Handle;
+
 DataQueue<QUEUE_ITEM> displayQueue(20);
 DataQueue<QUEUE_ITEM> outputQueue(5);
 
@@ -43,14 +45,16 @@ void setup() {
 	sprintf(qi.value, "%c", ScreenTypes::SplashScreen);
 	displayQueue.enqueue(qi);
 
+
 	xTaskCreatePinnedToCore(
 		TFT_Core_Proc,                  /* pvTaskCode */
 		"DisplayHandlerTask",            /* pcName */
 		4000,                   /* usStackDepth */
 		NULL,                   /* pvParameters */
 		1,                      /* uxPriority */
-		&TFT_Core_Handle,                 /* pxCreatedTask */
+		&Display_Core_Task_Handle,                 /* pxCreatedTask */
 		0);
+
 
 	delay(2000);
 
@@ -68,18 +72,26 @@ void setup() {
 
 	hsSerial.HandleWiFiConnection();
 
+	//xTaskCreatePinnedToCore(
+	//	Serial_Core_Proc,                  /* pvTaskCode */
+	//	"SerialHandlerTask",            /* pcName */
+	//	8000,                   /* usStackDepth */
+	//	NULL,                   /* pvParameters */
+	//	1,                      /* uxPriority */
+	//	&Serial_Core_Task_Handle,                 /* pxCreatedTask */
+	//	1);
 }
 
 
-void loop() {
+void loop() 
+{
 	if (!hsSerial.connectedToSomething) {
 		hsSerial.ConnectToHardsenseServer();
 	}
 
-
 	hsSerial.HandleInput();
 	hsSerial.HandleOutput();
-
+	yield();
 	delay(20);
 }
 
@@ -88,6 +100,21 @@ void TFT_Core_Proc(void* parameter)
 	displayHandler.Run();
 	
 	delay(20);
+}
+
+void Serial_Core_Proc(void* parameter)
+{
+	while (true)
+	{
+		if (!hsSerial.connectedToSomething) {
+			hsSerial.ConnectToHardsenseServer();
+		}
+
+		hsSerial.HandleInput();
+		hsSerial.HandleOutput();
+		yield();
+		delay(20);
+	}
 }
 
 

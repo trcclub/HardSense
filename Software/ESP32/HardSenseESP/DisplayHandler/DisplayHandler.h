@@ -35,6 +35,9 @@ private:
 
 	void* currentScreen = NULL;
 
+	//void GetSensorData(char*(*sensorFunc)());
+
+
 public:
 	DisplayHandler();
 	~DisplayHandler();

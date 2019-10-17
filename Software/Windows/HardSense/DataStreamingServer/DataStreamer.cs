@@ -69,7 +69,14 @@ namespace HardSense.DataStreamingServer
             running = true;
             readThread.Start();
             writeThread.Start();
-            heartbeatTimer.Start();
+
+            //
+            // ** RE-ENABLE THE HEARTBEAT
+            //
+            //heartbeatTimer.Start();
+            //
+            // ** RE-ENABLE THE HEARTBEAT
+            //
 
             writeThread.Join();
             readThread.Join();

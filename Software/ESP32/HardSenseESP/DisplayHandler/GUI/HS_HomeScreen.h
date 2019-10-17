@@ -14,11 +14,15 @@ class HS_HomeScreen :
 private:
 	HS_Dial_Widget* cpuLoadWidget;
 	uint16_t Home_Screen_cpuLoadDial_CurrentRingColor;
-	void Update_CPU_Total_Load(double percentage);
+
+	void Draw_CPU_Panel();
+	void Update_CPU_Panel_Load(double percentage);
+	void Update_CPU_Panel_Tempererature(double temp);
+	void Update_CPU_Panel_ClockSpeed(double temp);
 
 public:
 	HS_HomeScreen(TFT_eSPI *newTFT);
 	~HS_HomeScreen();
 	void UpdateScreen(char* value);
-	char* GetSensorList();
+	void SetSensorList(void(*AddItemToOutputQueue_func)(char key, char* value));
 };

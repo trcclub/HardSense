@@ -3,9 +3,8 @@
 #include "SPIFFS.h"
 #include <SPI.h>
 #include <TFT_eSPI.h>
+#include "../../../GlobalDefinitions.h"
 
-#define AA_FONT_SMALL "SegoeUI-14"
-#define AA_FONT_LARGE "SegoeUI-18"
 
 class HS_WidgetBase
 {

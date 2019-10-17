@@ -220,7 +220,15 @@ void HSSerial::NewSocketRequestAccepted()
 	sprintf(buf, "%c", ScreenTypes::Home);
 	AddItemToDisplayQueue(DisplayCommands::ChangeScreen, buf);
 
-	HeartbeatTimerEnabled(true);
+	//
+	// ** RE-ENABLE THE HEARTBEAT
+	//
+
+	//HeartbeatTimerEnabled(true);
+
+	//
+	// ** RE-ENABLE THE HEARTBEAT
+	//
 }
 
 void HSSerial::AcceptNewBTConnection()
@@ -269,7 +277,7 @@ void HSSerial::AddKeyToOutputMessage(byte key)
 
 void HSSerial::AddIntToOutputMessage(byte key, int val)
 {
-	char newVal[FIELD_MAX_LENGTH];
+	char newVal[MAX_BUF_SIZE];
 	sprintf(newVal, "%i", hardsenseSettings.serverPort);
 	AddStringToOutputMessage(key, newVal);
 }
@@ -281,17 +289,23 @@ void HSSerial::AddBoolToOutputMessage(byte key, bool value)
 
 void HSSerial::AddStringToOutputMessage(byte key, String value)
 {
-	char buf[128];
-	value.toCharArray(buf, 128);
+	char buf[MAX_BUF_SIZE];
+	value.toCharArray(buf, MAX_BUF_SIZE);
 	AddStringToOutputMessage(key, buf);
 }
 
 void HSSerial::AddStringToOutputMessage(byte key, char *value)
 {
-	portENTER_CRITICAL(&outputDataMux);
-
 	int valueLength = strlen(value);
 	int newLength = OutputDataLength + valueLength + 3;
+
+	if (newLength > MAX_BUF_SIZE) {
+		HandleOutput();
+		valueLength = strlen(value);
+		newLength = OutputDataLength + valueLength + 3;
+	}
+	portENTER_CRITICAL(&outputDataMux);
+
 	char tmp[newLength];
 	
 	if (OutputDataLength > 0) {
@@ -331,6 +345,9 @@ void HSSerial::HandleOutput() {
 
 	portEXIT_CRITICAL(&outputDataMux);
 
+	//Serial.print("OUTPUT: ");
+	//Serial.println(tmpOutputData);
+
 	(this->*PrintMessageToOutput)((char)TRANS__KEY::STX);
 	for (int x = 0; x < tmpOutputDataLength; x++) {
 		(this->*PrintMessageToOutput)(tmpOutputData[x]);
@@ -351,17 +368,20 @@ void HSSerial::HandleInput() {
 		AddStringToOutputMessage(currItem.key, currItem.value);
 	}
 
-
 	if (!(this->*InputAvailable)())
 		return;
 
+	Serial.println("HandleInput 1");
 	while ((this->*InputAvailable)() && (this->*ReadInputByte)() != TRANS__KEY::STX) {}
 
 	ParseInput((this->*ReadInputStringUntil)(TRANS__KEY::ETX));
+	Serial.println("HandleInput 2");
 }
 
 void HSSerial::ParseInput(String input)
 {
+	Serial.print("ParseInput 1 ");
+	Serial.println(input);
 	int currIndex = input.indexOf(TRANS__KEY::PACKET_END);
 	int start = 0;
 	while (currIndex != -1) {
@@ -369,13 +389,13 @@ void HSSerial::ParseInput(String input)
 
 		char key = currToken.charAt(0);
 		String value = currToken.substring(1);
-
 		DispatchCommand(key, value);
 
 		start = currIndex + 1;
 		currIndex = input.indexOf(TRANS__KEY::PACKET_END, start);
-		yield(); // Avoid a watchdog time-out
+		//yield(); // Avoid a watchdog time-out
 	}
+	Serial.println("ParseInput 2");
 }
 
 void HSSerial::DispatchCommand(char key, String val) {
