@@ -30,3 +30,8 @@ char* Set_Home_Screen_SensorList(void(*AddItemToOutputQueue_func)(char key, char
 	return HS_Current_HomeScreen->GetSensorList();
 	*/
 }
+
+bool Handle_HomeScreen_Touch(int x, int y)
+{
+	HS_Current_HomeScreen->HandleTouch(x, y);
+}

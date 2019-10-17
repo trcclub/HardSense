@@ -1,10 +1,13 @@
 #pragma once
 #include "Arduino.h"
+#include <FS.h>
 #include <SPI.h>
 #include <TFT_eSPI.h>
 #include "../HSSerial/HSSerial.h"
 #include <Queue.h>
 #include "../QueueItem.h"
+
+#define CALIBRATION_FILE "/calibrationData"
 
 enum DisplayCommands {
 	ChangeScreen = 0,
@@ -29,14 +32,12 @@ private:
 
 	void(*UpdateCureentScreen)(char* value) = NULL;
 	void(*DestoryCurrentScreen)() = NULL;
+	bool(*HandleTouchPoint)(int x, int y) = NULL;
 
 	void LoadNewScreen(char screenID);
 	void(*AddItemToOutputQueue)(char key, char* value);
 
-	void* currentScreen = NULL;
-
-	//void GetSensorData(char*(*sensorFunc)());
-
+	void SetTouch();
 
 public:
 	DisplayHandler();

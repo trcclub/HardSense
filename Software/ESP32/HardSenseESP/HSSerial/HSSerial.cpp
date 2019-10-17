@@ -371,17 +371,17 @@ void HSSerial::HandleInput() {
 	if (!(this->*InputAvailable)())
 		return;
 
-	Serial.println("HandleInput 1");
+	//Serial.println("HandleInput 1");
 	while ((this->*InputAvailable)() && (this->*ReadInputByte)() != TRANS__KEY::STX) {}
 
 	ParseInput((this->*ReadInputStringUntil)(TRANS__KEY::ETX));
-	Serial.println("HandleInput 2");
+	//Serial.println("HandleInput 2");
 }
 
 void HSSerial::ParseInput(String input)
 {
-	Serial.print("ParseInput 1 ");
-	Serial.println(input);
+	//Serial.print("ParseInput 1 ");
+	//Serial.println(input);
 	int currIndex = input.indexOf(TRANS__KEY::PACKET_END);
 	int start = 0;
 	while (currIndex != -1) {
@@ -395,7 +395,7 @@ void HSSerial::ParseInput(String input)
 		currIndex = input.indexOf(TRANS__KEY::PACKET_END, start);
 		//yield(); // Avoid a watchdog time-out
 	}
-	Serial.println("ParseInput 2");
+	//Serial.println("ParseInput 2");
 }
 
 void HSSerial::DispatchCommand(char key, String val) {

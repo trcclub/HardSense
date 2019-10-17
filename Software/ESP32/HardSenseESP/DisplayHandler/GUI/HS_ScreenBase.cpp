@@ -48,7 +48,7 @@ void HS_ScreenBase::DrawBoxWithBorderAndDropShadow(int32_t x, int32_t y, int32_t
 	TFT->drawFastVLine(x+w, y, h, dropShadowColor);
 }
 
-void HS_ScreenBase::DrawBoxDropShadow(int32_t x, int32_t, int32_t w, int32_t h, int32_t boxColor)
+void HS_ScreenBase::HandleTouch(int x, int y)
 {
 
 }
@@ -70,6 +70,5 @@ void HS_ScreenBase::HS_Load_Fonts()
 		Serial.println("\r\HS_ScreenBase::HS_Load_Fonts():: Font missing in SPIFFS, did you upload it?");
 		while (1) yield();
 	}
-	else Serial.println("\r\HS_ScreenBase::HS_Load_Fonts():: Fonts found OK.");
 
 }

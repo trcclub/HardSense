@@ -7,9 +7,13 @@
 #define SCREEN_HOME_CPU_LOAD_DIAL_X 22
 #define SCREEN_HOME_CPU_LOAD_DIAL_Y 2
 
-#define CPU_AREA_BGCOLOR 0x7D19
+#define CPU_PANEL_BGCOLOR 0x7D19
 #define BOX_BORDER_COLOR 0x9DDB
 #define BOX_DROP_SHADOW 0x63F2
+#define CPU_PANEL_LOW_X 0
+#define CPU_PANEL_HIGH_X 208
+#define CPU_PANEL_LOW_Y 0
+#define CPU_PANEL_HIGH_Y 94
 
 class HS_HomeScreen :
 	public HS_ScreenBase
@@ -22,10 +26,12 @@ private:
 	void Update_CPU_Panel_Load(double percentage);
 	void Update_CPU_Panel_Tempererature(double temp);
 	void Update_CPU_Panel_ClockSpeed(double temp);
+	bool CPU_Panel_Touched(int x, int y);
 
 public:
 	HS_HomeScreen(TFT_eSPI *newTFT);
 	~HS_HomeScreen();
 	void UpdateScreen(char* value);
 	void SetSensorList(void(*AddItemToOutputQueue_func)(char key, char* value));
+	void HandleTouch(int x, int y);
 };

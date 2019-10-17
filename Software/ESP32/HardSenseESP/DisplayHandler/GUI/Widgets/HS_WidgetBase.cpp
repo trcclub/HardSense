@@ -27,5 +27,4 @@ void HS_WidgetBase::HS_Load_Fonts()
 		Serial.println("\r\HS_WidgetBase::HS_Load_Fonts:: Font missing in SPIFFS, did you upload it?");
 		while (1) yield();
 	}
-	else Serial.println("\r\HS_WidgetBase::HS_Load_Fonts:: Fonts found OK.");
 }
