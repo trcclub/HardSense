@@ -5,10 +5,12 @@ HS_HomeScreen::HS_HomeScreen(TFT_eSPI *newTFT) : HS_ScreenBase(newTFT)
 	//Serial.println("\n----\nCreate_Screen_Home() !!!");
 	Home_Screen_cpuLoadDial_CurrentRingColor = TFT_GREEN;
 	cpuLoadWidget = new HS_Dial_Widget(*TFT);
+	gpuLoadWidget = new HS_Dial_Widget(*TFT);
 
 	TFT->fillScreen(TFT_WHITE);
 
 	Draw_CPU_Panel();
+	Draw_GPU_Panel();
 
 	//Serial.println("Ending Create_Screen_Home() !!!");
 }
@@ -16,6 +18,7 @@ HS_HomeScreen::HS_HomeScreen(TFT_eSPI *newTFT) : HS_ScreenBase(newTFT)
 HS_HomeScreen::~HS_HomeScreen()
 {
 	delete(cpuLoadWidget);
+	delete(gpuLoadWidget);
 }
 
 void HS_HomeScreen::UpdateScreen(char* value)
@@ -41,12 +44,12 @@ void HS_HomeScreen::UpdateScreen(char* value)
 		Update_CPU_Panel_Power(dValue);
 		break;
 	case 'e':
-		Serial.print("Update_GPU_Panel_Load: ");
-		Serial.println(dValue);
-		//Update_GPU_Panel_Load(dValue);
+		//Serial.print("Update_GPU_Panel_Load: ");
+		//Serial.println(dValue);
+		Update_GPU_Panel_Load(dValue);
 		break;
 	case 'f':
-		//Update_GPU_Panel_Temperature(dValue);
+		Update_GPU_Panel_Temperature(dValue);
 		break;
 	default:
 		break;
@@ -62,10 +65,21 @@ void HS_HomeScreen::SetSensorList(void(*AddItemToOutputQueue_func)(char key, cha
 	AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/intelcpu/0/load/0,a");
 	AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/intelcpu/0/temperature/6,b");
 	AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/intelcpu/0/clock/1,c");
-	delay(20);
+
+	delay(30); // I've got to figure out why this is necessary
+	
 	AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/intelcpu/0/power/0,d");
 	AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/nvidiagpu/0/load/0,e");
 	AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/nvidiagpu/0/temperature/0,f");
+}
+
+
+void HS_HomeScreen::HandleTouch(int x, int y)
+{
+	if (CPU_Panel_Touched(x, y))
+	{
+		// Do interesting things here
+	}
 }
 
 void HS_HomeScreen::Draw_CPU_Panel()
@@ -81,7 +95,7 @@ void HS_HomeScreen::Draw_CPU_Panel()
 
 	//CPU Package Load Dial Gauge
 	DrawBoxWithBorderAndDropShadow(20, 0, 188, 94, BOX_BORDER_COLOR,PANEL_BGCOLOR, BOX_DROP_SHADOW);
-	cpuLoadWidget->DrawDialScale(*TFT, SCREEN_HOME_CPU_LOAD_DIAL_MIN, SCREEN_HOME_CPU_LOAD_DIAL_MAX, 30, Home_Screen_cpuLoadDial_CurrentRingColor);
+	cpuLoadWidget->DrawDialScale(*TFT, SCREEN_HOME_LOAD_DIAL_MIN, SCREEN_HOME_LOAD_DIAL_MAX, 30, Home_Screen_cpuLoadDial_CurrentRingColor);
 	Update_CPU_Panel_Load(0.0);
 
 	//CPU Package Temperature
@@ -97,7 +111,6 @@ void HS_HomeScreen::Draw_CPU_Panel()
 	// CPU Clock Speed
 	DrawBoxWithBorderAndDropShadow(113, 64, 89, 26, BOX_BORDER_COLOR, PANEL_BGCOLOR, BOX_DROP_SHADOW);
 	TFT->drawString(String("MHz"), 198, 70);
-	
 
 	/*
 	TFT->setTextDatum(ML_DATUM);
@@ -120,18 +133,9 @@ bool HS_HomeScreen::CPU_Panel_Touched(int x, int y)
 	return false;
 }
 
-
-void HS_HomeScreen::HandleTouch(int x, int y)
-{
-	if (CPU_Panel_Touched(x,y))
-	{
-		// Do interesting things here
-	}
-}
-
 void HS_HomeScreen::Update_CPU_Panel_Load(double percentage)
 {
-	int angle = map(percentage, 0, 100, SCREEN_HOME_CPU_LOAD_DIAL_MIN, SCREEN_HOME_CPU_LOAD_DIAL_MAX);
+	int angle = map(percentage, 0, 100, SCREEN_HOME_LOAD_DIAL_MIN, SCREEN_HOME_LOAD_DIAL_MAX);
 
 	uint16_t ringColor;
 	if (percentage > 94)
@@ -153,7 +157,7 @@ void HS_HomeScreen::Update_CPU_Panel_Load(double percentage)
 	if (ringColor != Home_Screen_cpuLoadDial_CurrentRingColor)
 	{
 		Home_Screen_cpuLoadDial_CurrentRingColor = ringColor;
-		cpuLoadWidget->DrawDialScale(*TFT, SCREEN_HOME_CPU_LOAD_DIAL_MIN, SCREEN_HOME_CPU_LOAD_DIAL_MAX, 30, Home_Screen_cpuLoadDial_CurrentRingColor);
+		cpuLoadWidget->DrawDialScale(*TFT, SCREEN_HOME_LOAD_DIAL_MIN, SCREEN_HOME_LOAD_DIAL_MAX, 30, Home_Screen_cpuLoadDial_CurrentRingColor);
 	}
 
 	cpuLoadWidget->PlotDial(SCREEN_HOME_CPU_LOAD_DIAL_X, SCREEN_HOME_CPU_LOAD_DIAL_Y, angle, "Load", percentage, BOX_DROP_SHADOW);
@@ -188,4 +192,90 @@ void HS_HomeScreen::Update_CPU_Panel_ClockSpeed(double clock)
 	int i = clock;
 	TFT->drawNumber(i, 118, 70);
 	//Serial.println("Update_CPU_Panel_ClockSpeed 2");
+}
+
+
+
+void HS_HomeScreen::Draw_GPU_Panel()
+{
+	int yAdd = 95;
+	String printer = "";
+	TFT->loadFont(AA_FONT_LARGE);
+	DrawBoxWithBorderAndDropShadow(0, 0 + yAdd, 22, 94, BOX_BORDER_COLOR, PANEL_BGCOLOR, BOX_DROP_SHADOW);
+
+	TFT->setTextColor(TFT_WHITE, PANEL_BGCOLOR);
+	TFT->setTextDatum(MC_DATUM);
+	TFT->drawString("G", 10, 25 + yAdd);
+	TFT->drawString("P", 10, 47 + yAdd);
+	TFT->drawString("U", 9, 69 + yAdd);
+
+
+
+	//GPU Package Load Dial Gauge
+	DrawBoxWithBorderAndDropShadow(20, 0 + yAdd, 188, 94, BOX_BORDER_COLOR, PANEL_BGCOLOR, BOX_DROP_SHADOW);
+	gpuLoadWidget->DrawDialScale(*TFT, SCREEN_HOME_LOAD_DIAL_MIN, SCREEN_HOME_LOAD_DIAL_MAX, 30, Home_Screen_gpuLoadDial_CurrentRingColor);
+	Update_GPU_Panel_Load(0.0);
+
+	//GPU Package Temperature
+	DrawBoxWithBorderAndDropShadow(123, 4 + yAdd, 67, 26, BOX_BORDER_COLOR, PANEL_BGCOLOR, BOX_DROP_SHADOW);
+
+	TFT->setTextColor(TFT_WHITE, PANEL_BGCOLOR);
+	TFT->setTextDatum(TR_DATUM);
+	TFT->drawString(degreesC, 184, 10 + yAdd);
+
+
+	// GPU Power
+	//DrawBoxWithBorderAndDropShadow(123, 34, 67, 26, BOX_BORDER_COLOR, PANEL_BGCOLOR, BOX_DROP_SHADOW);
+	//TFT->drawString(String("W"), 184, 40);
+
+
+	// CPU Clock Speed
+	//DrawBoxWithBorderAndDropShadow(113, 64, 89, 26, BOX_BORDER_COLOR, PANEL_BGCOLOR, BOX_DROP_SHADOW);
+	//TFT->drawString(String("MHz"), 198, 70);
+
+	Update_GPU_Panel_Temperature(00.0);
+}
+
+void HS_HomeScreen::Update_GPU_Panel_Load(double percentage)
+{
+	//Serial.println("Update_GPU_Panel_Load 1");
+	int angle = map(percentage, 0, 100, SCREEN_HOME_LOAD_DIAL_MIN, SCREEN_HOME_LOAD_DIAL_MAX);
+
+	uint16_t ringColor;
+	if (percentage > 94)
+	{
+		ringColor = TFT_RED;
+	}
+	else if (percentage > 82)
+	{
+		ringColor = TFT_ORANGE;
+	}
+	else if (percentage > 61)
+	{
+		ringColor = TFT_YELLOW;
+	}
+	else
+	{
+		ringColor = TFT_GREEN;
+	}
+	if (ringColor != Home_Screen_gpuLoadDial_CurrentRingColor)
+	{
+		Home_Screen_gpuLoadDial_CurrentRingColor = ringColor;
+		gpuLoadWidget->DrawDialScale(*TFT, SCREEN_HOME_LOAD_DIAL_MIN, SCREEN_HOME_LOAD_DIAL_MAX, 30, Home_Screen_gpuLoadDial_CurrentRingColor);
+	}
+
+	//Serial.print("Percentage: ");
+	//Serial.print(percentage);
+	//Serial.print("  |  angle: ");
+	//Serial.println(angle);
+	gpuLoadWidget->PlotDial(SCREEN_HOME_GPU_LOAD_DIAL_X, SCREEN_HOME_GPU_LOAD_DIAL_Y, angle, "Load", percentage, BOX_DROP_SHADOW);
+}
+
+void HS_HomeScreen::Update_GPU_Panel_Temperature(double temp)
+{
+	int yAdd = 95;
+	TFT->fillRect(128, 9 + yAdd, 38, 18, PANEL_BGCOLOR);
+	TFT->setTextDatum(TR_DATUM);
+	TFT->setTextColor(TFT_WHITE, PANEL_BGCOLOR);
+	TFT->drawFloat(temp, 1, 162, 10 + yAdd);
 }

@@ -2,10 +2,14 @@
 #include "HS_ScreenBase.h"
 #include "Widgets/HS_Dial_Widget.h"
 
-#define SCREEN_HOME_CPU_LOAD_DIAL_MIN -120
-#define SCREEN_HOME_CPU_LOAD_DIAL_MAX 120
+#define SCREEN_HOME_LOAD_DIAL_MIN -120
+#define SCREEN_HOME_LOAD_DIAL_MAX 120
+
 #define SCREEN_HOME_CPU_LOAD_DIAL_X 22
 #define SCREEN_HOME_CPU_LOAD_DIAL_Y 2
+
+#define SCREEN_HOME_GPU_LOAD_DIAL_X 22
+#define SCREEN_HOME_GPU_LOAD_DIAL_Y 97
 
 #define PANEL_BGCOLOR 0x7D19
 #define BOX_BORDER_COLOR 0x9DDB
@@ -22,6 +26,10 @@ class HS_HomeScreen :
 private:
 	HS_Dial_Widget* cpuLoadWidget;
 	uint16_t Home_Screen_cpuLoadDial_CurrentRingColor;
+
+	HS_Dial_Widget* gpuLoadWidget;
+	uint16_t Home_Screen_gpuLoadDial_CurrentRingColor;
+
 	bool CPU_Panel_Touched(int x, int y);
 
 	void Draw_CPU_Panel();
@@ -30,6 +38,9 @@ private:
 	void Update_CPU_Panel_ClockSpeed(double temp);
 	void Update_CPU_Panel_Power(double power);
 
+	void Draw_GPU_Panel();
+	void Update_GPU_Panel_Load(double percentage);
+	void Update_GPU_Panel_Temperature(double temp);
 
 
 public:
