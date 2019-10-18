@@ -11,6 +11,7 @@ HS_HomeScreen::HS_HomeScreen(TFT_eSPI *newTFT) : HS_ScreenBase(newTFT)
 
 	Draw_CPU_Panel();
 	Draw_GPU_Panel();
+	Draw_Net_Panel();
 
 	//Serial.println("Ending Create_Screen_Home() !!!");
 }
@@ -55,6 +56,12 @@ void HS_HomeScreen::UpdateScreen(String value)
 	case 'h':
 		Update_GPU_Panel_FanControl(dValue);
 		break;
+	case 'i':
+		Update_Net_DownloadSpeed(dValue);
+		break;
+	case 'j':
+		Update_Net_UpLoadSpeed(dValue);
+		break;
 	default:
 		break;
 	}
@@ -69,6 +76,7 @@ void HS_HomeScreen::SetSensorList(void(*AddItemToOutputQueue_func)(char key, Str
 	
 	AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/intelcpu/0/load/0,a|/intelcpu/0/temperature/6,b|/intelcpu/0/clock/1,c|/intelcpu/0/power/0,d");
 	AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/nvidiagpu/0/load/0,e|/nvidiagpu/0/temperature/0,f|/nvidiagpu/0/clock/0,g|/nvidiagpu/0/control/0,h");
+	AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/Ethernet/0/recv,i|/Ethernet/0/send,j");
 
 
 	//AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/nvidiagpu/0/clock/0,g|/nvidiagpu/0/control/0,h");
@@ -102,9 +110,9 @@ void HS_HomeScreen::HandleTouch(int x, int y)
 void HS_HomeScreen::Draw_CPU_Panel()
 {
 	TFT->loadFont(AA_FONT_LARGE);
-	DrawBoxWithBorderAndDropShadow(0, 0, 22, 94, BOX_BORDER_COLOR, PANEL_BGCOLOR, BOX_DROP_SHADOW);
+	DrawBoxWithBorderAndDropShadow(0, 0, 22, 94, BOX_BORDER_COLOR, PANEL_HCOLOR, BOX_DROP_SHADOW);
 		
-	TFT->setTextColor(TFT_WHITE, PANEL_BGCOLOR);
+	TFT->setTextColor(TFT_WHITE, PANEL_HCOLOR);
 	TFT->setTextDatum(MC_DATUM);
 	TFT->drawString("C", 11, 25);
 	TFT->drawString("P", 10, 47);
@@ -216,9 +224,9 @@ void HS_HomeScreen::Draw_GPU_Panel()
 	int yAdd = 95;
 	String printer = "";
 	TFT->loadFont(AA_FONT_LARGE);
-	DrawBoxWithBorderAndDropShadow(0, 0 + yAdd, 22, 94, BOX_BORDER_COLOR, PANEL_BGCOLOR, BOX_DROP_SHADOW);
+	DrawBoxWithBorderAndDropShadow(0, 0 + yAdd, 22, 94, BOX_BORDER_COLOR, PANEL_HCOLOR, BOX_DROP_SHADOW);
 
-	TFT->setTextColor(TFT_WHITE, PANEL_BGCOLOR);
+	TFT->setTextColor(TFT_WHITE, PANEL_HCOLOR);
 	TFT->setTextDatum(MC_DATUM);
 	TFT->drawString("G", 10, 25 + yAdd);
 	TFT->drawString("P", 10, 47 + yAdd);
@@ -315,4 +323,64 @@ void HS_HomeScreen::Update_GPU_Panel_ClockSpeed(double clock)
 	TFT->setTextColor(TFT_WHITE, PANEL_BGCOLOR);
 	int i = clock;
 	TFT->drawNumber(i, 158, 70 + yAdd);
+}
+
+void HS_HomeScreen::Draw_Net_Panel()
+{
+	TFT->loadFont(AA_FONT_LARGE);
+	DrawBoxWithBorderAndDropShadow(206, 0, 113, 24, BOX_BORDER_COLOR, PANEL_HCOLOR, BOX_DROP_SHADOW);
+
+	TFT->setTextColor(TFT_WHITE, PANEL_HCOLOR);
+	TFT->setTextDatum(MC_DATUM);
+	TFT->drawString("NET", 265, 13);
+
+
+	//
+	DrawBoxWithBorderAndDropShadow(206, 22, 113, 51, BOX_BORDER_COLOR, PANEL_BGCOLOR, BOX_DROP_SHADOW);
+	TFT->drawFastHLine(206, 48, 113, BOX_BORDER_COLOR);
+	TFT->drawFastHLine(206, 49, 113, BOX_DROP_SHADOW);
+
+	
+	Update_Net_UpLoadSpeed(0.0);
+	Update_Net_DownloadSpeed(0.0);
+	
+}
+
+void HS_HomeScreen::Update_Net_UpLoadSpeed(double uSpeed)
+{
+	TFT->setTextColor(TFT_WHITE, PANEL_BGCOLOR);
+	TFT->fillRect(211, 28, 106, 20, PANEL_BGCOLOR);
+	TFT->setTextDatum(TR_DATUM);
+
+	TFT->fillTriangle(220, 30, 227, 41, 213, 41, TFT_GREEN);
+	TFT->fillTriangle(220, 32, 225, 40, 215, 40, PANEL_BGCOLOR);
+	TFT->drawString(GetSpeedString(uSpeed), 312, 29);
+}
+
+void HS_HomeScreen::Update_Net_DownloadSpeed(double dSpeed)
+{
+	TFT->setTextColor(TFT_WHITE, PANEL_BGCOLOR);
+	TFT->fillRect(211, 50, 106, 20, PANEL_BGCOLOR);
+	TFT->setTextDatum(TR_DATUM);
+
+	TFT->fillTriangle(220, 65, 227, 54, 213, 54, TFT_GREEN);
+	TFT->fillTriangle(220, 63, 225, 55, 215, 55, PANEL_BGCOLOR);
+
+	TFT->drawString(GetSpeedString(dSpeed), 312, 52);
+}
+
+String HS_HomeScreen::GetSpeedString(double speed)
+{
+	char buf[32];
+	if (speed > 1000)
+	{
+		speed = speed / 1000;
+		sprintf(buf, "%.1f MBs", speed);
+	}
+	else
+	{
+		sprintf(buf, "%.1f KBs", speed);
+	}
+
+	return String(buf);
 }

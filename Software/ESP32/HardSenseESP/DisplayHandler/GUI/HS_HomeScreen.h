@@ -11,6 +11,7 @@
 #define SCREEN_HOME_GPU_LOAD_DIAL_X 22
 #define SCREEN_HOME_GPU_LOAD_DIAL_Y 97
 
+#define PANEL_HCOLOR 0x3BB6
 #define PANEL_BGCOLOR 0x7D19
 #define BOX_BORDER_COLOR 0x9DDB
 #define BOX_DROP_SHADOW 0x63F2
@@ -44,6 +45,10 @@ private:
 	void Update_GPU_Panel_ClockSpeed(double temp);
 	void Update_GPU_Panel_FanControl(double temp);
 
+	void Draw_Net_Panel();
+	void Update_Net_DownloadSpeed(double dSpeed);
+	void Update_Net_UpLoadSpeed(double uSpeed);
+	String GetSpeedString(double speed);
 
 public:
 	HS_HomeScreen(TFT_eSPI *newTFT);
