@@ -48,9 +48,9 @@ private:
 	bool UpdateSetting(char key, String value);
 	bool SaveSettingsToFS();
 	
-	void UpdateSensorValuesToDisplay(String value);
+	//void UpdateSensorValuesToDisplay(String value);
 
-	void(*AddItemToDisplayQueue)(char key, char* value);
+	void(*AddItemToDisplayQueue)(char key, String value);
 
 	portMUX_TYPE heartbeatMux;
 	int heartbeatCounter;
@@ -61,7 +61,7 @@ private:
 public:
 	HSSerial();
 	~HSSerial();
-	bool Init(DataQueue<QUEUE_ITEM> *newOutputQueue, portMUX_TYPE &newOutputQueueMux, void(*AddItemToDisplayQueue_Func)(char key, char* value), void(*HeartbeatTimerEnabled_Func)(bool));
+	bool Init(DataQueue<QUEUE_ITEM> *newOutputQueue, portMUX_TYPE &newOutputQueueMux, void(*AddItemToDisplayQueue_Func)(char key, String value), void(*HeartbeatTimerEnabled_Func)(bool));
 
 
 	void AddKeyToOutputMessage(byte key);

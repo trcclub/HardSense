@@ -21,7 +21,7 @@ public:
 
 	String degreesC = "";
 
-	virtual void UpdateScreen(char* value);
+	virtual void UpdateScreen(String value);
 	virtual void SetSensorList(void(*AddItemToOutputQueue_func)(char key, char* value));
 	virtual void HandleTouch(int x, int y);
 

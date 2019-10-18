@@ -14,7 +14,7 @@ HS_ConnectToNetworkScreen::~HS_ConnectToNetworkScreen()
 {
 }
 
-void HS_ConnectToNetworkScreen::UpdateScreen(char* value)
+void HS_ConnectToNetworkScreen::UpdateScreen(String value)
 {
 	String strValue(value);
 

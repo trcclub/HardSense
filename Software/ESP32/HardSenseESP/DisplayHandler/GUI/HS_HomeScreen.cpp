@@ -21,7 +21,7 @@ HS_HomeScreen::~HS_HomeScreen()
 	delete(gpuLoadWidget);
 }
 
-void HS_HomeScreen::UpdateScreen(char* value)
+void HS_HomeScreen::UpdateScreen(String value)
 {
 	String strValue(value);
 
@@ -57,7 +57,7 @@ void HS_HomeScreen::UpdateScreen(char* value)
 
 }
 
-void HS_HomeScreen::SetSensorList(void(*AddItemToOutputQueue_func)(char key, char* value))
+void HS_HomeScreen::SetSensorList(void(*AddItemToOutputQueue_func)(char key, String value))
 {
 	// /intelcpu/0/load/0,a
 	// /intelcpu/0/temperature/6,b

@@ -14,7 +14,7 @@ HS_SplashScreen::~HS_SplashScreen()
 {
 }
 
-void HS_SplashScreen::UpdateScreen(char* value)
+void HS_SplashScreen::UpdateScreen(String value)
 {
 	String strValue(value);
 

@@ -24,7 +24,7 @@ HSSerial::~HSSerial()
 	}
 }
 
-bool HSSerial::Init(DataQueue<QUEUE_ITEM>* newOutputQueue, portMUX_TYPE& newOutputQueueMux, void(*AddItemToDisplayQueue_Func)(char key, char* value), void(*HeartbeatTimerEnabled_Func)(bool))
+bool HSSerial::Init(DataQueue<QUEUE_ITEM>* newOutputQueue, portMUX_TYPE& newOutputQueueMux, void(*AddItemToDisplayQueue_Func)(char key, String value), void(*HeartbeatTimerEnabled_Func)(bool))
 {
 	outputDataQueue = newOutputQueue;
 	AddItemToDisplayQueue = AddItemToDisplayQueue_Func;
@@ -436,7 +436,8 @@ void HSSerial::DispatchCommand(char key, String val) {
 		AddBoolToOutputMessage(TRANS__KEY::CONFIG_SERVER_PORT_UPDATE_SUCCESS, UpdateSetting(key, val));
 		break;
 	case TRANS__KEY::UPDATE_SENSOR_VALUE:
-		UpdateSensorValuesToDisplay(val);
+		AddItemToDisplayQueue(DisplayCommands::UpdateValue, val);
+		//UpdateSensorValuesToDisplay(val);
 		break;
 	case TRANS__KEY::HEARTBEAT:
 		AddKeyToOutputMessage(TRANS__KEY::HEARTBEAT_ACK);
@@ -485,6 +486,7 @@ void HSSerial::ClearHeartbeatCounter()
 	portEXIT_CRITICAL(&heartbeatMux);
 }
 
+/*
 void HSSerial::UpdateSensorValuesToDisplay(String value)
 {
 	// value format:
@@ -493,7 +495,9 @@ void HSSerial::UpdateSensorValuesToDisplay(String value)
 	//Serial.print("UpdateSensorValuesToDisplay: ");
 	//Serial.println(value);
 
-	char buf[MAX_QUEUE_ITEM_VALUE_SIZE];
-	value.toCharArray(buf, MAX_QUEUE_ITEM_VALUE_SIZE);
-	AddItemToDisplayQueue(DisplayCommands::UpdateValue, buf);
+	//char buf[MAX_QUEUE_ITEM_VALUE_SIZE];
+	//value.toCharArray(buf, MAX_QUEUE_ITEM_VALUE_SIZE);
+	//AddItemToDisplayQueue(DisplayCommands::UpdateValue, buf);
+	AddItemToDisplayQueue(DisplayCommands::UpdateValue, value);
 }
+*/

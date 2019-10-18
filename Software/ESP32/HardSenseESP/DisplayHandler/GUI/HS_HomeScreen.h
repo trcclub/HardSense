@@ -46,7 +46,7 @@ private:
 public:
 	HS_HomeScreen(TFT_eSPI *newTFT);
 	~HS_HomeScreen();
-	void UpdateScreen(char* value);
-	void SetSensorList(void(*AddItemToOutputQueue_func)(char key, char* value));
+	void UpdateScreen(String value);
+	void SetSensorList(void(*AddItemToOutputQueue_func)(char key, String value));
 	void HandleTouch(int x, int y);
 };

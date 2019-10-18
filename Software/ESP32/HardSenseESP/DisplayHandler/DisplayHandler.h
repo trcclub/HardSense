@@ -31,12 +31,12 @@ private:
 
 	void DispatchCommand();
 
-	void(*UpdateCureentScreen)(char* value) = NULL;
+	void(*UpdateCureentScreen)(String value) = NULL;
 	void(*DestoryCurrentScreen)() = NULL;
 	bool(*HandleTouchPoint)(int x, int y) = NULL;
 
 	void LoadNewScreen(char screenID);
-	void(*AddItemToOutputQueue)(char key, char* value);
+	void(*AddItemToOutputQueue)(char key, String value);
 
 	unsigned long lastTouch = 0;
 	void SetTouch();
@@ -44,7 +44,7 @@ private:
 public:
 	DisplayHandler();
 	~DisplayHandler();
-	void Init(DataQueue<QUEUE_ITEM>* newDisplayQueue, portMUX_TYPE& newDisplayQueueMux, void(*AddItemToOutputQueue_Func)(char key, char* value));
+	void Init(DataQueue<QUEUE_ITEM>* newDisplayQueue, portMUX_TYPE& newDisplayQueueMux, void(*AddItemToOutputQueue_Func)(char key, String value));
 	void Run();
 
 };

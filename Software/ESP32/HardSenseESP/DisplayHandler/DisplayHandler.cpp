@@ -16,7 +16,7 @@ DisplayHandler::~DisplayHandler()
 
 }
 
-void DisplayHandler::Init(DataQueue<QUEUE_ITEM>* newDisplayQueue, portMUX_TYPE& newDisplayQueueMux, void(*AddItemToOutputQueue_Func)(char key, char* value))
+void DisplayHandler::Init(DataQueue<QUEUE_ITEM>* newDisplayQueue, portMUX_TYPE& newDisplayQueueMux, void(*AddItemToOutputQueue_Func)(char key, String value))
 {
 	displayDataQueue = newDisplayQueue;
 	AddItemToOutputQueue = AddItemToOutputQueue_Func;
@@ -116,7 +116,7 @@ void DisplayHandler::DispatchCommand()
 			break;
 		case DisplayCommands::UpdateValue:
 			if (UpdateCureentScreen != NULL) {
-				UpdateCureentScreen(currItem.value);
+				UpdateCureentScreen(String(currItem.value));
 			}
 			break;
 		default:

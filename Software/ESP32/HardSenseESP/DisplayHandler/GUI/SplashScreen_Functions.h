@@ -17,7 +17,7 @@ void Destroy_SplashScreen()
 	}
 }
 
-void Update_SplashScreen(char* value)
+void Update_SplashScreen(String value)
 {
 	HS_Current_SplashScreen->UpdateScreen(value);
 }

@@ -17,7 +17,7 @@ void Destroy_ConnectToNetworkScreen()
 	}
 }
 
-void Update_ConnectToNetworkScreen(char* value)
+void Update_ConnectToNetworkScreen(String value)
 {
 	HS_Current_ConnectToNetworkScreen->UpdateScreen(value);
 }

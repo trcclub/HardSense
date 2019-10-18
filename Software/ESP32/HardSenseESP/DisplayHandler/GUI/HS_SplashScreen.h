@@ -8,7 +8,7 @@ private:
 public:
 	HS_SplashScreen(TFT_eSPI* newTFT);
 	~HS_SplashScreen();
-	void UpdateScreen(char* value);
+	void UpdateScreen(String value);
 	char* GetSensorList();
 };
 

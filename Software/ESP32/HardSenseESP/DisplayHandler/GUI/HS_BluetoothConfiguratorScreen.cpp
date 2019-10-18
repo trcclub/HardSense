@@ -14,7 +14,7 @@ HS_BluetoothConfiguratorScreen::~HS_BluetoothConfiguratorScreen()
 {
 }
 
-void HS_BluetoothConfiguratorScreen::UpdateScreen(char* value)
+void HS_BluetoothConfiguratorScreen::UpdateScreen(String value)
 {
 	String strValue(value);
 
