@@ -23,17 +23,17 @@ HS_HomeScreen::~HS_HomeScreen()
 	delete(gpuLoadWidget);
 }
 
-void HS_HomeScreen::UpdateScreen(char* value)
+void HS_HomeScreen::UpdateScreen(String value)
 {
-	String strValue(value);
-
-	char key = strValue.charAt(0);
-	String subValue = strValue.substring(strValue.indexOf(",") + 1);
+	char key = value.charAt(0);
+	String subValue = value.substring(value.indexOf(",") + 1);
 
 	double dValue = subValue.toDouble();
 
 	switch (key) {
 	case 'a':
+		Serial.print("Update_CPU_Panel_Load: ");
+		Serial.println(dValue);
 		Update_CPU_Panel_Load(dValue);
 		break;
 	case 'b':
@@ -46,10 +46,11 @@ void HS_HomeScreen::UpdateScreen(char* value)
 		Update_CPU_Panel_Power(dValue);
 		break;
 	case 'e':
+		Serial.print("Update_GPU_Panel_Load: ");
+		Serial.println(dValue);
 		Update_GPU_Panel_Load(dValue);
 		break;
 	case 'f':
-		Serial.println("Found GPU Temp");
 		Update_GPU_Panel_Temperature(dValue);
 		break;
 	default:
@@ -58,18 +59,18 @@ void HS_HomeScreen::UpdateScreen(char* value)
 
 }
 
-void HS_HomeScreen::SetSensorList(void(*AddItemToOutputQueue_func)(char key, char* value))
+void HS_HomeScreen::SetSensorList(void(*AddItemToOutputQueue_func)(char key, String value))
 {
 	// /intelcpu/0/load/0,a
 	// /intelcpu/0/temperature/6,b
 	// /intelcpu/0/clock/1,c"
-	AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/nvidiagpu/0/temperature/0,f");
 	AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/intelcpu/0/load/0,a");
 	AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/intelcpu/0/temperature/6,b");
-	delay(20);
 	AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/intelcpu/0/clock/1,c");
+	delay(20);
 	AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/intelcpu/0/power/0,d");
 	AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/nvidiagpu/0/load/0,e");
+	AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/nvidiagpu/0/temperature/0,f");
 }
 
 void HS_HomeScreen::Draw_CPU_Panel()
@@ -181,6 +182,7 @@ void HS_HomeScreen::HandleTouch(int x, int y)
 
 void HS_HomeScreen::Update_CPU_Panel_Load(double percentage)
 {
+	Serial.println("Update_CPU_Panel_Load 1");
 	int angle = map(percentage, 0, 100, SCREEN_HOME_CPU_LOAD_DIAL_MIN, SCREEN_HOME_CPU_LOAD_DIAL_MAX);
 
 	uint16_t ringColor;
@@ -206,6 +208,10 @@ void HS_HomeScreen::Update_CPU_Panel_Load(double percentage)
 		cpuLoadWidget->DrawDialScale(*TFT, SCREEN_HOME_CPU_LOAD_DIAL_MIN, SCREEN_HOME_CPU_LOAD_DIAL_MAX, 30, Home_Screen_cpuLoadDial_CurrentRingColor);
 	}
 
+	Serial.print("Percentage: ");
+	Serial.print(percentage);
+	Serial.print("  |  angle: ");
+	Serial.println(angle);
 	cpuLoadWidget->PlotDial(SCREEN_HOME_CPU_LOAD_DIAL_X, SCREEN_HOME_CPU_LOAD_DIAL_Y, angle, "Load", percentage, BOX_DROP_SHADOW);
 }
 
@@ -243,6 +249,7 @@ void HS_HomeScreen::Update_CPU_Panel_ClockSpeed(double clock)
 
 void HS_HomeScreen::Update_GPU_Panel_Load(double percentage)
 {
+	//Serial.println("Update_GPU_Panel_Load 1");
 	int angle = map(percentage, 0, 100, SCREEN_HOME_CPU_LOAD_DIAL_MIN, SCREEN_HOME_CPU_LOAD_DIAL_MAX);
 
 	uint16_t ringColor;
@@ -268,6 +275,10 @@ void HS_HomeScreen::Update_GPU_Panel_Load(double percentage)
 		gpuLoadWidget->DrawDialScale(*TFT, SCREEN_HOME_CPU_LOAD_DIAL_MIN, SCREEN_HOME_CPU_LOAD_DIAL_MAX, 30, Home_Screen_gpuLoadDial_CurrentRingColor);
 	}
 
+	//Serial.print("Percentage: ");
+	//Serial.print(percentage);
+	//Serial.print("  |  angle: ");
+	//Serial.println(angle);
 	gpuLoadWidget->PlotDial(SCREEN_HOME_GPU_LOAD_DIAL_X, SCREEN_HOME_GPU_LOAD_DIAL_Y, angle, "Load", percentage, BOX_DROP_SHADOW);
 }
 

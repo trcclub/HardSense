@@ -42,7 +42,8 @@ void setup() {
 
 	QUEUE_ITEM qi;
 	qi.key = DisplayCommands::ChangeScreen;
-	sprintf(qi.value, "%c", ScreenTypes::SplashScreen);
+	qi.value = String(ScreenTypes::SplashScreen);
+	//sprintf(qi.value, "%c", ScreenTypes::SplashScreen);
 	displayQueue.enqueue(qi);
 
 
@@ -148,21 +149,23 @@ void HeartbeatTimerEnabled(bool enabled)
 	}
 }
 
-void AddItemToDisplayQueue(char key, char* value)
+void AddItemToDisplayQueue(char key, String value)
 {
 	QUEUE_ITEM qi;
 	qi.key = key;
-	strcpy(qi.value, value);
+	qi.value = value;
+	//strcpy(qi.value, value);
 	portENTER_CRITICAL(&displayQueueMux);
 	displayQueue.enqueue(qi);
 	portEXIT_CRITICAL(&displayQueueMux);
 }
 
-void AddItemToOutputQueue(char key, char* value)
+void AddItemToOutputQueue(char key, String value)
 {
 	QUEUE_ITEM qi;
 	qi.key = key;
-	strcpy(qi.value, value);
+	qi.value = value;
+	//strcpy(qi.value, value);
 	portENTER_CRITICAL(&outputQueueMux);
 	outputQueue.enqueue(qi);
 	portEXIT_CRITICAL(&outputQueueMux);

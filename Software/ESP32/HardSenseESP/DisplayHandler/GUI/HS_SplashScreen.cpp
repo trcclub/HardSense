@@ -14,12 +14,10 @@ HS_SplashScreen::~HS_SplashScreen()
 {
 }
 
-void HS_SplashScreen::UpdateScreen(char* value)
+void HS_SplashScreen::UpdateScreen(String value)
 {
-	String strValue(value);
-
-	char key = strValue.charAt(0);
-	String subValue = strValue.substring(strValue.indexOf(",") + 1);
+	char key = value.charAt(0);
+	String subValue = value.substring(value.indexOf(",") + 1);
 
 	double dValue = subValue.toDouble();
 

@@ -65,10 +65,13 @@ void HS_Dial_Widget::CreateNeedle()
 
 void HS_Dial_Widget::PlotDial(int16_t x, int16_t y, int16_t angle, String label, float val, uint32_t dialColor)
 {
+	Serial.println("HS_Dial_Widget::PlotDial 1");
 	DrawEmptyDial(label, val, dialColor);
 
+	Serial.println("HS_Dial_Widget::PlotDial 2");
 	needle->pushRotated(dial, angle, TFT_BLACK); // dial is the destination Sprite
 
+	Serial.println("HS_Dial_Widget::PlotDial 3");
 	// Push the resultant dial Sprite to the screen, with transparent colour
 	dial->pushSprite(x, y, TFT_TRANSPARENT);
 }
