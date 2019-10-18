@@ -50,6 +50,9 @@ private:
 	void Update_Net_UpLoadSpeed(double uSpeed);
 	String GetSpeedString(double speed);
 
+	void Draw_Ram_Panel();
+	void Update_Ram_Useage(double dPercent);
+
 public:
 	HS_HomeScreen(TFT_eSPI *newTFT);
 	~HS_HomeScreen();

@@ -12,6 +12,7 @@ HS_HomeScreen::HS_HomeScreen(TFT_eSPI *newTFT) : HS_ScreenBase(newTFT)
 	Draw_CPU_Panel();
 	Draw_GPU_Panel();
 	Draw_Net_Panel();
+	Draw_Ram_Panel();
 
 	//Serial.println("Ending Create_Screen_Home() !!!");
 }
@@ -62,6 +63,9 @@ void HS_HomeScreen::UpdateScreen(String value)
 	case 'j':
 		Update_Net_UpLoadSpeed(dValue);
 		break;
+	case 'k':
+		Update_Ram_Useage(dValue);
+		break;
 	default:
 		break;
 	}
@@ -77,7 +81,8 @@ void HS_HomeScreen::SetSensorList(void(*AddItemToOutputQueue_func)(char key, Str
 	AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/intelcpu/0/load/0,a|/intelcpu/0/temperature/6,b|/intelcpu/0/clock/1,c|/intelcpu/0/power/0,d");
 	AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/nvidiagpu/0/load/0,e|/nvidiagpu/0/temperature/0,f|/nvidiagpu/0/clock/0,g|/nvidiagpu/0/control/0,h");
 	AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/Ethernet/0/recv,i|/Ethernet/0/send,j");
-
+	AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/ram/load/0,k");
+	
 
 	//AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/nvidiagpu/0/clock/0,g|/nvidiagpu/0/control/0,h");
 	/*
@@ -354,8 +359,8 @@ void HS_HomeScreen::Draw_Net_Panel()
 
 void HS_HomeScreen::Update_Net_UpLoadSpeed(double uSpeed)
 {
-	TFT->setTextColor(TFT_WHITE, PANEL_BGCOLOR);
 	TFT->fillRect(229, 27, 87, 20, PANEL_BGCOLOR);
+	TFT->setTextColor(TFT_WHITE, PANEL_BGCOLOR);
 	TFT->setTextDatum(TR_DATUM);
 
 	TFT->drawString(GetSpeedString(uSpeed), 312, 29);
@@ -363,11 +368,10 @@ void HS_HomeScreen::Update_Net_UpLoadSpeed(double uSpeed)
 
 void HS_HomeScreen::Update_Net_DownloadSpeed(double dSpeed)
 {
-	TFT->setTextColor(TFT_WHITE, PANEL_BGCOLOR);
 	TFT->fillRect(229, 50, 87, 20, PANEL_BGCOLOR);
+	TFT->setTextColor(TFT_WHITE, PANEL_BGCOLOR);
 	TFT->setTextDatum(TR_DATUM);
-
-
+	
 	TFT->drawString(GetSpeedString(dSpeed), 312, 52);
 }
 
@@ -385,4 +389,31 @@ String HS_HomeScreen::GetSpeedString(double speed)
 	}
 
 	return String(buf);
+}
+
+void HS_HomeScreen::Draw_Ram_Panel()
+{
+	TFT->loadFont(AA_FONT_LARGE);
+	DrawBoxWithBorderAndDropShadow(206, 72, 113, 24, BOX_BORDER_COLOR, PANEL_HCOLOR, BOX_DROP_SHADOW);
+
+	TFT->setTextColor(TFT_WHITE, PANEL_HCOLOR);
+	TFT->setTextDatum(TL_DATUM);
+	TFT->drawString("RAM", 212, 76);
+	TFT->drawString("%", 300, 76);
+
+	DrawBoxWithBorderAndDropShadow(206, 94, 113, 51, BOX_BORDER_COLOR, PANEL_BGCOLOR, BOX_DROP_SHADOW);
+
+	TFT->drawFastHLine(206, 123, 113, BOX_BORDER_COLOR);
+	TFT->drawFastHLine(206, 124, 113, BOX_DROP_SHADOW);
+
+	Update_Ram_Useage(0.0);
+}
+
+void HS_HomeScreen::Update_Ram_Useage(double dPercent)
+{
+	TFT->fillRect(253, 75, 44, 18, PANEL_HCOLOR);
+	TFT->setTextColor(TFT_WHITE, PANEL_HCOLOR);
+	TFT->setTextDatum(TR_DATUM);
+
+	TFT->drawFloat(dPercent, 1, 295, 76);
 }
