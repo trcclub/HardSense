@@ -36,11 +36,11 @@ void DisplayHandler::Run()
 	{
 		if (tftDisplay.getTouch(&x, &y))
 		{
-			if (HandleTouchPoint != NULL)
+			if ((millis() - lastTouch > TOUCH_DEBOUNCE_TIME) && (HandleTouchPoint != NULL))
 			{
 				HandleTouchPoint(x, y);
-			}
-			
+				lastTouch = millis();
+			}			
 		}
 		DispatchCommand();
 
