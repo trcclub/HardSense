@@ -6,7 +6,6 @@
 #include "../../GlobalDefinitions.h"
 #include "../../HSSerial/SerialInterface.h"
 
-#define CPU_AREA_BGCOLOR TFT_NAVY
 
 class HS_ScreenBase
 {
@@ -20,8 +19,13 @@ public:
 	//TFT_eSprite *smallTextPrinter;
 	//TFT_eSprite* largeTextPrinter;
 
-	virtual void UpdateScreen(char* value);
-	virtual void SetSensorList(void(*AddItemToOutputQueue_func)(char key, char* value));
+	String degreesC = "";
 
+	virtual void UpdateScreen(String value);
+	virtual void SetSensorList(void(*AddItemToOutputQueue_func)(char key, char* value));
+	virtual void HandleTouch(int x, int y);
+
+	void DrawBoxWithBorderAndDropShadow(int32_t x, int32_t, int32_t w, int32_t h, int32_t borderColor, int32_t boxColor, int32_t dropShadowColor);
+	
 };
 

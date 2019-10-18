@@ -63,26 +63,33 @@ void HS_Dial_Widget::CreateNeedle()
 	needle->drawPixel(piv_x, piv_y, TFT_WHITE);     // Mark needle pivot point with a white pixel
 }
 
-void HS_Dial_Widget::PlotDial(int16_t x, int16_t y, int16_t angle, String label, float val)
+void HS_Dial_Widget::PlotDial(int16_t x, int16_t y, int16_t angle, String label, float val, uint32_t dialColor)
 {
-	DrawEmptyDial(label, val);
+	Serial.println("HS_Dial_Widget::PlotDial 1");
+	DrawEmptyDial(label, val, dialColor);
 
+	Serial.println("HS_Dial_Widget::PlotDial 2");
 	needle->pushRotated(dial, angle, TFT_BLACK); // dial is the destination Sprite
 
+	Serial.println("HS_Dial_Widget::PlotDial 3");
 	// Push the resultant dial Sprite to the screen, with transparent colour
 	dial->pushSprite(x, y, TFT_TRANSPARENT);
+
+	Serial.println("HS_Dial_Widget::PlotDial 4");
 }
 
-void HS_Dial_Widget::DrawEmptyDial(String label, float val)
+void HS_Dial_Widget::DrawEmptyDial(String label, float val, uint32_t dialColor)
 {
 	// Draw black face
-	dial->fillCircle(45, 45, 40, TFT_BLACK);
+	dial->fillCircle(45, 45, 40, dialColor);
 	dial->drawPixel(45, 45, TFT_WHITE);        // For demo only, mark pivot point with a while pixel
 	
 	dial->setTextDatum(TC_DATUM);              // Draw dial text
-	dial->setTextColor(TFT_WHITE, TFT_BLACK);
+	dial->setTextColor(TFT_WHITE, dialColor);
 	dial->drawString(label, 45, 18, 2);
 	dial->fillRoundRect(27, 57, 39, 16, 8, TFT_LIGHTGREY);
 	dial->setTextColor(TFT_BLACK, TFT_LIGHTGREY);
 	dial->drawFloat(val, 1, 45, 60, 2);
+	Serial.print("WTF!!! ");
+	Serial.println(val);
 }

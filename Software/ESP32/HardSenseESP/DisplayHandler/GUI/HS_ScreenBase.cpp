@@ -23,7 +23,7 @@ HS_ScreenBase::~HS_ScreenBase()
 	//delete(largeTextPrinter);
 }
 
-void HS_ScreenBase::UpdateScreen(char* value)
+void HS_ScreenBase::UpdateScreen(String value)
 {
 
 }
