@@ -24,7 +24,7 @@ HSSerial::~HSSerial()
 	}
 }
 
-bool HSSerial::Init(DataQueue<QUEUE_ITEM>* newOutputQueue, portMUX_TYPE& newOutputQueueMux, void(*AddItemToDisplayQueue_Func)(char key, char* value), void(*HeartbeatTimerEnabled_Func)(bool))
+bool HSSerial::Init(DataQueue<QUEUE_ITEM>* newOutputQueue, portMUX_TYPE& newOutputQueueMux, void(*AddItemToDisplayQueue_Func)(char key, String value), void(*HeartbeatTimerEnabled_Func)(bool))
 {
 	outputDataQueue = newOutputQueue;
 	AddItemToDisplayQueue = AddItemToDisplayQueue_Func;
@@ -104,6 +104,7 @@ void HSSerial::HandleBluetoothConnection()
 	ReadInputByte = &HSSerial::BT_Read;;
 	ReadInputStringUntil = &HSSerial::BT_ReadStringUntil;
 	PrintMessageToOutput = &HSSerial::BT_PrintChar;
+	
 
 	btSerial->setTimeout(50);
 	btSerial->begin("HardSenseESP");
@@ -250,6 +251,7 @@ int HSSerial::BT_PrintChar(char c) {
 	return btSerial->print(c);
 }
 
+
 String HSSerial::BT_ReadStringUntil(char terminator) {
 	return btSerial->readStringUntil(terminator);
 }
@@ -299,7 +301,6 @@ void HSSerial::AddStringToOutputMessage(byte key, char *value)
 	int valueLength = strlen(value);
 	int newLength = OutputDataLength + valueLength + 3;
 
-
 	if (newLength > MAX_BUF_SIZE) {
 		HandleOutput();
 		valueLength = strlen(value);
@@ -332,6 +333,7 @@ void HSSerial::AddStringToOutputMessage(byte key, char *value)
 }
 
 void HSSerial::HandleOutput() {
+
 	if (OutputDataLength == 0) {
 		return;
 	}
@@ -354,8 +356,6 @@ void HSSerial::HandleOutput() {
 		(this->*PrintMessageToOutput)(tmpOutputData[x]);
 	}
 	(this->*PrintMessageToOutput)((char)TRANS__KEY::ETX);
-
-	
 }
 
 
@@ -381,8 +381,9 @@ void HSSerial::HandleInput() {
 
 void HSSerial::ParseInput(String input)
 {
-	//Serial.print("ParseInput 1 ");
-	//Serial.println(input);
+	//Serial.print("ParseInput  : '");
+	//Serial.print(input);
+	//Serial.println("'");
 	int currIndex = input.indexOf(TRANS__KEY::PACKET_END);
 	int start = 0;
 	while (currIndex != -1) {
@@ -493,8 +494,12 @@ void HSSerial::UpdateSensorValuesToDisplay(String value)
 	//
 	//Serial.print("UpdateSensorValuesToDisplay: ");
 	//Serial.println(value);
+	AddItemToDisplayQueue(DisplayCommands::UpdateValue, value);
 
+
+	/*
 	char buf[MAX_QUEUE_ITEM_VALUE_SIZE];
 	value.toCharArray(buf, MAX_QUEUE_ITEM_VALUE_SIZE);
 	AddItemToDisplayQueue(DisplayCommands::UpdateValue, buf);
+	*/
 }

@@ -8,6 +8,7 @@
 #include "../QueueItem.h"
 
 #define CALIBRATION_FILE "/calibrationData"
+#define TOUCH_DEBOUNCE_TIME 250
 
 enum DisplayCommands {
 	ChangeScreen = 0,
@@ -30,19 +31,20 @@ private:
 
 	void DispatchCommand();
 
-	void(*UpdateCureentScreen)(char* value) = NULL;
+	void(*UpdateCurrentScreen)(String value) = NULL;
 	void(*DestoryCurrentScreen)() = NULL;
 	bool(*HandleTouchPoint)(int x, int y) = NULL;
 
 	void LoadNewScreen(char screenID);
-	void(*AddItemToOutputQueue)(char key, char* value);
+	void(*AddItemToOutputQueue)(char key, String value);
 
+	unsigned long lastTouch = 0;
 	void SetTouch();
 
 public:
 	DisplayHandler();
 	~DisplayHandler();
-	void Init(DataQueue<QUEUE_ITEM>* newDisplayQueue, portMUX_TYPE& newDisplayQueueMux, void(*AddItemToOutputQueue_Func)(char key, char* value));
+	void Init(DataQueue<QUEUE_ITEM>* newDisplayQueue, portMUX_TYPE& newDisplayQueueMux, void(*AddItemToOutputQueue_Func)(char key, String value));
 	void Run();
 
 };

@@ -14,12 +14,10 @@ HS_ConnectToNetworkScreen::~HS_ConnectToNetworkScreen()
 {
 }
 
-void HS_ConnectToNetworkScreen::UpdateScreen(char* value)
+void HS_ConnectToNetworkScreen::UpdateScreen(String value)
 {
-	String strValue(value);
-
-	char key = strValue.charAt(0);
-	String subValue = strValue.substring(strValue.indexOf(",") + 1);
+	char key = value.charAt(0);
+	String subValue = value.substring(value.indexOf(",") + 1);
 
 	double dValue = subValue.toDouble();
 

@@ -16,7 +16,7 @@ DisplayHandler::~DisplayHandler()
 
 }
 
-void DisplayHandler::Init(DataQueue<QUEUE_ITEM>* newDisplayQueue, portMUX_TYPE& newDisplayQueueMux, void(*AddItemToOutputQueue_Func)(char key, char* value))
+void DisplayHandler::Init(DataQueue<QUEUE_ITEM>* newDisplayQueue, portMUX_TYPE& newDisplayQueueMux, void(*AddItemToOutputQueue_Func)(char key, String value))
 {
 	displayDataQueue = newDisplayQueue;
 	AddItemToOutputQueue = AddItemToOutputQueue_Func;
@@ -36,11 +36,11 @@ void DisplayHandler::Run()
 	{
 		if (tftDisplay.getTouch(&x, &y))
 		{
-			if (HandleTouchPoint != NULL)
+			if ((millis() - lastTouch > TOUCH_DEBOUNCE_TIME) && (HandleTouchPoint != NULL))
 			{
 				HandleTouchPoint(x, y);
-			}
-			
+				lastTouch = millis();
+			}			
 		}
 		DispatchCommand();
 
@@ -66,7 +66,7 @@ void DisplayHandler::LoadNewScreen(char screenID)
 	if (DestoryCurrentScreen != NULL) {
 		DestoryCurrentScreen();
 		DestoryCurrentScreen = NULL;
-		UpdateCureentScreen = NULL;
+		UpdateCurrentScreen = NULL;
 		HandleTouchPoint = NULL;
 	}
 	AddItemToOutputQueue(TRANS__KEY::CLEAR_SENSOR_LIST, "");
@@ -75,22 +75,22 @@ void DisplayHandler::LoadNewScreen(char screenID)
 	switch (key) {
 	case ScreenTypes::SplashScreen:
 		DestoryCurrentScreen = Destroy_SplashScreen;
-		UpdateCureentScreen = Update_SplashScreen;
+		UpdateCurrentScreen = Update_SplashScreen;
 		Create_SplashScreen(&tftDisplay);
 		break;
 	case ScreenTypes::ConnectToNetwork:
 		DestoryCurrentScreen = Destroy_ConnectToNetworkScreen;
-		UpdateCureentScreen = Update_ConnectToNetworkScreen;
+		UpdateCurrentScreen = Update_ConnectToNetworkScreen;
 		Create_ConnectToNetworkScreen(&tftDisplay);
 		break;
 	case ScreenTypes::BluetoothConfigurator:
 		DestoryCurrentScreen = Destroy_BluetoothConfiguratorScreen;
-		UpdateCureentScreen = Update_BluetoothConfiguratorScreen;
+		UpdateCurrentScreen = Update_BluetoothConfiguratorScreen;
 		Create_BluetoothConfiguratorScreen(&tftDisplay);
 		break;
 	case ScreenTypes::Home:
 		DestoryCurrentScreen = Destroy_HomeScreen;
-		UpdateCureentScreen = Update_HomeScreen;
+		UpdateCurrentScreen = Update_HomeScreen;
 		HandleTouchPoint = Handle_HomeScreen_Touch;
 		Create_HomeScreen(&tftDisplay);
 		//GetSensorData(Home_Screen_SensorList);
@@ -115,8 +115,8 @@ void DisplayHandler::DispatchCommand()
 			LoadNewScreen(currItem.value[0]);
 			break;
 		case DisplayCommands::UpdateValue:
-			if (UpdateCureentScreen != NULL) {
-				UpdateCureentScreen(currItem.value);
+			if (UpdateCurrentScreen != NULL) {
+				UpdateCurrentScreen(currItem.value);
 			}
 			break;
 		default:

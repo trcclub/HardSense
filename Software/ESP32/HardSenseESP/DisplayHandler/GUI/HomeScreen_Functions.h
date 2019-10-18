@@ -17,12 +17,12 @@ void Destroy_HomeScreen()
 	}
 }
 
-void Update_HomeScreen(char* value)
+void Update_HomeScreen(String value)
 {
 	HS_Current_HomeScreen->UpdateScreen(value);
 }
 
-char* Set_Home_Screen_SensorList(void(*AddItemToOutputQueue_func)(char key, char* value))
+char* Set_Home_Screen_SensorList(void(*AddItemToOutputQueue_func)(char key, String value))
 {
 	HS_Current_HomeScreen->SetSensorList(AddItemToOutputQueue_func);
 	/*

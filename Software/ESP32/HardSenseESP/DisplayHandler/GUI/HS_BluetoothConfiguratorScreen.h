@@ -8,7 +8,7 @@ private:
 public:
 	HS_BluetoothConfiguratorScreen(TFT_eSPI* newTFT);
 	~HS_BluetoothConfiguratorScreen();
-	void UpdateScreen(char* value);
+	void UpdateScreen(String value);
 	char* GetSensorList();
 };
 

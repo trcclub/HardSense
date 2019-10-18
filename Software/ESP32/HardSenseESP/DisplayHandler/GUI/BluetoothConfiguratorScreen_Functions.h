@@ -17,7 +17,7 @@ void Destroy_BluetoothConfiguratorScreen()
 	}
 }
 
-void Update_BluetoothConfiguratorScreen(char* value)
+void Update_BluetoothConfiguratorScreen(String value)
 {
 	HS_Current_BluetoothConfiguratorScreen->UpdateScreen(value);
 }

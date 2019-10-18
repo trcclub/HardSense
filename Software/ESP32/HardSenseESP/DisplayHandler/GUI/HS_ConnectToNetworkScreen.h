@@ -8,7 +8,7 @@ private:
 public:
 	HS_ConnectToNetworkScreen(TFT_eSPI* newTFT);
 	~HS_ConnectToNetworkScreen();
-	void UpdateScreen(char* value);
+	void UpdateScreen(String value);
 	char* GetSensorList();
 };
 

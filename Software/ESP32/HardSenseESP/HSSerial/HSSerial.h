@@ -35,11 +35,13 @@ private:
 
 	int BT_Available();
 	int BT_Read();
+	//int BT_WriteOutput(String output);
 	int BT_PrintChar(char c);
 	String BT_ReadStringUntil(char terminator);
 	int WiFi_Available();
 	int WiFi_Read();
 	String WiFi_ReadStringUntil(char terminator);
+	//int WiFi_WriteOutput(String output);
 	int WiFi_PrintChar(char c);
 	void ParseInput(String input);
 	void DispatchCommand(char key, String val);
@@ -50,7 +52,7 @@ private:
 	
 	void UpdateSensorValuesToDisplay(String value);
 
-	void(*AddItemToDisplayQueue)(char key, char* value);
+	void(*AddItemToDisplayQueue)(char key, String value);
 
 	portMUX_TYPE heartbeatMux;
 	int heartbeatCounter;
@@ -61,7 +63,7 @@ private:
 public:
 	HSSerial();
 	~HSSerial();
-	bool Init(DataQueue<QUEUE_ITEM> *newOutputQueue, portMUX_TYPE &newOutputQueueMux, void(*AddItemToDisplayQueue_Func)(char key, char* value), void(*HeartbeatTimerEnabled_Func)(bool));
+	bool Init(DataQueue<QUEUE_ITEM> *newOutputQueue, portMUX_TYPE &newOutputQueueMux, void(*AddItemToDisplayQueue_Func)(char key, String value), void(*HeartbeatTimerEnabled_Func)(bool));
 
 
 	void AddKeyToOutputMessage(byte key);
