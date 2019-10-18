@@ -25,12 +25,13 @@ private:
 	HS_Dial_Widget* cpuLoadWidget;
 	uint16_t Home_Screen_cpuLoadDial_CurrentRingColor;
 
-	HS_Dial_Widget* gpuLoadWidget;
-	uint16_t Home_Screen_gpuLoadDial_CurrentRingColor;
+	//HS_Dial_Widget* gpuLoadWidget;
+	//uint16_t Home_Screen_gpuLoadDial_CurrentRingColor;
 
 	void Draw_CPU_Panel();
 	void Update_CPU_Panel_Load(double percentage);
-	void Update_CPU_Panel_Tempererature(double temp);
+	void Update_CPU_Panel_Temperature(double temp);
+	void Update_CPU_Panel_Power(double power);
 	void Update_CPU_Panel_ClockSpeed(double temp);
 	bool CPU_Panel_Touched(int x, int y);
 
