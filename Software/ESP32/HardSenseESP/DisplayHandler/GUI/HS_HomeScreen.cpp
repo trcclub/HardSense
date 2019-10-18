@@ -334,12 +334,18 @@ void HS_HomeScreen::Draw_Net_Panel()
 	TFT->setTextDatum(MC_DATUM);
 	TFT->drawString("NET", 265, 13);
 
+	
 
-	//
 	DrawBoxWithBorderAndDropShadow(206, 22, 113, 51, BOX_BORDER_COLOR, PANEL_BGCOLOR, BOX_DROP_SHADOW);
 	TFT->drawFastHLine(206, 48, 113, BOX_BORDER_COLOR);
 	TFT->drawFastHLine(206, 49, 113, BOX_DROP_SHADOW);
 
+
+	TFT->fillTriangle(220, 30, 227, 41, 213, 41, TFT_GREEN);
+	TFT->fillTriangle(220, 32, 225, 40, 215, 40, PANEL_BGCOLOR);
+
+	TFT->fillTriangle(220, 65, 227, 54, 213, 54, TFT_GREEN);
+	TFT->fillTriangle(220, 63, 225, 55, 215, 55, PANEL_BGCOLOR);
 	
 	Update_Net_UpLoadSpeed(0.0);
 	Update_Net_DownloadSpeed(0.0);
@@ -349,22 +355,18 @@ void HS_HomeScreen::Draw_Net_Panel()
 void HS_HomeScreen::Update_Net_UpLoadSpeed(double uSpeed)
 {
 	TFT->setTextColor(TFT_WHITE, PANEL_BGCOLOR);
-	TFT->fillRect(211, 28, 106, 20, PANEL_BGCOLOR);
+	TFT->fillRect(229, 27, 87, 20, PANEL_BGCOLOR);
 	TFT->setTextDatum(TR_DATUM);
 
-	TFT->fillTriangle(220, 30, 227, 41, 213, 41, TFT_GREEN);
-	TFT->fillTriangle(220, 32, 225, 40, 215, 40, PANEL_BGCOLOR);
 	TFT->drawString(GetSpeedString(uSpeed), 312, 29);
 }
 
 void HS_HomeScreen::Update_Net_DownloadSpeed(double dSpeed)
 {
 	TFT->setTextColor(TFT_WHITE, PANEL_BGCOLOR);
-	TFT->fillRect(211, 50, 106, 20, PANEL_BGCOLOR);
+	TFT->fillRect(229, 50, 87, 20, PANEL_BGCOLOR);
 	TFT->setTextDatum(TR_DATUM);
 
-	TFT->fillTriangle(220, 65, 227, 54, 213, 54, TFT_GREEN);
-	TFT->fillTriangle(220, 63, 225, 55, 215, 55, PANEL_BGCOLOR);
 
 	TFT->drawString(GetSpeedString(dSpeed), 312, 52);
 }
