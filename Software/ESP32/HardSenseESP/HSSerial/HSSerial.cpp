@@ -301,7 +301,6 @@ void HSSerial::AddStringToOutputMessage(byte key, char *value)
 	int valueLength = strlen(value);
 	int newLength = OutputDataLength + valueLength + 3;
 
-
 	if (newLength > MAX_BUF_SIZE) {
 		HandleOutput();
 		valueLength = strlen(value);
