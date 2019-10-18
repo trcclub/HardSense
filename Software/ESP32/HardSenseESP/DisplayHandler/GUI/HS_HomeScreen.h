@@ -41,6 +41,8 @@ private:
 	void Draw_GPU_Panel();
 	void Update_GPU_Panel_Load(double percentage);
 	void Update_GPU_Panel_Temperature(double temp);
+	void Update_GPU_Panel_ClockSpeed(double temp);
+	void Update_GPU_Panel_FanControl(double temp);
 
 
 public:

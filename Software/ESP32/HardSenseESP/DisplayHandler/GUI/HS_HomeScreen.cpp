@@ -44,12 +44,16 @@ void HS_HomeScreen::UpdateScreen(String value)
 		Update_CPU_Panel_Power(dValue);
 		break;
 	case 'e':
-		//Serial.print("Update_GPU_Panel_Load: ");
-		//Serial.println(dValue);
 		Update_GPU_Panel_Load(dValue);
 		break;
 	case 'f':
 		Update_GPU_Panel_Temperature(dValue);
+		break;
+	case 'g':
+		Update_GPU_Panel_ClockSpeed(dValue);
+		break;
+	case 'h':
+		Update_GPU_Panel_FanControl(dValue);
 		break;
 	default:
 		break;
@@ -62,6 +66,13 @@ void HS_HomeScreen::SetSensorList(void(*AddItemToOutputQueue_func)(char key, Str
 	// /intelcpu/0/load/0,a
 	// /intelcpu/0/temperature/6,b
 	// /intelcpu/0/clock/1,c"
+	
+	AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/intelcpu/0/load/0,a|/intelcpu/0/temperature/6,b|/intelcpu/0/clock/1,c|/intelcpu/0/power/0,d");
+	AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/nvidiagpu/0/load/0,e|/nvidiagpu/0/temperature/0,f|/nvidiagpu/0/clock/0,g|/nvidiagpu/0/control/0,h");
+
+
+	//AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/nvidiagpu/0/clock/0,g|/nvidiagpu/0/control/0,h");
+	/*
 	AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/intelcpu/0/load/0,a");
 	AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/intelcpu/0/temperature/6,b");
 	AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/intelcpu/0/clock/1,c");
@@ -71,6 +82,12 @@ void HS_HomeScreen::SetSensorList(void(*AddItemToOutputQueue_func)(char key, Str
 	AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/intelcpu/0/power/0,d");
 	AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/nvidiagpu/0/load/0,e");
 	AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/nvidiagpu/0/temperature/0,f");
+
+	delay(30); // I've got to figure out why this is necessary
+
+	AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/nvidiagpu/0/clock/0,g");
+	AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/nvidiagpu/0/control/0,h");
+	*/
 }
 
 
@@ -105,8 +122,8 @@ void HS_HomeScreen::Draw_CPU_Panel()
 	TFT->drawString(degreesC, 184, 10);
 
 	// CPU Power
-	DrawBoxWithBorderAndDropShadow(123, 34, 67, 26, BOX_BORDER_COLOR, PANEL_BGCOLOR, BOX_DROP_SHADOW);
-	TFT->drawString(String("W"), 184, 40);
+	DrawBoxWithBorderAndDropShadow(118, 34, 77, 26, BOX_BORDER_COLOR, PANEL_BGCOLOR, BOX_DROP_SHADOW);
+	TFT->drawString(String("W"), 189, 40);
 
 	// CPU Clock Speed
 	DrawBoxWithBorderAndDropShadow(113, 64, 89, 26, BOX_BORDER_COLOR, PANEL_BGCOLOR, BOX_DROP_SHADOW);
@@ -119,7 +136,7 @@ void HS_HomeScreen::Draw_CPU_Panel()
 	*/
 
 	Update_CPU_Panel_Temperature(0.0);
-	Update_CPU_Panel_Power(0.0);
+	Update_CPU_Panel_Power(999.9);
 	Update_CPU_Panel_ClockSpeed(0000.0);
 }
 
@@ -177,10 +194,10 @@ void HS_HomeScreen::Update_CPU_Panel_Temperature(double temp)
 
 void HS_HomeScreen::Update_CPU_Panel_Power(double temp)
 {
-	TFT->fillRect(128, 39, 38, 18, PANEL_BGCOLOR);
+	TFT->fillRect(123, 39, 48, 18, PANEL_BGCOLOR);
 	TFT->setTextDatum(TR_DATUM);
 	TFT->setTextColor(TFT_WHITE, PANEL_BGCOLOR);
-	TFT->drawFloat(temp, 1, 162, 40);
+	TFT->drawFloat(temp, 1, 167, 40);
 }
 
 void HS_HomeScreen::Update_CPU_Panel_ClockSpeed(double clock)
@@ -193,8 +210,6 @@ void HS_HomeScreen::Update_CPU_Panel_ClockSpeed(double clock)
 	TFT->drawNumber(i, 118, 70);
 	//Serial.println("Update_CPU_Panel_ClockSpeed 2");
 }
-
-
 
 void HS_HomeScreen::Draw_GPU_Panel()
 {
@@ -223,17 +238,19 @@ void HS_HomeScreen::Draw_GPU_Panel()
 	TFT->setTextDatum(TR_DATUM);
 	TFT->drawString(degreesC, 184, 10 + yAdd);
 
+	// Fan load
+	DrawBoxWithBorderAndDropShadow(123, 34 + yAdd, 67, 26, BOX_BORDER_COLOR, PANEL_BGCOLOR, BOX_DROP_SHADOW);
+	TFT->drawString(String("%"), 184, 40 + yAdd);
 
-	// GPU Power
-	//DrawBoxWithBorderAndDropShadow(123, 34, 67, 26, BOX_BORDER_COLOR, PANEL_BGCOLOR, BOX_DROP_SHADOW);
-	//TFT->drawString(String("W"), 184, 40);
 
-
-	// CPU Clock Speed
-	//DrawBoxWithBorderAndDropShadow(113, 64, 89, 26, BOX_BORDER_COLOR, PANEL_BGCOLOR, BOX_DROP_SHADOW);
-	//TFT->drawString(String("MHz"), 198, 70);
+	// GPU Clock Speed
+	DrawBoxWithBorderAndDropShadow(113, 64 + yAdd, 89, 26, BOX_BORDER_COLOR, PANEL_BGCOLOR, BOX_DROP_SHADOW);
+	TFT->drawString(String("MHz"), 198, 70 + yAdd);
 
 	Update_GPU_Panel_Temperature(00.0);
+	Update_GPU_Panel_FanControl(00.0);
+	Update_GPU_Panel_ClockSpeed(0000.0);
+
 }
 
 void HS_HomeScreen::Update_GPU_Panel_Load(double percentage)
@@ -278,4 +295,24 @@ void HS_HomeScreen::Update_GPU_Panel_Temperature(double temp)
 	TFT->setTextDatum(TR_DATUM);
 	TFT->setTextColor(TFT_WHITE, PANEL_BGCOLOR);
 	TFT->drawFloat(temp, 1, 162, 10 + yAdd);
+}
+
+void HS_HomeScreen::Update_GPU_Panel_FanControl(double temp)
+{
+	int yAdd = 95;
+	TFT->fillRect(128, 39 + yAdd, 38, 18, PANEL_BGCOLOR);
+	TFT->setTextDatum(TR_DATUM);
+	TFT->setTextColor(TFT_WHITE, PANEL_BGCOLOR);
+	TFT->drawFloat(temp, 1, 162, 40 + yAdd);
+
+}
+
+void HS_HomeScreen::Update_GPU_Panel_ClockSpeed(double clock)
+{
+	int yAdd = 95;
+	TFT->fillRect(117, 69 + yAdd, 44, 18, PANEL_BGCOLOR);
+	TFT->setTextDatum(TR_DATUM);
+	TFT->setTextColor(TFT_WHITE, PANEL_BGCOLOR);
+	int i = clock;
+	TFT->drawNumber(i, 158, 70 + yAdd);
 }
