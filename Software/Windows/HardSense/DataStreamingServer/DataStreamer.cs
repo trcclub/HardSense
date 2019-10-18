@@ -73,7 +73,7 @@ namespace HardSense.DataStreamingServer
             //
             // ** RE-ENABLE THE HEARTBEAT
             //
-            heartbeatTimer.Start();
+            //heartbeatTimer.Start();
             //
             // ** RE-ENABLE THE HEARTBEAT
             //

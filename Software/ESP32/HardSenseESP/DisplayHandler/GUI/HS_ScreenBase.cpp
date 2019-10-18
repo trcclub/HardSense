@@ -7,18 +7,14 @@ HS_ScreenBase::HS_ScreenBase(TFT_eSPI *newTFT)
 
 	/*
 	smallTextPrinter = new TFT_eSprite(TFT);
+	largeTextPrinter = new TFT_eSprite(TFT);
 
 	smallTextPrinter->setColorDepth(8);
 	smallTextPrinter->loadFont(AA_FONT_SMALL);
 
-	largeTextPrinter = new TFT_eSprite(TFT);
 	largeTextPrinter->setColorDepth(8);
 	largeTextPrinter->loadFont(AA_FONT_LARGE);
 	*/
-
-	char d = 0xB0;
-	degreesC = String(d);
-	degreesC += "C";
 }
 
 HS_ScreenBase::~HS_ScreenBase()
@@ -27,28 +23,12 @@ HS_ScreenBase::~HS_ScreenBase()
 	//delete(largeTextPrinter);
 }
 
-void HS_ScreenBase::UpdateScreen(String value)
+void HS_ScreenBase::UpdateScreen(char* value)
 {
 
 }
 
 void HS_ScreenBase::SetSensorList(void(*AddItemToOutputQueue_func)(char key, char* value))
-{
-
-}
-
-void HS_ScreenBase::DrawBoxWithBorderAndDropShadow(int32_t x, int32_t y, int32_t w, int32_t h, int32_t borderColor, int32_t boxColor, int32_t dropShadowColor)
-{			   	//0, 0, 200, 94
-	TFT->fillRect(x, y, w, h, borderColor);
-	TFT->fillRect(x+2, y+2, w-4, h-4, boxColor);
-
-	TFT->drawFastHLine(x+3, y+3, w-5, dropShadowColor);
-	TFT->drawFastVLine(x+2, y+3, h-5, dropShadowColor);
-	TFT->drawFastHLine(x, y+h, w, dropShadowColor);
-	TFT->drawFastVLine(x+w, y, h, dropShadowColor);
-}
-
-void HS_ScreenBase::HandleTouch(int x, int y)
 {
 
 }
@@ -70,5 +50,6 @@ void HS_ScreenBase::HS_Load_Fonts()
 		Serial.println("\r\HS_ScreenBase::HS_Load_Fonts():: Font missing in SPIFFS, did you upload it?");
 		while (1) yield();
 	}
+	else Serial.println("\r\HS_ScreenBase::HS_Load_Fonts():: Fonts found OK.");
 
 }
