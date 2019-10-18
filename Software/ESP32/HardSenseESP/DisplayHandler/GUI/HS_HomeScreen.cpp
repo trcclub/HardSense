@@ -99,6 +99,7 @@ bool HS_HomeScreen::CPU_Panel_Touched(int x, int y)
 {
 	if ((x >= CPU_PANEL_LOW_X+5 && x <= CPU_PANEL_HIGH_X-5) && (y >= CPU_PANEL_LOW_Y+5 && y <= CPU_PANEL_HIGH_Y-5))
 	{
+		Serial.println("Touch me");
 		return true;
 	}
 	return false;
