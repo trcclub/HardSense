@@ -145,7 +145,7 @@ void HS_HomeScreen::Update_CPU_Panel_Load(double percentage)
 
 }
 
-void HS_HomeScreen::Update_CPU_Panel_Tempererature(double temp)
+void HS_HomeScreen::Update_CPU_Panel_Temperature(double temp)
 {
 	//Serial.println("Update_CPU_Panel_Tempererature 1");
 
