@@ -54,9 +54,9 @@ private:
 
 	portMUX_TYPE heartbeatMux;
 	int heartbeatCounter;
-	void ClearHeartbeatCounter();
 	bool IncrementHeartbeatCounter();
 	void(*HeartbeatTimerEnabled)(bool);
+	bool AddHeartbeatToOutput = false;
 
 public:
 	HSSerial();
@@ -76,7 +76,7 @@ public:
 	void ConnectToHardsenseServer();
 	void HandleWiFiConnection();
 	void HandleInput();
-	void HandleOutput();
+	void IRAM_ATTR HandleOutput();
 
 	void FireHeartbeat();
 };

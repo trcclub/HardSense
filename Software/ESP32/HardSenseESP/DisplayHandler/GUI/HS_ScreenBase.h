@@ -20,6 +20,7 @@ public:
 	//TFT_eSprite* largeTextPrinter;
 
 	String degreesC = "";
+	char degreesC_char[3];
 	void(*AddItemToDisplayQueue)(char key, String value);
 
 	virtual void UpdateScreen(String value);

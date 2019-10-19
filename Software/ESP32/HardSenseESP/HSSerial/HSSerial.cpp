@@ -224,7 +224,7 @@ void HSSerial::NewSocketRequestAccepted()
 	// ** RE-ENABLE THE HEARTBEAT
 	//
 
-	//HeartbeatTimerEnabled(true);
+	HeartbeatTimerEnabled(true);
 
 	//
 	// ** RE-ENABLE THE HEARTBEAT
@@ -330,7 +330,19 @@ void HSSerial::AddStringToOutputMessage(byte key, char *value)
 	portEXIT_CRITICAL(&outputDataMux);
 }
 
-void HSSerial::HandleOutput() {
+void HSSerial::HandleOutput() 
+{
+	if (AddHeartbeatToOutput)
+	{
+		portENTER_CRITICAL(&heartbeatMux);
+		AddHeartbeatToOutput = false;
+		portEXIT_CRITICAL(&heartbeatMux);
+		if (connectedToSomething && IncrementHeartbeatCounter())
+		{
+			AddKeyToOutputMessage(TRANS__KEY::HEARTBEAT);
+		}
+	}
+
 	if (OutputDataLength == 0) {
 		return;
 	}
@@ -443,7 +455,7 @@ void HSSerial::DispatchCommand(char key, String val) {
 		AddKeyToOutputMessage(TRANS__KEY::HEARTBEAT_ACK);
 		break;
 	case TRANS__KEY::HEARTBEAT_ACK:
-		ClearHeartbeatCounter();
+		heartbeatCounter = 0;
 		break;
 	default:
 		//Serial.print("Unknown Command: '");
@@ -452,8 +464,13 @@ void HSSerial::DispatchCommand(char key, String val) {
 	}
 }
 
-void HSSerial::FireHeartbeat()
+void IRAM_ATTR HSSerial::FireHeartbeat()
 {
+	portENTER_CRITICAL(&heartbeatMux);
+	AddHeartbeatToOutput = true;
+	portEXIT_CRITICAL(&heartbeatMux);
+
+	/*
 	if (!connectedToSomething) {
 		return;
 	}
@@ -462,28 +479,19 @@ void HSSerial::FireHeartbeat()
 	{
 		AddKeyToOutputMessage(TRANS__KEY::HEARTBEAT);
 	}
+	*/
 }
 
 bool HSSerial::IncrementHeartbeatCounter()
 {
 	if (heartbeatCounter > MAX_HEARTBEATS_MISSED) {
 		connectedToSomething = false;
-		ClearHeartbeatCounter();
+		heartbeatCounter = 0;
 		HeartbeatTimerEnabled(false);
 		return false;
 	}
-	portENTER_CRITICAL(&heartbeatMux);
 	heartbeatCounter++;
-	portEXIT_CRITICAL(&heartbeatMux);
-
 	return true;
-}
-
-void HSSerial::ClearHeartbeatCounter()
-{
-	portENTER_CRITICAL(&heartbeatMux);
-	heartbeatCounter = 0;
-	portEXIT_CRITICAL(&heartbeatMux);
 }
 
 /*

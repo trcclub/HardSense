@@ -3,9 +3,9 @@
 
 HS_Dial_Widget::HS_Dial_Widget(TFT_eSPI TFT)
 {
-	if (!TFT.fontsLoaded()) {
-		HS_Load_Fonts();
-	}
+	//if (!TFT.fontsLoaded()) {
+	//	HS_Load_Fonts();
+	//}
 
 	dial = new TFT_eSprite(&TFT);
 	needle = new TFT_eSprite(&TFT);
@@ -34,9 +34,7 @@ void HS_Dial_Widget::DrawDialScale(TFT_eSPI TFT, int16_t start_angle, int16_t en
 	// Draw dial outline
 	dial->fillSprite(TFT_TRANSPARENT);           // Fill with transparent colour
 	dial->fillCircle(45, 45, 43, ringColor);  // Draw dial outer
-
-	// Hijack the use of the needle Sprite since that has not been used yet!
-
+	
 	TFT_eSprite tickSprite = TFT_eSprite(&TFT);
 	tickSprite.setColorDepth(8);
 	tickSprite.createSprite(3, 3);     // 3 pixels wide, 3 high
@@ -47,6 +45,7 @@ void HS_Dial_Widget::DrawDialScale(TFT_eSPI TFT, int16_t start_angle, int16_t en
 		tickSprite.pushRotated(dial, angle); // Sprite is used to make scale markers
 		yield(); // Avoid a watchdog time-out
 	}
+	tickSprite.deleteSprite();
 }
 
 
@@ -94,4 +93,6 @@ void HS_Dial_Widget::DrawEmptyDial(String label, float val, uint32_t dialColor)
 	dial->fillRoundRect(27, 57, 39, 16, 8, TFT_LIGHTGREY);
 	dial->setTextColor(TFT_BLACK, TFT_LIGHTGREY);
 	dial->drawFloat(val, 1, 45, 60, 2);
+
+
 }

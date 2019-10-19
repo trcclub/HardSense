@@ -2,6 +2,7 @@
 
 HS_WidgetBase::HS_WidgetBase()
 {
+	SPIFFS.begin();
 	//HS_Load_Fonts();
 }
 

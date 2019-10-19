@@ -34,6 +34,13 @@ private:
 	bool CPU_Panel_Touched(int x, int y);
 
 
+	TFT_eSprite* textPrinter_Sprite;
+
+	void Draw_Net_Panel();
+	void Update_Net_DownloadSpeed(double dSpeed);
+	void Update_Net_UpLoadSpeed(double uSpeed);
+	String GetSpeedString(double speed);
+
 public:
 	HS_HomeScreen_B(TFT_eSPI* newTFT);
 	~HS_HomeScreen_B();

@@ -3,6 +3,12 @@
 HS_HomeScreen::HS_HomeScreen(TFT_eSPI *newTFT) : HS_ScreenBase(newTFT)
 {
 	//Serial.println("\n----\nCreate_Screen_Home() !!!");
+	textPrinter_Sprite = new TFT_eSprite(TFT);
+	textPrinter_Sprite->setColorDepth(16);
+	textPrinter_Sprite->loadFont(AA_FONT_LARGE);
+	textPrinter_Sprite->setTextColor(TFT_WHITE, PANEL_BGCOLOR);
+	textPrinter_Sprite->setTextDatum(TR_DATUM);
+
 	Home_Screen_cpuLoadDial_CurrentRingColor = TFT_GREEN;
 	cpuLoadWidget = new HS_Dial_Widget(*TFT);
 	gpuLoadWidget = new HS_Dial_Widget(*TFT);
@@ -22,16 +28,16 @@ HS_HomeScreen::~HS_HomeScreen()
 	TFT->unloadFont();
 	delete(cpuLoadWidget);
 	delete(gpuLoadWidget);
+
+	textPrinter_Sprite->unloadFont();
+	textPrinter_Sprite->deleteSprite();
+	delete(textPrinter_Sprite);
 }
 
 void HS_HomeScreen::UpdateScreen(String value)
 {
-	String strValue(value);
-
-	char key = strValue.charAt(0);
-	String subValue = strValue.substring(strValue.indexOf(",") + 1);
-
-	double dValue = subValue.toDouble();
+	char key = value.charAt(0);
+	double dValue = value.substring(value.indexOf(",") + 1).toDouble();
 
 	switch (key) {
 	case 'a':
@@ -75,33 +81,10 @@ void HS_HomeScreen::UpdateScreen(String value)
 
 void HS_HomeScreen::SetSensorList(void(*AddItemToOutputQueue_func)(char key, String value))
 {
-	// /intelcpu/0/load/0,a
-	// /intelcpu/0/temperature/6,b
-	// /intelcpu/0/clock/1,c"
-	
 	AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/intelcpu/0/load/0,a|/intelcpu/0/temperature/6,b|/intelcpu/0/clock/1,c|/intelcpu/0/power/0,d");
 	AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/nvidiagpu/0/load/0,e|/nvidiagpu/0/temperature/0,f|/nvidiagpu/0/clock/0,g|/nvidiagpu/0/control/0,h");
 	AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/Ethernet/0/recv,i|/Ethernet/0/send,j");
 	AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/ram/load/0,k");
-	
-
-	//AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/nvidiagpu/0/clock/0,g|/nvidiagpu/0/control/0,h");
-	/*
-	AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/intelcpu/0/load/0,a");
-	AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/intelcpu/0/temperature/6,b");
-	AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/intelcpu/0/clock/1,c");
-
-	delay(30); // I've got to figure out why this is necessary
-	
-	AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/intelcpu/0/power/0,d");
-	AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/nvidiagpu/0/load/0,e");
-	AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/nvidiagpu/0/temperature/0,f");
-
-	delay(30); // I've got to figure out why this is necessary
-
-	AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/nvidiagpu/0/clock/0,g");
-	AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/nvidiagpu/0/control/0,h");
-	*/
 }
 
 
@@ -133,7 +116,7 @@ void HS_HomeScreen::Draw_CPU_Panel()
 	DrawBoxWithBorderAndDropShadow(123,4,67,26, BOX_BORDER_COLOR, PANEL_BGCOLOR, BOX_DROP_SHADOW);
 	TFT->setTextColor(TFT_WHITE, PANEL_BGCOLOR);
 	TFT->setTextDatum(TR_DATUM);
-	TFT->drawString(degreesC, 184, 10);
+	//TFT->drawString(degreesC, 184, 10);
 
 	// CPU Power
 	DrawBoxWithBorderAndDropShadow(118, 34, 77, 26, BOX_BORDER_COLOR, PANEL_BGCOLOR, BOX_DROP_SHADOW);
@@ -201,10 +184,26 @@ void HS_HomeScreen::Update_CPU_Panel_Temperature(double temp)
 {
 	//Serial.println("Update_CPU_Panel_Tempererature 1");
 
+	//Serial.println("HS_HomeScreen::Update_CPU_Panel_Temperature 1");
+	textPrinter_Sprite->createSprite(59, 18);
+	//Serial.println("HS_HomeScreen::Update_CPU_Panel_Temperature 2");
+	textPrinter_Sprite->fillSprite(PANEL_BGCOLOR);
+	char buf[10];
+	sprintf(buf, "%.1f%s ", temp, degreesC_char);
+	//Serial.println("HS_HomeScreen::Update_CPU_Panel_Temperature 3");
+	textPrinter_Sprite->drawString(String(buf), 59, 0);
+	//Serial.println("HS_HomeScreen::Update_CPU_Panel_Temperature 4");
+	textPrinter_Sprite->pushSprite(126, 10);
+	//Serial.println("HS_HomeScreen::Update_CPU_Panel_Temperature 5");
+	textPrinter_Sprite->deleteSprite();
+	//Serial.println("HS_HomeScreen::Update_CPU_Panel_Temperature 6");
+
+	/*
 	TFT->fillRect(128, 9, 38, 18, PANEL_BGCOLOR);
 	TFT->setTextDatum(TR_DATUM);
 	TFT->setTextColor(TFT_WHITE, PANEL_BGCOLOR);
 	TFT->drawFloat(temp, 1, 162, 10);
+	*/
 	//Serial.println("Update_CPU_Panel_Tempererature 2");
 }
 
@@ -362,20 +361,48 @@ void HS_HomeScreen::Draw_Net_Panel()
 
 void HS_HomeScreen::Update_Net_UpLoadSpeed(double uSpeed)
 {
+	//Serial.println("HS_HomeScreen::Update_Net_UpLoadSpeed 1");
+	textPrinter_Sprite->createSprite(81, 18);
+	//Serial.println("HS_HomeScreen::Update_Net_UpLoadSpeed 2");
+	textPrinter_Sprite->fillSprite(PANEL_BGCOLOR);
+	//Serial.println("HS_HomeScreen::Update_Net_UpLoadSpeed 3");
+	textPrinter_Sprite->drawString(GetSpeedString(uSpeed), 81, 0);
+	//Serial.println("HS_HomeScreen::Update_Net_UpLoadSpeed 4");
+	textPrinter_Sprite->pushSprite(232, 28);
+	//Serial.println("HS_HomeScreen::Update_Net_UpLoadSpeed 5");
+	textPrinter_Sprite->deleteSprite();
+	//Serial.println("HS_HomeScreen::Update_Net_UpLoadSpeed 6");
+
+	/*
 	TFT->fillRect(229, 27, 87, 20, PANEL_BGCOLOR);
 	TFT->setTextColor(TFT_WHITE, PANEL_BGCOLOR);
 	TFT->setTextDatum(TR_DATUM);
 
 	TFT->drawString(GetSpeedString(uSpeed), 312, 29);
+	*/
 }
 
 void HS_HomeScreen::Update_Net_DownloadSpeed(double dSpeed)
 {
+	//Serial.println("HS_HomeScreen::Update_Net_DownloadSpeed 1");
+	textPrinter_Sprite->createSprite(81, 18);
+	//Serial.println("HS_HomeScreen::Update_Net_DownloadSpeed 2");
+	textPrinter_Sprite->fillSprite(PANEL_BGCOLOR);
+	//Serial.println("HS_HomeScreen::Update_Net_DownloadSpeed 3");
+	textPrinter_Sprite->drawString(GetSpeedString(dSpeed), 81, 0);
+	//Serial.println("HS_HomeScreen::Update_Net_DownloadSpeed 4");
+	textPrinter_Sprite->pushSprite(232, 53);
+	//Serial.println("HS_HomeScreen::Update_Net_DownloadSpeed 5");
+	textPrinter_Sprite->deleteSprite();
+	//Serial.println("HS_HomeScreen::Update_Net_DownloadSpeed 6");
+
+	/*
 	TFT->fillRect(229, 50, 87, 20, PANEL_BGCOLOR);
 	TFT->setTextColor(TFT_WHITE, PANEL_BGCOLOR);
 	TFT->setTextDatum(TR_DATUM);
 	
 	TFT->drawString(GetSpeedString(dSpeed), 312, 52);
+	*/
 }
 
 String HS_HomeScreen::GetSpeedString(double speed)

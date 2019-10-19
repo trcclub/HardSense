@@ -3,7 +3,8 @@
 HS_ScreenBase::HS_ScreenBase(TFT_eSPI *newTFT)
 {
 	TFT = newTFT;
-	HS_Load_Fonts();
+	SPIFFS.begin();
+	//HS_Load_Fonts();
 
 	/*
 	smallTextPrinter = new TFT_eSprite(TFT);
@@ -19,6 +20,7 @@ HS_ScreenBase::HS_ScreenBase(TFT_eSPI *newTFT)
 	char d = 0xB0;
 	degreesC = String(d);
 	degreesC += "C";
+	sprintf(degreesC_char, "%cC", d);
 }
 
 HS_ScreenBase::~HS_ScreenBase()
@@ -56,6 +58,7 @@ void HS_ScreenBase::HandleTouch(int x, int y)
 
 void HS_ScreenBase::HS_Load_Fonts()
 {
+
 	if (!TFT->fontsLoaded())
 	{
 		Serial.println("HS_ScreenBase::HS_Load_Fonts():  NOT LOADED");

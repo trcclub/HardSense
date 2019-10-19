@@ -25,6 +25,8 @@ class HS_HomeScreen :
 	public HS_ScreenBase
 {
 private:
+	TFT_eSprite* textPrinter_Sprite;
+
 	HS_Dial_Widget* cpuLoadWidget;
 	uint16_t Home_Screen_cpuLoadDial_CurrentRingColor;
 
