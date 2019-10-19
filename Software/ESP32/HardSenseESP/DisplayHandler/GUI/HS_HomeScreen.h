@@ -25,8 +25,6 @@ class HS_HomeScreen :
 	public HS_ScreenBase
 {
 private:
-	TFT_eSprite* textPrinter_Sprite;
-
 	HS_Dial_Widget* cpuLoadWidget;
 	uint16_t Home_Screen_cpuLoadDial_CurrentRingColor;
 
@@ -38,14 +36,14 @@ private:
 	void Draw_CPU_Panel();
 	void Update_CPU_Panel_Load(double percentage);
 	void Update_CPU_Panel_Temperature(double temp);
-	void Update_CPU_Panel_ClockSpeed(double temp);
+	void Update_CPU_Panel_ClockSpeed(double clock);
 	void Update_CPU_Panel_Power(double power);
 
 	void Draw_GPU_Panel();
 	void Update_GPU_Panel_Load(double percentage);
 	void Update_GPU_Panel_Temperature(double temp);
-	void Update_GPU_Panel_ClockSpeed(double temp);
-	void Update_GPU_Panel_FanControl(double temp);
+	void Update_GPU_Panel_ClockSpeed(double clock);
+	void Update_GPU_Panel_FanControl(double load);
 
 	void Draw_Net_Panel();
 	void Update_Net_DownloadSpeed(double dSpeed);

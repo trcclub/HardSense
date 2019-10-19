@@ -51,13 +51,13 @@ void DisplayHandler::Run()
 		DispatchCommand();
 		//Serial.println("DisplayHandler::Run 3");
 
-		/*
+		
 		if (millis() - last > 1000)
 		{
 			Serial.println(ESP.getFreeHeap());
 			last = millis();
 		}
-		*/
+		
 
 		//HandleButtons();
 		yield();

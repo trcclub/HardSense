@@ -16,8 +16,7 @@ public:
 	~HS_ScreenBase();
 
 	TFT_eSPI *TFT;
-	//TFT_eSprite *smallTextPrinter;
-	//TFT_eSprite* largeTextPrinter;
+	TFT_eSprite* textPrinter_Sprite;
 
 	String degreesC = "";
 	char degreesC_char[3];

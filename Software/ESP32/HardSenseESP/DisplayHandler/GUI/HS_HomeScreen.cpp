@@ -3,15 +3,12 @@
 HS_HomeScreen::HS_HomeScreen(TFT_eSPI *newTFT) : HS_ScreenBase(newTFT)
 {
 	//Serial.println("\n----\nCreate_Screen_Home() !!!");
-	textPrinter_Sprite = new TFT_eSprite(TFT);
-	textPrinter_Sprite->setColorDepth(16);
-	textPrinter_Sprite->loadFont(AA_FONT_LARGE);
-	textPrinter_Sprite->setTextColor(TFT_WHITE, PANEL_BGCOLOR);
-	textPrinter_Sprite->setTextDatum(TR_DATUM);
-
+	TFT->loadFont(AA_FONT_LARGE);
 	Home_Screen_cpuLoadDial_CurrentRingColor = TFT_GREEN;
 	cpuLoadWidget = new HS_Dial_Widget(*TFT);
 	gpuLoadWidget = new HS_Dial_Widget(*TFT);
+	
+	textPrinter_Sprite->setTextColor(TFT_WHITE, PANEL_BGCOLOR);
 
 	TFT->fillScreen(TFT_WHITE);
 
@@ -25,13 +22,8 @@ HS_HomeScreen::HS_HomeScreen(TFT_eSPI *newTFT) : HS_ScreenBase(newTFT)
 
 HS_HomeScreen::~HS_HomeScreen()
 {
-	TFT->unloadFont();
 	delete(cpuLoadWidget);
 	delete(gpuLoadWidget);
-
-	textPrinter_Sprite->unloadFont();
-	textPrinter_Sprite->deleteSprite();
-	delete(textPrinter_Sprite);
 }
 
 void HS_HomeScreen::UpdateScreen(String value)
@@ -120,11 +112,11 @@ void HS_HomeScreen::Draw_CPU_Panel()
 
 	// CPU Power
 	DrawBoxWithBorderAndDropShadow(118, 34, 77, 26, BOX_BORDER_COLOR, PANEL_BGCOLOR, BOX_DROP_SHADOW);
-	TFT->drawString(String("W"), 189, 40);
+	//TFT->drawString(String("W"), 189, 40);
 
 	// CPU Clock Speed
-	DrawBoxWithBorderAndDropShadow(113, 64, 89, 26, BOX_BORDER_COLOR, PANEL_BGCOLOR, BOX_DROP_SHADOW);
-	TFT->drawString(String("MHz"), 198, 70);
+	DrawBoxWithBorderAndDropShadow(111, 64, 93, 26, BOX_BORDER_COLOR, PANEL_BGCOLOR, BOX_DROP_SHADOW);
+	//TFT->drawString(String("MHz"), 198, 70);
 
 	/*
 	TFT->setTextDatum(ML_DATUM);
@@ -133,7 +125,7 @@ void HS_HomeScreen::Draw_CPU_Panel()
 	*/
 
 	Update_CPU_Panel_Temperature(0.0);
-	Update_CPU_Panel_Power(999.9);
+	Update_CPU_Panel_Power(00.0);
 	Update_CPU_Panel_ClockSpeed(0000.0);
 }
 
@@ -182,41 +174,53 @@ void HS_HomeScreen::Update_CPU_Panel_Load(double percentage)
 
 void HS_HomeScreen::Update_CPU_Panel_Temperature(double temp)
 {
-	//Serial.println("Update_CPU_Panel_Tempererature 1");
-
-	//Serial.println("HS_HomeScreen::Update_CPU_Panel_Temperature 1");
-	textPrinter_Sprite->createSprite(59, 18);
-	//Serial.println("HS_HomeScreen::Update_CPU_Panel_Temperature 2");
+	textPrinter_Sprite->createSprite(62, 18);
 	textPrinter_Sprite->fillSprite(PANEL_BGCOLOR);
 	char buf[10];
-	sprintf(buf, "%.1f%s ", temp, degreesC_char);
-	//Serial.println("HS_HomeScreen::Update_CPU_Panel_Temperature 3");
-	textPrinter_Sprite->drawString(String(buf), 59, 0);
-	//Serial.println("HS_HomeScreen::Update_CPU_Panel_Temperature 4");
-	textPrinter_Sprite->pushSprite(126, 10);
-	//Serial.println("HS_HomeScreen::Update_CPU_Panel_Temperature 5");
+	sprintf(buf, "%.1f %s ", temp, degreesC_char);
+	textPrinter_Sprite->drawString(String(buf), 62, 0);
+	textPrinter_Sprite->pushSprite(127, 10);
 	textPrinter_Sprite->deleteSprite();
-	//Serial.println("HS_HomeScreen::Update_CPU_Panel_Temperature 6");
-
+	
 	/*
 	TFT->fillRect(128, 9, 38, 18, PANEL_BGCOLOR);
 	TFT->setTextDatum(TR_DATUM);
 	TFT->setTextColor(TFT_WHITE, PANEL_BGCOLOR);
 	TFT->drawFloat(temp, 1, 162, 10);
 	*/
-	//Serial.println("Update_CPU_Panel_Tempererature 2");
 }
 
-void HS_HomeScreen::Update_CPU_Panel_Power(double temp)
+void HS_HomeScreen::Update_CPU_Panel_Power(double power)
 {
+	textPrinter_Sprite->createSprite(67, 18);
+	textPrinter_Sprite->fillSprite(PANEL_BGCOLOR);
+	char buf[10];
+	sprintf(buf, "%.1f W", power);
+	textPrinter_Sprite->drawString(String(buf), 67, 0);
+	textPrinter_Sprite->pushSprite(122, 40);
+	textPrinter_Sprite->deleteSprite();
+
+	/*
 	TFT->fillRect(123, 39, 48, 18, PANEL_BGCOLOR);
 	TFT->setTextDatum(TR_DATUM);
 	TFT->setTextColor(TFT_WHITE, PANEL_BGCOLOR);
 	TFT->drawFloat(temp, 1, 167, 40);
+	*/
 }
 
 void HS_HomeScreen::Update_CPU_Panel_ClockSpeed(double clock)
 {
+	textPrinter_Sprite->createSprite(83, 18);
+	textPrinter_Sprite->fillSprite(PANEL_BGCOLOR);
+	char buf[12];
+	sprintf(buf, "%.0f MHz", clock);
+	textPrinter_Sprite->drawString(String(buf), 83, 0);
+	textPrinter_Sprite->pushSprite(116, 70);
+	textPrinter_Sprite->deleteSprite();
+
+
+
+	/*
 	//Serial.println("Update_CPU_Panel_ClockSpeed 1");
 	TFT->fillRect(117, 69, 44, 18, PANEL_BGCOLOR);
 	TFT->setTextDatum(TL_DATUM);
@@ -224,6 +228,7 @@ void HS_HomeScreen::Update_CPU_Panel_ClockSpeed(double clock)
 	int i = clock;
 	TFT->drawNumber(i, 118, 70);
 	//Serial.println("Update_CPU_Panel_ClockSpeed 2");
+	*/
 }
 
 void HS_HomeScreen::Draw_GPU_Panel()
@@ -249,18 +254,18 @@ void HS_HomeScreen::Draw_GPU_Panel()
 	//GPU Package Temperature
 	DrawBoxWithBorderAndDropShadow(123, 4 + yAdd, 67, 26, BOX_BORDER_COLOR, PANEL_BGCOLOR, BOX_DROP_SHADOW);
 
-	TFT->setTextColor(TFT_WHITE, PANEL_BGCOLOR);
-	TFT->setTextDatum(TR_DATUM);
-	TFT->drawString(degreesC, 184, 10 + yAdd);
+	//TFT->setTextColor(TFT_WHITE, PANEL_BGCOLOR);
+	//TFT->setTextDatum(TR_DATUM);
+	//TFT->drawString(degreesC, 184, 10 + yAdd);
 
 	// Fan load
 	DrawBoxWithBorderAndDropShadow(123, 34 + yAdd, 67, 26, BOX_BORDER_COLOR, PANEL_BGCOLOR, BOX_DROP_SHADOW);
-	TFT->drawString(String("%"), 184, 40 + yAdd);
+	//TFT->drawString(String("%"), 184, 40 + yAdd);
 
 
 	// GPU Clock Speed
-	DrawBoxWithBorderAndDropShadow(113, 64 + yAdd, 89, 26, BOX_BORDER_COLOR, PANEL_BGCOLOR, BOX_DROP_SHADOW);
-	TFT->drawString(String("MHz"), 198, 70 + yAdd);
+	DrawBoxWithBorderAndDropShadow(111, 64 + yAdd, 93, 26, BOX_BORDER_COLOR, PANEL_BGCOLOR, BOX_DROP_SHADOW);
+	//TFT->drawString(String("MHz"), 198, 70 + yAdd);
 
 	Update_GPU_Panel_Temperature(00.0);
 	Update_GPU_Panel_FanControl(00.0);
@@ -270,7 +275,6 @@ void HS_HomeScreen::Draw_GPU_Panel()
 
 void HS_HomeScreen::Update_GPU_Panel_Load(double percentage)
 {
-	//Serial.println("Update_GPU_Panel_Load 1");
 	int angle = map(percentage, 0, 100, SCREEN_HOME_LOAD_DIAL_MIN, SCREEN_HOME_LOAD_DIAL_MAX);
 
 	uint16_t ringColor;
@@ -295,41 +299,65 @@ void HS_HomeScreen::Update_GPU_Panel_Load(double percentage)
 		Home_Screen_gpuLoadDial_CurrentRingColor = ringColor;
 		gpuLoadWidget->DrawDialScale(*TFT, SCREEN_HOME_LOAD_DIAL_MIN, SCREEN_HOME_LOAD_DIAL_MAX, 30, Home_Screen_gpuLoadDial_CurrentRingColor);
 	}
-
-	//Serial.print("Percentage: ");
-	//Serial.print(percentage);
-	//Serial.print("  |  angle: ");
-	//Serial.println(angle);
 	gpuLoadWidget->PlotDial(SCREEN_HOME_GPU_LOAD_DIAL_X, SCREEN_HOME_GPU_LOAD_DIAL_Y, angle, "Load", percentage, BOX_DROP_SHADOW);
 }
 
 void HS_HomeScreen::Update_GPU_Panel_Temperature(double temp)
 {
+	textPrinter_Sprite->createSprite(62, 18);
+	textPrinter_Sprite->fillSprite(PANEL_BGCOLOR);
+	char buf[10];
+	sprintf(buf, "%.1f %s ", temp, degreesC_char);
+	textPrinter_Sprite->drawString(String(buf), 62, 0);
+	textPrinter_Sprite->pushSprite(127, 105);
+	textPrinter_Sprite->deleteSprite();
+
+	/*
 	int yAdd = 95;
 	TFT->fillRect(128, 9 + yAdd, 38, 18, PANEL_BGCOLOR);
 	TFT->setTextDatum(TR_DATUM);
 	TFT->setTextColor(TFT_WHITE, PANEL_BGCOLOR);
 	TFT->drawFloat(temp, 1, 162, 10 + yAdd);
+	*/
 }
 
-void HS_HomeScreen::Update_GPU_Panel_FanControl(double temp)
+void HS_HomeScreen::Update_GPU_Panel_FanControl(double load)
 {
+	textPrinter_Sprite->createSprite(59, 18);
+	textPrinter_Sprite->fillSprite(PANEL_BGCOLOR);
+	char buf[12];
+	sprintf(buf, "%.1f %%", load);
+	textPrinter_Sprite->drawString(String(buf), 59, 0);
+	textPrinter_Sprite->pushSprite(126, 135);
+	textPrinter_Sprite->deleteSprite();
+
+	/*
 	int yAdd = 95;
 	TFT->fillRect(128, 39 + yAdd, 38, 18, PANEL_BGCOLOR);
 	TFT->setTextDatum(TR_DATUM);
 	TFT->setTextColor(TFT_WHITE, PANEL_BGCOLOR);
 	TFT->drawFloat(temp, 1, 162, 40 + yAdd);
-
+	*/
 }
 
 void HS_HomeScreen::Update_GPU_Panel_ClockSpeed(double clock)
 {
+	textPrinter_Sprite->createSprite(83, 18);
+	textPrinter_Sprite->fillSprite(PANEL_BGCOLOR);
+	char buf[12];
+	sprintf(buf, "%.0f MHz", clock);
+	textPrinter_Sprite->drawString(String(buf), 83, 0);
+	textPrinter_Sprite->pushSprite(116, 165);
+	textPrinter_Sprite->deleteSprite();
+
+	/*
 	int yAdd = 95;
 	TFT->fillRect(117, 69 + yAdd, 44, 18, PANEL_BGCOLOR);
 	TFT->setTextDatum(TR_DATUM);
 	TFT->setTextColor(TFT_WHITE, PANEL_BGCOLOR);
 	int i = clock;
 	TFT->drawNumber(i, 158, 70 + yAdd);
+	*/
 }
 
 void HS_HomeScreen::Draw_Net_Panel()
@@ -361,18 +389,12 @@ void HS_HomeScreen::Draw_Net_Panel()
 
 void HS_HomeScreen::Update_Net_UpLoadSpeed(double uSpeed)
 {
-	//Serial.println("HS_HomeScreen::Update_Net_UpLoadSpeed 1");
 	textPrinter_Sprite->createSprite(81, 18);
-	//Serial.println("HS_HomeScreen::Update_Net_UpLoadSpeed 2");
 	textPrinter_Sprite->fillSprite(PANEL_BGCOLOR);
-	//Serial.println("HS_HomeScreen::Update_Net_UpLoadSpeed 3");
 	textPrinter_Sprite->drawString(GetSpeedString(uSpeed), 81, 0);
-	//Serial.println("HS_HomeScreen::Update_Net_UpLoadSpeed 4");
 	textPrinter_Sprite->pushSprite(232, 28);
-	//Serial.println("HS_HomeScreen::Update_Net_UpLoadSpeed 5");
 	textPrinter_Sprite->deleteSprite();
-	//Serial.println("HS_HomeScreen::Update_Net_UpLoadSpeed 6");
-
+	
 	/*
 	TFT->fillRect(229, 27, 87, 20, PANEL_BGCOLOR);
 	TFT->setTextColor(TFT_WHITE, PANEL_BGCOLOR);
@@ -384,18 +406,12 @@ void HS_HomeScreen::Update_Net_UpLoadSpeed(double uSpeed)
 
 void HS_HomeScreen::Update_Net_DownloadSpeed(double dSpeed)
 {
-	//Serial.println("HS_HomeScreen::Update_Net_DownloadSpeed 1");
 	textPrinter_Sprite->createSprite(81, 18);
-	//Serial.println("HS_HomeScreen::Update_Net_DownloadSpeed 2");
 	textPrinter_Sprite->fillSprite(PANEL_BGCOLOR);
-	//Serial.println("HS_HomeScreen::Update_Net_DownloadSpeed 3");
 	textPrinter_Sprite->drawString(GetSpeedString(dSpeed), 81, 0);
-	//Serial.println("HS_HomeScreen::Update_Net_DownloadSpeed 4");
 	textPrinter_Sprite->pushSprite(232, 53);
-	//Serial.println("HS_HomeScreen::Update_Net_DownloadSpeed 5");
 	textPrinter_Sprite->deleteSprite();
-	//Serial.println("HS_HomeScreen::Update_Net_DownloadSpeed 6");
-
+	
 	/*
 	TFT->fillRect(229, 50, 87, 20, PANEL_BGCOLOR);
 	TFT->setTextColor(TFT_WHITE, PANEL_BGCOLOR);
@@ -429,7 +445,7 @@ void HS_HomeScreen::Draw_Ram_Panel()
 	TFT->setTextColor(TFT_WHITE, PANEL_HCOLOR);
 	TFT->setTextDatum(TL_DATUM);
 	TFT->drawString("RAM", 212, 76);
-	TFT->drawString("%", 300, 76);
+	//TFT->drawString("%", 300, 76);
 
 	DrawBoxWithBorderAndDropShadow(206, 94, 113, 51, BOX_BORDER_COLOR, PANEL_BGCOLOR, BOX_DROP_SHADOW);
 
@@ -441,9 +457,20 @@ void HS_HomeScreen::Draw_Ram_Panel()
 
 void HS_HomeScreen::Update_Ram_Useage(double dPercent)
 {
+	textPrinter_Sprite->createSprite(50, 18);
+	textPrinter_Sprite->fillSprite(PANEL_HCOLOR);
+	char buf[12];
+	sprintf(buf, "%.0f %%", dPercent);
+	textPrinter_Sprite->setTextColor(TFT_WHITE, PANEL_HCOLOR);
+	textPrinter_Sprite->drawString(String(buf), 50, 0);
+	textPrinter_Sprite->pushSprite(262,76);
+	textPrinter_Sprite->deleteSprite();
+	textPrinter_Sprite->setTextColor(TFT_WHITE, PANEL_BGCOLOR);  //put the text color back.
+	/*
 	TFT->fillRect(253, 75, 44, 18, PANEL_HCOLOR);
 	TFT->setTextColor(TFT_WHITE, PANEL_HCOLOR);
 	TFT->setTextDatum(TR_DATUM);
 
 	TFT->drawFloat(dPercent, 1, 295, 76);
+	*/
 }

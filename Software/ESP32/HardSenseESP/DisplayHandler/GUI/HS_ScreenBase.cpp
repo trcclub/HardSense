@@ -4,18 +4,12 @@ HS_ScreenBase::HS_ScreenBase(TFT_eSPI *newTFT)
 {
 	TFT = newTFT;
 	SPIFFS.begin();
-	//HS_Load_Fonts();
 
-	/*
-	smallTextPrinter = new TFT_eSprite(TFT);
 
-	smallTextPrinter->setColorDepth(8);
-	smallTextPrinter->loadFont(AA_FONT_SMALL);
-
-	largeTextPrinter = new TFT_eSprite(TFT);
-	largeTextPrinter->setColorDepth(8);
-	largeTextPrinter->loadFont(AA_FONT_LARGE);
-	*/
+	textPrinter_Sprite = new TFT_eSprite(TFT);
+	textPrinter_Sprite->setColorDepth(16);
+	textPrinter_Sprite->loadFont(AA_FONT_LARGE);
+	textPrinter_Sprite->setTextDatum(TR_DATUM);
 
 	char d = 0xB0;
 	degreesC = String(d);
@@ -26,8 +20,10 @@ HS_ScreenBase::HS_ScreenBase(TFT_eSPI *newTFT)
 HS_ScreenBase::~HS_ScreenBase()
 {
 	TFT->unloadFont();
-	//delete(smallTextPrinter);
-	//delete(largeTextPrinter);
+
+	textPrinter_Sprite->unloadFont();
+	textPrinter_Sprite->deleteSprite();
+	delete(textPrinter_Sprite);
 }
 
 void HS_ScreenBase::UpdateScreen(String value)
