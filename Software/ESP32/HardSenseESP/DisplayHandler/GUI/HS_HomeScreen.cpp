@@ -317,7 +317,6 @@ void HS_HomeScreen::Draw_Net_Panel()
 	
 	Update_Net_UpLoadSpeed(0.0);
 	Update_Net_DownloadSpeed(0.0);
-	
 }
 
 void HS_HomeScreen::Update_Net_UpLoadSpeed(double uSpeed)

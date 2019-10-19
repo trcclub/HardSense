@@ -117,13 +117,21 @@ void DisplayHandler::DispatchCommand()
 		portENTER_CRITICAL(&displayQueueMux);
 		QUEUE_ITEM currItem = displayDataQueue->dequeue();
 		portEXIT_CRITICAL(&displayQueueMux);
+
 		switch (currItem.key) {
 		case DisplayCommands::ChangeScreen:
-			LoadNewScreen(currItem.value[0]);
+			if (currItem.value.length() == 1) 
+			{
+				LoadNewScreen(currItem.value[0]);
+			}			
 			break;
 		case DisplayCommands::UpdateValue:
 			if (UpdateCureentScreen != NULL) {
-				UpdateCureentScreen(String(currItem.value));
+				if (currItem.value.length() >= 3)
+				{
+					UpdateCureentScreen(String(currItem.value));
+				}
+				
 			}
 			break;
 		default:

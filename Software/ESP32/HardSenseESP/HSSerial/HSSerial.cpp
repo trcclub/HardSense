@@ -366,8 +366,6 @@ void HSSerial::HandleOutput()
 		(this->*PrintMessageToOutput)(tmpOutputData[x]);
 	}
 	(this->*PrintMessageToOutput)((char)TRANS__KEY::ETX);
-
-	
 }
 
 
@@ -384,11 +382,9 @@ void HSSerial::HandleInput() {
 	if (!(this->*InputAvailable)())
 		return;
 
-	//Serial.println("HandleInput 1");
-	while ((this->*InputAvailable)() && (this->*ReadInputByte)() != TRANS__KEY::STX) {}
+	while ((this->*InputAvailable)() && (this->*ReadInputByte)() != TRANS__KEY::STX) { yield(); }
 
 	ParseInput((this->*ReadInputStringUntil)(TRANS__KEY::ETX));
-	//Serial.println("HandleInput 2");
 }
 
 void HSSerial::ParseInput(String input)
@@ -406,7 +402,7 @@ void HSSerial::ParseInput(String input)
 
 		start = currIndex + 1;
 		currIndex = input.indexOf(TRANS__KEY::PACKET_END, start);
-		//yield(); // Avoid a watchdog time-out
+		yield(); // Avoid a watchdog time-out
 	}
 	//Serial.println("ParseInput 2");
 }
@@ -470,17 +466,6 @@ void IRAM_ATTR HSSerial::FireHeartbeat()
 	portENTER_CRITICAL(&heartbeatMux);
 	AddHeartbeatToOutput = true;
 	portEXIT_CRITICAL(&heartbeatMux);
-
-	/*
-	if (!connectedToSomething) {
-		return;
-	}
-
-	if (IncrementHeartbeatCounter())
-	{
-		AddKeyToOutputMessage(TRANS__KEY::HEARTBEAT);
-	}
-	*/
 }
 
 bool HSSerial::IncrementHeartbeatCounter()
@@ -494,19 +479,3 @@ bool HSSerial::IncrementHeartbeatCounter()
 	heartbeatCounter++;
 	return true;
 }
-
-/*
-void HSSerial::UpdateSensorValuesToDisplay(String value)
-{
-	// value format:
-	// <key>,<double value as string>
-	//
-	//Serial.print("UpdateSensorValuesToDisplay: ");
-	//Serial.println(value);
-
-	//char buf[MAX_QUEUE_ITEM_VALUE_SIZE];
-	//value.toCharArray(buf, MAX_QUEUE_ITEM_VALUE_SIZE);
-	//AddItemToDisplayQueue(DisplayCommands::UpdateValue, buf);
-	AddItemToDisplayQueue(DisplayCommands::UpdateValue, value);
-}
-*/
