@@ -4,7 +4,7 @@ HS_SplashScreen::HS_SplashScreen(TFT_eSPI* newTFT) : HS_ScreenBase(newTFT)
 {
 	Serial.println("HS_SplashScreen() !!!");
 
-	TFT->fillScreen(TFT_BLACK);
+	TFT->fillScreen(TFT_YELLOW);
 	TFT->setCursor(40, 40);
 	TFT->setTextSize(2);
 	TFT->print("Splash Screen");

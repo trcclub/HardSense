@@ -98,7 +98,7 @@ void HSSerial::HandleBluetoothConnection()
 	char buf[2];
 	sprintf(buf, "%c", ScreenTypes::BluetoothConfigurator);
 	AddItemToDisplayQueue(DisplayCommands::ChangeScreen, buf);
-
+	connectedToSomething = false;
 	btSerial = new BluetoothSerial();
 	InputAvailable = &HSSerial::BT_Available;
 	ReadInputByte = &HSSerial::BT_Read;;
@@ -117,6 +117,7 @@ void HSSerial::HandleBluetoothConnection()
 
 			HandleOutput();
 
+			yield();
 			delay(20);
 		}
 	}
@@ -132,7 +133,7 @@ bool HSSerial::WaitForBTConnection()
 		{
 			break;
 		}
-
+		yield();
 		delay(20);
 	}
 }

@@ -76,8 +76,8 @@ public:
 	void ConnectToHardsenseServer();
 	void HandleWiFiConnection();
 	void HandleInput();
-	void IRAM_ATTR HandleOutput();
+	void HandleOutput();
 
-	void FireHeartbeat();
+	void IRAM_ATTR FireHeartbeat();
 };
 

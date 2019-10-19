@@ -2,7 +2,7 @@
 
 HS_BluetoothConfiguratorScreen::HS_BluetoothConfiguratorScreen(TFT_eSPI* newTFT) : HS_ScreenBase(newTFT)
 {
-	Serial.println("HS_SplashScreen() !!!");
+	Serial.println("HS_BluetoothConfiguratorScreen() !!!");
 
 	TFT->fillScreen(TFT_RED);
 	TFT->setCursor(40, 40);

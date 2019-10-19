@@ -39,14 +39,7 @@ void setup() {
 	heartbeatTimer = timerBegin(0, 80, true);
 	timerAttachInterrupt(heartbeatTimer, &onTimer, true);
 	timerAlarmWrite(heartbeatTimer, HEARTBEAT_TIMER_POLL_TIME, true);
-
-	QUEUE_ITEM qi;
-	qi.key = DisplayCommands::ChangeScreen;
-	qi.value = String(ScreenTypes::SplashScreen);
-	//sprintf(qi.value, "%c", ScreenTypes::SplashScreen);
-	displayQueue.enqueue(qi);
-
-
+	
 	xTaskCreatePinnedToCore(
 		TFT_Core_Proc,                  /* pvTaskCode */
 		"DisplayHandlerTask",            /* pcName */
@@ -56,8 +49,14 @@ void setup() {
 		&Display_Core_Task_Handle,                 /* pxCreatedTask */
 		0);
 
+	QUEUE_ITEM qi;
+	qi.key = DisplayCommands::ChangeScreen;
+	qi.value = String(ScreenTypes::SplashScreen);
+	//sprintf(qi.value, "%c", ScreenTypes::SplashScreen);
+	displayQueue.enqueue(qi);
 
-	delay(2000);
+
+	delay(1000);
 
 	if (!hsSerial.Init(&outputQueue, outputQueueMux, AddItemToDisplayQueue, HeartbeatTimerEnabled))
 	{
