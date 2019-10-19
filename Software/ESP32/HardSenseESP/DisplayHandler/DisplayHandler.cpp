@@ -34,7 +34,6 @@ void DisplayHandler::Init(DataQueue<QUEUE_ITEM>* newDisplayQueue, portMUX_TYPE& 
 
 void DisplayHandler::Run()
 {
-	//Serial.println("DisplayHandler::Run 1");
 	unsigned long last = millis();
 	uint16_t x, y;
 	while (true)
@@ -47,31 +46,25 @@ void DisplayHandler::Run()
 				lastTouch = millis();
 			}			
 		}
-		//Serial.println("DisplayHandler::Run 2");
 		DispatchCommand();
-		//Serial.println("DisplayHandler::Run 3");
 
-		
+		/*
 		if (millis() - last > 1000)
 		{
 			Serial.println(ESP.getFreeHeap());
 			last = millis();
 		}
-		
+		*/
 
 		//HandleButtons();
 		yield();
 		delay(20);
 
 	}
-
-	//Serial.println("DisplayHandler::Run END");
 }
 
 void DisplayHandler::LoadNewScreen(char screenID)
 {
-	//Serial.println("LoadNewScreen");
-
 	if (DestoryCurrentScreen != NULL) {
 		DestoryCurrentScreen();
 		DestoryCurrentScreen = NULL;
@@ -119,41 +112,25 @@ void DisplayHandler::LoadNewScreen(char screenID)
 
 void DisplayHandler::DispatchCommand()
 {
-	//Serial.println("DisplayHandler::DispatchCommand 1");
 	while (!displayDataQueue->isEmpty())
 	{
-		//Serial.println("DisplayHandler::DispatchCommand 1");
 		portENTER_CRITICAL(&displayQueueMux);
 		QUEUE_ITEM currItem = displayDataQueue->dequeue();
 		portEXIT_CRITICAL(&displayQueueMux);
-
-		/*
-		Serial.println("DisplayHandler::DispatchCommand 2");
-		Serial.print("Curritem - key: '");
-		Serial.print(currItem.key);
-		Serial.print("' - value '");
-		Serial.print(currItem.value);
-		Serial.println("'\n");
-		*/
 		switch (currItem.key) {
 		case DisplayCommands::ChangeScreen:
 			LoadNewScreen(currItem.value[0]);
 			break;
 		case DisplayCommands::UpdateValue:
-			//Serial.println("DisplayHandler::DispatchCommand 3");
 			if (UpdateCureentScreen != NULL) {
-				//Serial.println("DisplayHandler::DispatchCommand 4");
 				UpdateCureentScreen(String(currItem.value));
-				//Serial.println("DisplayHandler::DispatchCommand 5");
 			}
 			break;
 		default:
 			break;
 		}
 		yield();
-		//Serial.println("DisplayHandler::DispatchCommand 2");
 	}
-	//Serial.println("DisplayHandler::DispatchCommand 6");
 }
 
 void DisplayHandler::SetTouch()
