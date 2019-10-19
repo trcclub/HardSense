@@ -20,10 +20,12 @@ public:
 	//TFT_eSprite* largeTextPrinter;
 
 	String degreesC = "";
+	void(*AddItemToDisplayQueue)(char key, String value);
 
 	virtual void UpdateScreen(String value);
 	virtual void SetSensorList(void(*AddItemToOutputQueue_func)(char key, char* value));
 	virtual void HandleTouch(int x, int y);
+	void SetDisplayQueue(void(*AddItemToDisplayQueue_func)(char key, String value));
 
 	void DrawBoxWithBorderAndDropShadow(int32_t x, int32_t, int32_t w, int32_t h, int32_t borderColor, int32_t boxColor, int32_t dropShadowColor);
 	

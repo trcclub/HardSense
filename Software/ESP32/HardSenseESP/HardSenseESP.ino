@@ -33,7 +33,7 @@ hw_timer_t* heartbeatTimer = NULL;
 void setup() {
 	Serial.begin(115200);
 
-	displayHandler.Init(&displayQueue, displayQueueMux, AddItemToOutputQueue);
+	displayHandler.Init(&displayQueue, displayQueueMux, AddItemToOutputQueue, AddItemToDisplayQueue);
 
 	InitButtons();
 	heartbeatTimer = timerBegin(0, 80, true);

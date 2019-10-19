@@ -23,6 +23,7 @@ HS_ScreenBase::HS_ScreenBase(TFT_eSPI *newTFT)
 
 HS_ScreenBase::~HS_ScreenBase()
 {
+	TFT->unloadFont();
 	//delete(smallTextPrinter);
 	//delete(largeTextPrinter);
 }
@@ -55,20 +56,33 @@ void HS_ScreenBase::HandleTouch(int x, int y)
 
 void HS_ScreenBase::HS_Load_Fonts()
 {
-	if (!SPIFFS.begin()) {
-		Serial.println("HS_ScreenBase::HS_Load_Fonts():: SPIFFS initialisation failed!");
-		while (1) yield(); // Stay here twiddling thumbs waiting
-	}
-
-	// ESP32 will crash if any of the fonts are missing
-	bool font_missing = false;
-	if (SPIFFS.exists("/SegoeUI-14.vlw") == false) font_missing = true;
-	if (SPIFFS.exists("/SegoeUI-18.vlw") == false) font_missing = true;
-
-	if (font_missing)
+	if (!TFT->fontsLoaded())
 	{
-		Serial.println("\r\HS_ScreenBase::HS_Load_Fonts():: Font missing in SPIFFS, did you upload it?");
-		while (1) yield();
+		Serial.println("HS_ScreenBase::HS_Load_Fonts():  NOT LOADED");
 	}
 
+	//if (!TFT->fontsLoaded()) 
+	//{
+		if (!SPIFFS.begin()) {
+			Serial.println("HS_ScreenBase::HS_Load_Fonts():: SPIFFS initialisation failed!");
+			while (1) yield(); // Stay here twiddling thumbs waiting
+		}
+
+		// ESP32 will crash if any of the fonts are missing
+		bool font_missing = false;
+		if (SPIFFS.exists("/SegoeUI-14.vlw") == false) font_missing = true;
+		if (SPIFFS.exists("/SegoeUI-18.vlw") == false) font_missing = true;
+
+		if (font_missing)
+		{
+			Serial.println("\r\HS_ScreenBase::HS_Load_Fonts():: Font missing in SPIFFS, did you upload it?");
+			while (1) yield();
+		}
+	//}
+
+}
+
+void HS_ScreenBase::SetDisplayQueue(void(*AddItemToDisplayQueue_func)(char key, String value))
+{
+	AddItemToDisplayQueue = AddItemToDisplayQueue_func;
 }

@@ -3,6 +3,10 @@
 
 HS_Dial_Widget::HS_Dial_Widget(TFT_eSPI TFT)
 {
+	if (!TFT.fontsLoaded()) {
+		HS_Load_Fonts();
+	}
+
 	dial = new TFT_eSprite(&TFT);
 	needle = new TFT_eSprite(&TFT);
 	// Create the dial Sprite
@@ -16,7 +20,12 @@ HS_Dial_Widget::HS_Dial_Widget(TFT_eSPI TFT)
 
 HS_Dial_Widget::~HS_Dial_Widget()
 {
+	dial->unloadFont();
+	dial->deleteSprite();
 	delete(dial);
+
+	needle->unloadFont();
+	needle->deleteSprite();
 	delete(needle);
 }
 

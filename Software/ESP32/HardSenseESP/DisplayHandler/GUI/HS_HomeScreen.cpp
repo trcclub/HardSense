@@ -19,6 +19,7 @@ HS_HomeScreen::HS_HomeScreen(TFT_eSPI *newTFT) : HS_ScreenBase(newTFT)
 
 HS_HomeScreen::~HS_HomeScreen()
 {
+	TFT->unloadFont();
 	delete(cpuLoadWidget);
 	delete(gpuLoadWidget);
 }
@@ -158,6 +159,9 @@ bool HS_HomeScreen::CPU_Panel_Touched(int x, int y)
 	if ((x >= CPU_PANEL_LOW_X+5 && x <= CPU_PANEL_HIGH_X-5) && (y >= CPU_PANEL_LOW_Y+5 && y <= CPU_PANEL_HIGH_Y-5))
 	{
 		Serial.println("Touch me");
+		char buf[2];
+		sprintf(buf, "%c", ScreenTypes::HomeB);
+		AddItemToDisplayQueue(DisplayCommands::ChangeScreen, buf);
 		return true;
 	}
 	return false;
@@ -191,7 +195,6 @@ void HS_HomeScreen::Update_CPU_Panel_Load(double percentage)
 	}
 
 	cpuLoadWidget->PlotDial(SCREEN_HOME_CPU_LOAD_DIAL_X, SCREEN_HOME_CPU_LOAD_DIAL_Y, angle, "Load", percentage, BOX_DROP_SHADOW);
-
 }
 
 void HS_HomeScreen::Update_CPU_Panel_Temperature(double temp)

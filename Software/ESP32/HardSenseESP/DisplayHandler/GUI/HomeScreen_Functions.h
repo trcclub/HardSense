@@ -35,3 +35,8 @@ bool Handle_HomeScreen_Touch(int x, int y)
 {
 	HS_Current_HomeScreen->HandleTouch(x, y);
 }
+
+void Set_HomeScreen_DisplayQueue(void(*AddItemToDisplayQueue_func)(char key, String value))
+{
+	HS_Current_HomeScreen->SetDisplayQueue(AddItemToDisplayQueue_func);
+}

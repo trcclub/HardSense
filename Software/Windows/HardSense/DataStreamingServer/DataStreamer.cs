@@ -215,6 +215,9 @@ namespace HardSense.DataStreamingServer
                     AddSensorListToSDStreamer(value);
                     sender.AddStringToMessage(ProtocolKeys.TRANSMISSION_KEYS["ACK"], "Sensors aded to list");
                     break;
+                case (char)TRANS__KEY.CLEAR_SENSOR_LIST:
+                    sdStreamer.ClearSensorList();
+                    break;
                 case (char)TRANS__KEY.HEARTBEAT_ACK:
                     heartbeatsMissed = 0;
                     break;

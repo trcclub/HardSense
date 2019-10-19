@@ -1,11 +1,13 @@
 #include "DisplayHandler.h"
+#include "FS.h"
+#include "SPIFFS.h"
 #include "../HSSerial/SerialInterface.h"
 
 #include "GUI/HomeScreen_Functions.h"
 #include "GUI//SplashScreen_Functions.h"
 #include "GUI//ConnectToNetworkScreen_Functions.h"
 #include "GUI/BluetoothConfiguratorScreen_Functions.h"
-
+#include "GUI/HomeScreenB_Functions.h"
 
 DisplayHandler::DisplayHandler()
 {
@@ -16,13 +18,15 @@ DisplayHandler::~DisplayHandler()
 
 }
 
-void DisplayHandler::Init(DataQueue<QUEUE_ITEM>* newDisplayQueue, portMUX_TYPE& newDisplayQueueMux, void(*AddItemToOutputQueue_Func)(char key, String value))
+void DisplayHandler::Init(DataQueue<QUEUE_ITEM>* newDisplayQueue, portMUX_TYPE& newDisplayQueueMux, void(*AddItemToOutputQueue_Func)(char key, String value), void(*AddItemToDisplayQueue_Func)(char key, String value))
 {
 	displayDataQueue = newDisplayQueue;
 	AddItemToOutputQueue = AddItemToOutputQueue_Func;
 	displayQueueMux = newDisplayQueueMux;
+	AddItemToDisplayQueue = AddItemToDisplayQueue_Func;
 
 	tftDisplay.init();
+
 	tftDisplay.setRotation(1);
 	tftDisplay.fillScreen(TFT_BLACK);
 	SetTouch();
@@ -63,6 +67,7 @@ void DisplayHandler::Run()
 void DisplayHandler::LoadNewScreen(char screenID)
 {
 	//Serial.println("LoadNewScreen");
+
 	if (DestoryCurrentScreen != NULL) {
 		DestoryCurrentScreen();
 		DestoryCurrentScreen = NULL;
@@ -70,7 +75,6 @@ void DisplayHandler::LoadNewScreen(char screenID)
 		HandleTouchPoint = NULL;
 	}
 	AddItemToOutputQueue(TRANS__KEY::CLEAR_SENSOR_LIST, "");
-
 	char key = screenID;
 	switch (key) {
 	case ScreenTypes::SplashScreen:
@@ -93,8 +97,16 @@ void DisplayHandler::LoadNewScreen(char screenID)
 		UpdateCureentScreen = Update_HomeScreen;
 		HandleTouchPoint = Handle_HomeScreen_Touch;
 		Create_HomeScreen(&tftDisplay);
-		//GetSensorData(Home_Screen_SensorList);
 		Set_Home_Screen_SensorList(AddItemToOutputQueue);
+		Set_HomeScreen_DisplayQueue(AddItemToDisplayQueue);
+		break;
+	case ScreenTypes::HomeB:
+		DestoryCurrentScreen = Destroy_HomeScreenB;
+		UpdateCureentScreen = Update_HomeScreenB;
+		HandleTouchPoint = Handle_HomeScreenB_Touch;
+		Create_HomeScreenB(&tftDisplay);
+		Set_Home_ScreenB_SensorList(AddItemToOutputQueue);
+		Set_HomeScreenB_DisplayQueue(AddItemToDisplayQueue);
 		break;
 	default:
 		break;

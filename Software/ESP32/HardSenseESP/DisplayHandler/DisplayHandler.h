@@ -3,24 +3,14 @@
 #include <FS.h>
 #include <SPI.h>
 #include <TFT_eSPI.h>
+#include "../GlobalDefinitions.h"
 #include "../HSSerial/HSSerial.h"
 #include <Queue.h>
 #include "../QueueItem.h"
 
 #define CALIBRATION_FILE "/calibrationData"
-#define TOUCH_DEBOUNCE_TIME 250
+#define TOUCH_DEBOUNCE_TIME 1000
 
-enum DisplayCommands {
-	ChangeScreen = 0,
-	UpdateValue,
-};
-
-enum ScreenTypes {
-	SplashScreen = 0,
-	ConnectToNetwork,
-	BluetoothConfigurator,
-	Home,
-};
 
 class DisplayHandler
 {
@@ -37,6 +27,7 @@ private:
 
 	void LoadNewScreen(char screenID);
 	void(*AddItemToOutputQueue)(char key, String value);
+	void(*AddItemToDisplayQueue)(char key, String value);
 
 	unsigned long lastTouch = 0;
 	void SetTouch();
@@ -44,7 +35,7 @@ private:
 public:
 	DisplayHandler();
 	~DisplayHandler();
-	void Init(DataQueue<QUEUE_ITEM>* newDisplayQueue, portMUX_TYPE& newDisplayQueueMux, void(*AddItemToOutputQueue_Func)(char key, String value));
+	void Init(DataQueue<QUEUE_ITEM>* newDisplayQueue, portMUX_TYPE& newDisplayQueueMux, void(*AddItemToOutputQueue_Func)(char key, String value), void(*AddItemToDisplayQueue_Func)(char key, String value));
 	void Run();
 
 };

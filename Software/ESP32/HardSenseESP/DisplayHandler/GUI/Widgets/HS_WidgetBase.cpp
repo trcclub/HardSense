@@ -2,7 +2,7 @@
 
 HS_WidgetBase::HS_WidgetBase()
 {
-	HS_Load_Fonts();
+	//HS_Load_Fonts();
 }
 
 HS_WidgetBase::~HS_WidgetBase()

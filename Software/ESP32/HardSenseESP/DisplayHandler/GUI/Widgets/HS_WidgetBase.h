@@ -9,9 +9,9 @@
 class HS_WidgetBase
 {
 private:
-	void HS_Load_Fonts();
 
 public:
+	void HS_Load_Fonts();
 	HS_WidgetBase();
 	~HS_WidgetBase();
 };
