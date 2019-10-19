@@ -62,6 +62,12 @@ void HS_HomeScreen::UpdateScreen(String value)
 	case 'k':
 		Update_Ram_Useage(dValue);
 		break;
+	case 'l':
+		Update_Ram_Used(dValue);
+		break;
+	case 'm':
+		Update_Ram_Free(dValue);
+		break;
 	default:
 		break;
 	}
@@ -72,7 +78,7 @@ void HS_HomeScreen::SetSensorList(void(*AddItemToOutputQueue_func)(char key, Str
 	AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/intelcpu/0/load/0,a|/intelcpu/0/temperature/6,b|/intelcpu/0/clock/1,c|/intelcpu/0/power/0,d");
 	AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/nvidiagpu/0/load/0,e|/nvidiagpu/0/temperature/0,f|/nvidiagpu/0/clock/0,g|/nvidiagpu/0/control/0,h");
 	AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/Ethernet/0/recv,i|/Ethernet/0/send,j");
-	AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/ram/load/0,k");
+	AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/ram/load/0,k|/ram/data/0,l|/ram/data/1,m");
 }
 
 
@@ -306,7 +312,7 @@ void HS_HomeScreen::Draw_Net_Panel()
 	TFT->fillTriangle(220, 30, 227, 41, 213, 41, TFT_GREEN);
 	TFT->fillTriangle(220, 32, 225, 40, 215, 40, PANEL_BGCOLOR);
 
-	TFT->fillTriangle(220, 65, 227, 54, 213, 54, TFT_GREEN);
+	TFT->fillTriangle(220, 65, 227, 54, 213, 54, TFT_RED);
 	TFT->fillTriangle(220, 63, 225, 55, 215, 55, PANEL_BGCOLOR);
 	
 	Update_Net_UpLoadSpeed(0.0);
@@ -359,9 +365,16 @@ void HS_HomeScreen::Draw_Ram_Panel()
 
 	DrawBoxWithBorderAndDropShadow(206, 94, 113, 51, BOX_BORDER_COLOR, PANEL_BGCOLOR, BOX_DROP_SHADOW);
 
-	TFT->drawFastHLine(206, 123, 113, BOX_BORDER_COLOR);
-	TFT->drawFastHLine(206, 124, 113, BOX_DROP_SHADOW);
+	TFT->setTextColor(TFT_RED, PANEL_BGCOLOR);
+	TFT->drawString("U:", 212, 101);
 
+	TFT->drawFastHLine(206, 120, 113, BOX_BORDER_COLOR);
+	TFT->drawFastHLine(206, 121, 113, BOX_DROP_SHADOW);
+	
+	TFT->setTextColor(TFT_GREEN, PANEL_BGCOLOR);
+	TFT->drawString("F:", 212, 126);
+
+	Update_Ram_Used(1234.5);
 	Update_Ram_Useage(0.0);
 }
 
@@ -376,4 +389,28 @@ void HS_HomeScreen::Update_Ram_Useage(double dPercent)
 	textPrinter_Sprite->pushSprite(262,76);
 	textPrinter_Sprite->deleteSprite();
 	textPrinter_Sprite->setTextColor(TFT_WHITE, PANEL_BGCOLOR);  //put the text color back.
+}
+
+void HS_HomeScreen::Update_Ram_Used(double used)
+{
+	textPrinter_Sprite->createSprite(80, 18);
+	textPrinter_Sprite->fillSprite(PANEL_BGCOLOR);
+	char buf[12];
+	sprintf(buf, "%.2f GB", used);
+	textPrinter_Sprite->drawString(String(buf), 80, 0);
+	textPrinter_Sprite->pushSprite(232, 102);
+	textPrinter_Sprite->deleteSprite();
+
+}
+
+void HS_HomeScreen::Update_Ram_Free(double free)
+{
+	textPrinter_Sprite->createSprite(80, 18);
+	textPrinter_Sprite->fillSprite(PANEL_BGCOLOR);
+	char buf[12];
+	sprintf(buf, "%.2f GB", free);
+	textPrinter_Sprite->drawString(String(buf), 80, 0);
+	textPrinter_Sprite->pushSprite(232, 127);
+	textPrinter_Sprite->deleteSprite();
+
 }

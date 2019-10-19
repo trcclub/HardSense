@@ -52,6 +52,8 @@ private:
 
 	void Draw_Ram_Panel();
 	void Update_Ram_Useage(double dPercent);
+	void Update_Ram_Used(double used);
+	void Update_Ram_Free(double free);
 
 public:
 	HS_HomeScreen(TFT_eSPI *newTFT);
