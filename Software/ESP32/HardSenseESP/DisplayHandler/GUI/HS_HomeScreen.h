@@ -11,10 +11,19 @@
 #define SCREEN_HOME_GPU_LOAD_DIAL_X 22
 #define SCREEN_HOME_GPU_LOAD_DIAL_Y 97
 
+/* Light Blue theme
 #define PANEL_HCOLOR 0x3BB6
 #define PANEL_BGCOLOR 0x7D19
 #define BOX_BORDER_COLOR 0x9DDB
 #define BOX_DROP_SHADOW 0x63F2
+*/
+
+
+#define PANEL_HCOLOR 0x3BB6
+#define PANEL_BGCOLOR 0x7D19
+#define BOX_BORDER_COLOR 0x9DDB
+#define BOX_DROP_SHADOW 0x63F2
+
 
 #define CPU_PANEL_LOW_X 0
 #define CPU_PANEL_HIGH_X 208
@@ -54,6 +63,11 @@ private:
 	void Update_Ram_Useage(double dPercent);
 	void Update_Ram_Used(double used);
 	void Update_Ram_Free(double free);
+
+	void Draw_HDD_Panel();
+	void Update_HDD_Useage(char key, double percent);
+
+	void Draw_Graph();
 
 public:
 	HS_HomeScreen(TFT_eSPI *newTFT);

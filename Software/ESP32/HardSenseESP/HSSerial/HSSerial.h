@@ -64,11 +64,11 @@ public:
 	bool Init(DataQueue<QUEUE_ITEM> *newOutputQueue, portMUX_TYPE &newOutputQueueMux, void(*AddItemToDisplayQueue_Func)(char key, String value), void(*HeartbeatTimerEnabled_Func)(bool));
 
 
-	void AddKeyToOutputMessage(byte key);
-	void AddIntToOutputMessage(byte key, int val);
-	void AddBoolToOutputMessage(byte key, bool value);
-	void AddStringToOutputMessage(byte key, String value);
-	void AddStringToOutputMessage(byte key, char *value);
+	void AddKeyToOutputMessage(TRANS__KEY key);
+	void AddIntToOutputMessage(TRANS__KEY key, int val);
+	void AddBoolToOutputMessage(TRANS__KEY key, bool value);
+	void AddStringToOutputMessage(TRANS__KEY key, String value);
+	void AddStringToOutputMessage(TRANS__KEY key, char *value);
 
 	bool ConnectedToWifi;
 	bool connectedToSomething = false;

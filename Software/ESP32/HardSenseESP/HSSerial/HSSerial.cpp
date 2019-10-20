@@ -271,31 +271,31 @@ int HSSerial::WiFi_PrintChar(char c) {
 	return wifiSerial->print(c);
 }
 
-void HSSerial::AddKeyToOutputMessage(byte key)
+void HSSerial::AddKeyToOutputMessage(TRANS__KEY key)
 {
 	AddStringToOutputMessage(key, "");
 }
 
-void HSSerial::AddIntToOutputMessage(byte key, int val)
+void HSSerial::AddIntToOutputMessage(TRANS__KEY key, int val)
 {
 	char newVal[MAX_BUF_SIZE];
 	sprintf(newVal, "%i", hardsenseSettings.serverPort);
 	AddStringToOutputMessage(key, newVal);
 }
 
-void HSSerial::AddBoolToOutputMessage(byte key, bool value)
+void HSSerial::AddBoolToOutputMessage(TRANS__KEY key, bool value)
 {
 	value ? AddStringToOutputMessage(key, "true") : AddStringToOutputMessage(key, "false");
 }
 
-void HSSerial::AddStringToOutputMessage(byte key, String value)
+void HSSerial::AddStringToOutputMessage(TRANS__KEY key, String value)
 {
 	char buf[MAX_BUF_SIZE];
 	value.toCharArray(buf, MAX_BUF_SIZE);
 	AddStringToOutputMessage(key, buf);
 }
 
-void HSSerial::AddStringToOutputMessage(byte key, char *value)
+void HSSerial::AddStringToOutputMessage(TRANS__KEY key, char *value)
 {
 	int valueLength = strlen(value);
 	int newLength = OutputDataLength + valueLength + 3;
@@ -376,13 +376,13 @@ void HSSerial::HandleInput() {
 		QUEUE_ITEM currItem = outputDataQueue->dequeue();
 		portEXIT_CRITICAL(&outputQueueMux);
 
-		AddStringToOutputMessage(currItem.key, currItem.value);
+		AddStringToOutputMessage(TRANS__KEY(currItem.key), currItem.value);
 	}
 
 	if (!(this->*InputAvailable)())
 		return;
 
-	while ((this->*InputAvailable)() && (this->*ReadInputByte)() != TRANS__KEY::STX) { yield(); }
+	while ((this->*InputAvailable)() && (this->*ReadInputByte)() != TRANS__KEY::STX) { /*yield();*/ }
 
 	ParseInput((this->*ReadInputStringUntil)(TRANS__KEY::ETX));
 }
