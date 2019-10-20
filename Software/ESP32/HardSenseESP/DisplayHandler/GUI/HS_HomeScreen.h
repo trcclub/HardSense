@@ -67,8 +67,6 @@ private:
 	void Draw_HDD_Panel();
 	void Update_HDD_Useage(char key, double percent);
 
-	void Draw_Graph();
-
 public:
 	HS_HomeScreen(TFT_eSPI *newTFT);
 	~HS_HomeScreen();

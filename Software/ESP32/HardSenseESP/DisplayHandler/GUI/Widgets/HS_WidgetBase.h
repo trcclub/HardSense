@@ -11,7 +11,6 @@ class HS_WidgetBase
 private:
 
 public:
-	void HS_Load_Fonts();
 	HS_WidgetBase();
 	~HS_WidgetBase();
 };

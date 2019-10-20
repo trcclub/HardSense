@@ -4,19 +4,21 @@ HS_HomeScreen::HS_HomeScreen(TFT_eSPI *newTFT) : HS_ScreenBase(newTFT)
 {
 	TFT->loadFont(AA_FONT_LARGE);
 	Home_Screen_cpuLoadDial_CurrentRingColor = TFT_GREEN;
-	cpuLoadWidget = new HS_Dial_Widget(*TFT);
-	gpuLoadWidget = new HS_Dial_Widget(*TFT);
 	
 	textPrinter_Sprite->setTextColor(TFT_WHITE, PANEL_BGCOLOR);
 
 	TFT->fillScreen(TFT_DARKGREY);
 	TFT->fillScreen(TFT_WHITE);
 
-	Draw_CPU_Panel();
-	Draw_GPU_Panel();
 	Draw_Net_Panel();
 	Draw_Ram_Panel();
 	Draw_HDD_Panel();
+
+	cpuLoadWidget = new HS_Dial_Widget(*TFT);
+	Draw_CPU_Panel();
+	
+	gpuLoadWidget = new HS_Dial_Widget(*TFT);
+	Draw_GPU_Panel();
 }
 
 HS_HomeScreen::~HS_HomeScreen()
@@ -27,13 +29,12 @@ HS_HomeScreen::~HS_HomeScreen()
 
 void HS_HomeScreen::UpdateScreen(String value)
 {
-	char key = value.charAt(0);
-	double dValue = value.substring(value.indexOf(",") + 1).toDouble();
+	String str(value);
+	char key = str.charAt(0);
+	String subStr = str.substring(str.indexOf(",") + 1);
+	double dValue = subStr.toDouble();
 
 	switch (key) {
-	case 'a':
-		Update_CPU_Panel_Load(dValue);
-		break;
 	case 'b':
 		Update_CPU_Panel_Temperature(dValue);
 		break;
@@ -42,9 +43,6 @@ void HS_HomeScreen::UpdateScreen(String value)
 		break;
 	case 'd':
 		Update_CPU_Panel_Power(dValue);
-		break;
-	case 'e':
-		Update_GPU_Panel_Load(dValue);
 		break;
 	case 'f':
 		Update_GPU_Panel_Temperature(dValue);
@@ -74,6 +72,12 @@ void HS_HomeScreen::UpdateScreen(String value)
 	case 'p':
 	case 'q':
 		Update_HDD_Useage(key,dValue);
+		break;
+	case 'a':
+		Update_CPU_Panel_Load(dValue);
+		break;
+	case 'e':
+		Update_GPU_Panel_Load(dValue);
 		break;
 	default:
 		break;
@@ -496,7 +500,7 @@ void HS_HomeScreen::Update_HDD_Useage(char key, double percent)
 	// E:  /hdd/3/load/0	o
 	// F:  /hdd/1/load/0	p
 	// G:  /hdd/0/load/0	q
-
+	
 	uint32_t circleColor = TFT_GREEN;
 	if (percent > 95) {
 		circleColor = TFT_RED;
@@ -528,6 +532,8 @@ void HS_HomeScreen::Update_HDD_Useage(char key, double percent)
 	}
 	x = x + (xAdd * multiplier);
 
+
+	
 	textPrinter_Sprite->createSprite(70, 16);
 	textPrinter_Sprite->fillSprite(PANEL_BGCOLOR);
 	char buf[12];
@@ -536,10 +542,4 @@ void HS_HomeScreen::Update_HDD_Useage(char key, double percent)
 	textPrinter_Sprite->fillCircle(6, 7, 5, circleColor);
 	textPrinter_Sprite->pushSprite(x, y);
 	textPrinter_Sprite->deleteSprite();
-
-}
-
-void HS_HomeScreen::Draw_Graph()
-{
-
 }
