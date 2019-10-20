@@ -31,6 +31,7 @@ namespace HardSense.GUI.Bluetooth
             writeThread = new Thread(writeThreadProc);
             groupBox_UpdateSettings.Enabled = false;
             groupBox_HardSenseESPCurrentInfo.Enabled = false;
+            button_DeleteTouchCalibrationFile.Enabled = false;
 
             GetAvailablePorts();
         }
@@ -168,6 +169,7 @@ namespace HardSense.GUI.Bluetooth
                 groupBox_Bluetooth.Enabled = false;
                 groupBox_UpdateSettings.Enabled = true;
                 groupBox_HardSenseESPCurrentInfo.Enabled = true;
+                button_DeleteTouchCalibrationFile.Enabled = true;
 
                 if (Properties.Settings.Default.DebugOutput)
                 {
@@ -463,6 +465,14 @@ namespace HardSense.GUI.Bluetooth
             AddStringToMessage(ProtocolKeys.TRANSMISSION_KEYS["CONFIG_SET_SERVER_PORT"], textBox_ServerPort.Text);
             textBox_ServerName.Clear();
             textBox_ServerPort.Clear();
+        }
+
+        private void button_DeleteTouchCalibrationFile_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("Are you sure you want to delete the touch calibration file?", "Confirm Delete", MessageBoxButtons.OKCancel) == DialogResult.OK)
+            {
+                AddKeyToMessage(ProtocolKeys.TRANSMISSION_KEYS["CONFIG_DELETE_TOUCH_CALIBRATION_FILE"]);
+            }
         }
     }
 }

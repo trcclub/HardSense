@@ -61,6 +61,7 @@ namespace HardSense.DataStreamingServer
             TRANSMISSION_KEYS.Add("CONFIG_CURRENT_SERVER_PORT", '\u0030'); // 
             TRANSMISSION_KEYS.Add("CONFIG_SET_SERVER_PORT", '\u0031'); // 
             TRANSMISSION_KEYS.Add("CONFIG_SERVER_PORT_UPDATE_SUCCESS", '\u0035'); // 5
+            TRANSMISSION_KEYS.Add("CONFIG_DELETE_TOUCH_CALIBRATION_FILE", '\u0036'); // 6
 
         }
     }
@@ -110,6 +111,7 @@ namespace HardSense.DataStreamingServer
         CONFIG_CURRENT_SERVER_PORT = 0X30, // 0
         CONFIG_SET_SERVER_PORT = 0X31, // 1
         CONFIG_SERVER_PORT_UPDATE_SUCCESS = 0X35, // 5
+        CONFIG_DELETE_TOUCH_CALIBRATION_FILE = 0X36, // 6
     };
 
     

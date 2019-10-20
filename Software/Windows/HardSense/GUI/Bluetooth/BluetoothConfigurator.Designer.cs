@@ -59,6 +59,7 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.button_Exit = new System.Windows.Forms.Button();
+            this.button_DeleteTouchCalibrationFile = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.bindingSource1)).BeginInit();
             this.groupBox_Bluetooth.SuspendLayout();
             this.groupBox_HardSenseESPCurrentInfo.SuspendLayout();
@@ -325,7 +326,7 @@
             // 
             // button_Exit
             // 
-            this.button_Exit.Location = new System.Drawing.Point(152, 238);
+            this.button_Exit.Location = new System.Drawing.Point(297, 238);
             this.button_Exit.Name = "button_Exit";
             this.button_Exit.Size = new System.Drawing.Size(75, 23);
             this.button_Exit.TabIndex = 5;
@@ -333,11 +334,22 @@
             this.button_Exit.UseVisualStyleBackColor = true;
             this.button_Exit.Click += new System.EventHandler(this.button_Exit_Click);
             // 
+            // button_DeleteTouchCalibrationFile
+            // 
+            this.button_DeleteTouchCalibrationFile.Location = new System.Drawing.Point(12, 237);
+            this.button_DeleteTouchCalibrationFile.Name = "button_DeleteTouchCalibrationFile";
+            this.button_DeleteTouchCalibrationFile.Size = new System.Drawing.Size(103, 23);
+            this.button_DeleteTouchCalibrationFile.TabIndex = 6;
+            this.button_DeleteTouchCalibrationFile.Text = "Delete Calibration";
+            this.button_DeleteTouchCalibrationFile.UseVisualStyleBackColor = true;
+            this.button_DeleteTouchCalibrationFile.Click += new System.EventHandler(this.button_DeleteTouchCalibrationFile_Click);
+            // 
             // BluetoothConfigurator
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(383, 274);
+            this.Controls.Add(this.button_DeleteTouchCalibrationFile);
             this.Controls.Add(this.button_Exit);
             this.Controls.Add(this.groupBox_UpdateSettings);
             this.Controls.Add(this.groupBox_HardSenseESPCurrentInfo);
@@ -390,5 +402,6 @@
         private System.Windows.Forms.Button button_UpdateServerInfoToESP;
         private System.Windows.Forms.TextBox textBox_ServerPort;
         private System.Windows.Forms.TextBox textBox_ServerName;
+        private System.Windows.Forms.Button button_DeleteTouchCalibrationFile;
     }
 }

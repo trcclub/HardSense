@@ -4,21 +4,18 @@ HS_HomeScreen::HS_HomeScreen(TFT_eSPI *newTFT) : HS_ScreenBase(newTFT)
 {
 	TFT->loadFont(AA_FONT_LARGE);
 	Home_Screen_cpuLoadDial_CurrentRingColor = TFT_GREEN;
+	cpuLoadWidget = new HS_Dial_Widget(*TFT);
+	gpuLoadWidget = new HS_Dial_Widget(*TFT);
 	
 	textPrinter_Sprite->setTextColor(TFT_WHITE, PANEL_BGCOLOR);
 
 	TFT->fillScreen(TFT_DARKGREY);
-	TFT->fillScreen(TFT_WHITE);
 
+	Draw_CPU_Panel();
+	Draw_GPU_Panel();
 	Draw_Net_Panel();
 	Draw_Ram_Panel();
 	Draw_HDD_Panel();
-
-	cpuLoadWidget = new HS_Dial_Widget(*TFT);
-	Draw_CPU_Panel();
-	
-	gpuLoadWidget = new HS_Dial_Widget(*TFT);
-	Draw_GPU_Panel();
 }
 
 HS_HomeScreen::~HS_HomeScreen()

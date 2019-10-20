@@ -454,6 +454,9 @@ void HSSerial::DispatchCommand(char key, String val) {
 	case TRANS__KEY::HEARTBEAT_ACK:
 		heartbeatCounter = 0;
 		break;
+	case TRANS__KEY::CONFIG_DELETE_TOUCH_CALIBRATION_FILE:
+		SPIFFS.remove(CALIBRATION_FILE);
+		break;
 	default:
 		//Serial.print("Unknown Command: '");
 		//Serial.println(key, HEX);
