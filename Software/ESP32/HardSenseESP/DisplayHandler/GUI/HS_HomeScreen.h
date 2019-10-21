@@ -1,4 +1,5 @@
 #pragma once
+#include "RTClib.h"
 #include "HS_ScreenBase.h"
 #include "Widgets/HS_Dial_Widget.h"
 
@@ -10,6 +11,27 @@
 
 #define SCREEN_HOME_GPU_LOAD_DIAL_X 22
 #define SCREEN_HOME_GPU_LOAD_DIAL_Y 97
+
+#define CPU_PANEL_X 0
+#define CPU_PANEL_Y 0
+
+#define GPU_PANEL_X 0
+#define GPU_PANEL_Y 95
+
+#define NET_PANEL_X 207
+#define NET_PANEL_Y 53
+
+#define RAM_PANEL_X 207
+#define RAM_PANEL_Y 122
+
+#define RAM_PANEL_X 207
+#define RAM_PANEL_Y 122
+
+#define HDD_PANEL_X 0
+#define HDD_PANEL_Y 190
+
+#define TIME_PANEL_X 207
+#define TIME_PANEL_Y 0
 
 /* Light Blue theme
 #define PANEL_HCOLOR 0x3BB6
@@ -29,6 +51,8 @@
 #define CPU_PANEL_HIGH_X 208
 #define CPU_PANEL_LOW_Y 0
 #define CPU_PANEL_HIGH_Y 94
+
+
 
 class HS_HomeScreen :
 	public HS_ScreenBase
@@ -67,10 +91,19 @@ private:
 	void Draw_HDD_Panel();
 	void Update_HDD_Useage(char key, double percent);
 
+	RTC_DS1307 rtc;
+	unsigned long lastTimeUpate = 0;
+	int updateTimeInterval = 1000;
+	char daysOfTheWeek[7][5] = { "Sun", "Mon", "Tues", "Wed", "Thur", "Fri", "Sat" };
+	char monthsOfTheYear[12][4] = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
+	void Draw_TimeBox();
+	void Update_Time();
+
 public:
 	HS_HomeScreen(TFT_eSPI *newTFT);
 	~HS_HomeScreen();
 	void UpdateScreen(String value);
+	void UpdateScreenOnInterval();
 	void SetSensorList(void(*AddItemToOutputQueue_func)(char key, String value));
 	void HandleTouch(int x, int y);
 };

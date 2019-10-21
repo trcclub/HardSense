@@ -22,6 +22,11 @@ void Update_HomeScreen(String value)
 	HS_Current_HomeScreen->UpdateScreen(value);
 }
 
+void Update_HomeScreen_OnInterval()
+{
+	HS_Current_HomeScreen->UpdateScreenOnInterval();
+}
+
 char* Set_Home_Screen_SensorList(void(*AddItemToOutputQueue_func)(char key, String value))
 {
 	HS_Current_HomeScreen->SetSensorList(AddItemToOutputQueue_func);
@@ -40,3 +45,4 @@ void Set_HomeScreen_DisplayQueue(void(*AddItemToDisplayQueue_func)(char key, Str
 {
 	HS_Current_HomeScreen->SetDisplayQueue(AddItemToDisplayQueue_func);
 }
+

@@ -21,7 +21,8 @@ private:
 
 	void DispatchCommand();
 
-	void(*UpdateCureentScreen)(String value) = NULL;
+	void(*UpdateCurentScreen)(String value) = NULL;
+	void(*UpdateCurentScreenOnInterval)() = NULL;
 	void(*DestoryCurrentScreen)() = NULL;
 	bool(*HandleTouchPoint)(int x, int y) = NULL;
 

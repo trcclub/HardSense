@@ -56,7 +56,7 @@ private:
 	int heartbeatCounter;
 	bool IncrementHeartbeatCounter();
 	void(*HeartbeatTimerEnabled)(bool);
-	bool AddHeartbeatToOutput = false;
+	volatile bool AddHeartbeatToOutput = false;
 
 public:
 	HSSerial();

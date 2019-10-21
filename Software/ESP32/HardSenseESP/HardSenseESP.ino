@@ -21,7 +21,7 @@ DataQueue<QUEUE_ITEM> outputQueue(5);
 DisplayHandler displayHandler;
 HSSerial hsSerial;
 
-byte btButton = 22;
+byte btButton = 33;
 
 //int counter = 0;
 

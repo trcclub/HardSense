@@ -48,6 +48,11 @@ void DisplayHandler::Run()
 		}
 		DispatchCommand();
 
+		if (UpdateCurentScreenOnInterval != NULL)
+		{
+			UpdateCurentScreenOnInterval();
+		}
+
 		/*
 		if (millis() - last > 1000)
 		{
@@ -68,7 +73,8 @@ void DisplayHandler::LoadNewScreen(char screenID)
 	if (DestoryCurrentScreen != NULL) {
 		DestoryCurrentScreen();
 		DestoryCurrentScreen = NULL;
-		UpdateCureentScreen = NULL;
+		UpdateCurentScreen = NULL;
+		UpdateCurentScreenOnInterval = NULL;
 		HandleTouchPoint = NULL;
 	}
 	AddItemToOutputQueue(TRANS__KEY::CLEAR_SENSOR_LIST, "");
@@ -76,30 +82,31 @@ void DisplayHandler::LoadNewScreen(char screenID)
 	switch (key) {
 	case ScreenTypes::SplashScreen:
 		DestoryCurrentScreen = Destroy_SplashScreen;
-		UpdateCureentScreen = Update_SplashScreen;
+		UpdateCurentScreen = Update_SplashScreen;
 		Create_SplashScreen(&tftDisplay);
 		break;
 	case ScreenTypes::ConnectToNetwork:
 		DestoryCurrentScreen = Destroy_ConnectToNetworkScreen;
-		UpdateCureentScreen = Update_ConnectToNetworkScreen;
+		UpdateCurentScreen = Update_ConnectToNetworkScreen;
 		Create_ConnectToNetworkScreen(&tftDisplay);
 		break;
 	case ScreenTypes::BluetoothConfigurator:
 		DestoryCurrentScreen = Destroy_BluetoothConfiguratorScreen;
-		UpdateCureentScreen = Update_BluetoothConfiguratorScreen;
+		UpdateCurentScreen = Update_BluetoothConfiguratorScreen;
 		Create_BluetoothConfiguratorScreen(&tftDisplay);
 		break;
 	case ScreenTypes::Home:
 		DestoryCurrentScreen = Destroy_HomeScreen;
-		UpdateCureentScreen = Update_HomeScreen;
+		UpdateCurentScreen = Update_HomeScreen;
 		HandleTouchPoint = Handle_HomeScreen_Touch;
+		UpdateCurentScreenOnInterval = Update_HomeScreen_OnInterval;
 		Create_HomeScreen(&tftDisplay);
 		Set_Home_Screen_SensorList(AddItemToOutputQueue);
 		Set_HomeScreen_DisplayQueue(AddItemToDisplayQueue);
 		break;
 	case ScreenTypes::HomeB:
 		DestoryCurrentScreen = Destroy_HomeScreenB;
-		UpdateCureentScreen = Update_HomeScreenB;
+		UpdateCurentScreen = Update_HomeScreenB;
 		HandleTouchPoint = Handle_HomeScreenB_Touch;
 		Create_HomeScreenB(&tftDisplay);
 		Set_Home_ScreenB_SensorList(AddItemToOutputQueue);
@@ -126,10 +133,10 @@ void DisplayHandler::DispatchCommand()
 			}			
 			break;
 		case DisplayCommands::UpdateValue:
-			if (UpdateCureentScreen != NULL) {
+			if (UpdateCurentScreen != NULL) {
 				if (currItem.value.length() >= 3)
 				{
-					UpdateCureentScreen(String(currItem.value));
+					UpdateCurentScreen(String(currItem.value));
 				}
 				
 			}

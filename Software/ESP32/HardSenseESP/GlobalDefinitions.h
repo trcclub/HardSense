@@ -20,4 +20,5 @@ enum ScreenTypes {
 	HomeB,
 };
 
+
 #endif // !HS_GLOBAL_DEFINITATIONS
