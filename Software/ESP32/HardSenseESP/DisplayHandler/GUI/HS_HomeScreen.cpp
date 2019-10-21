@@ -6,6 +6,7 @@ HS_HomeScreen::HS_HomeScreen(TFT_eSPI *newTFT) : HS_ScreenBase(newTFT)
 	Home_Screen_cpuLoadDial_CurrentRingColor = TFT_GREEN;
 	cpuLoadWidget = new HS_Dial_Widget(*TFT);
 	gpuLoadWidget = new HS_Dial_Widget(*TFT);
+	rtc.begin();
 	
 
 	
@@ -15,11 +16,10 @@ HS_HomeScreen::HS_HomeScreen(TFT_eSPI *newTFT) : HS_ScreenBase(newTFT)
 
 	Draw_CPU_Panel();
 	Draw_GPU_Panel();
+	Draw_Time_Panel();
 	Draw_Net_Panel();
 	Draw_Ram_Panel();
 	Draw_HDD_Panel();
-	rtc.begin();
-	Draw_TimeBox();
 }
 
 HS_HomeScreen::~HS_HomeScreen()
@@ -89,6 +89,7 @@ void HS_HomeScreen::UpdateScreenOnInterval()
 {
 	if (millis() - lastTimeUpate > updateTimeInterval)
 	{
+		lastTimeUpate = millis();
 		Update_Time();
 	}
 }
@@ -584,7 +585,7 @@ void HS_HomeScreen::Update_HDD_Useage(char key, double percent)
 	textPrinter_Sprite->deleteSprite();
 }
 
-void HS_HomeScreen::Draw_TimeBox()
+void HS_HomeScreen::Draw_Time_Panel()
 {
 	int x = TIME_PANEL_X;
 	int y = TIME_PANEL_Y;
@@ -637,12 +638,12 @@ void HS_HomeScreen::Update_Time()
 
 	if (hour > 12)
 	{
-		date = String(hour - 12) + ":" + min + " " + sec + " pm";
+		date = String(hour - 12) + ":" + min + " " + sec + " PM";
 	}
 	else
 	{
 
-		date = String(hour) + ":" + min + ":" + sec + " am";
+		date = String(hour) + ":" + min + ":" + sec + " AM";
 	}
 	textPrinter_Sprite->drawString(date, 53, 26);
 	
