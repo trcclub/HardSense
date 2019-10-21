@@ -52,6 +52,11 @@
 #define CPU_PANEL_LOW_Y 0
 #define CPU_PANEL_HIGH_Y 94
 
+#define GPU_PANEL_LOW_X GPU_PANEL_X
+#define GPU_PANEL_HIGH_X (GPU_PANEL_X + 207)
+#define GPU_PANEL_LOW_Y GPU_PANEL_Y
+#define GPU_PANEL_HIGH_Y (GPU_PANEL_Y + 95)
+
 
 
 class HS_HomeScreen :
@@ -65,6 +70,7 @@ private:
 	uint16_t Home_Screen_gpuLoadDial_CurrentRingColor;
 
 	bool CPU_Panel_Touched(int x, int y);
+	bool GPU_Panel_Touched(int x, int y);
 
 	void Draw_CPU_Panel();
 	void Update_CPU_Panel_Load(double percentage);

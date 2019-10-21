@@ -8,8 +8,6 @@ HS_HomeScreen::HS_HomeScreen(TFT_eSPI *newTFT) : HS_ScreenBase(newTFT)
 	gpuLoadWidget = new HS_Dial_Widget(*TFT);
 	rtc.begin();
 	
-
-	
 	textPrinter_Sprite->setTextColor(TFT_WHITE, PANEL_BGCOLOR);
 
 	TFT->fillScreen(TFT_DARKGREY);
@@ -107,11 +105,11 @@ void HS_HomeScreen::SetSensorList(void(*AddItemToOutputQueue_func)(char key, Str
 
 void HS_HomeScreen::HandleTouch(int x, int y)
 {
-	if (CPU_Panel_Touched(x, y))
+	if (GPU_Panel_Touched(x, y))
 	{
 		Serial.println("Touch me");
 		char buf[2];
-		sprintf(buf, "%c", ScreenTypes::HomeB);
+		sprintf(buf, "%c", ScreenTypes::Game);
 		AddItemToDisplayQueue(DisplayCommands::ChangeScreen, buf);
 	}
 }
@@ -267,7 +265,15 @@ void HS_HomeScreen::Draw_GPU_Panel()
 	Update_GPU_Panel_Temperature(00.0);
 	Update_GPU_Panel_FanControl(00.0);
 	Update_GPU_Panel_ClockSpeed(0000.0);
+}
 
+bool HS_HomeScreen::GPU_Panel_Touched(int x, int y)
+{
+	if ((x >= GPU_PANEL_LOW_X + 5 && x <= GPU_PANEL_HIGH_X - 5) && (y >= GPU_PANEL_LOW_Y + 5 && y <= GPU_PANEL_HIGH_Y - 5))
+	{
+		return true;
+	}
+	return false;
 }
 
 void HS_HomeScreen::Update_GPU_Panel_Load(double percentage)

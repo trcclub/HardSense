@@ -17,7 +17,7 @@ enum ScreenTypes {
 	ConnectToNetwork,
 	BluetoothConfigurator,
 	Home,
-	HomeB,
+	Game,
 };
 
 

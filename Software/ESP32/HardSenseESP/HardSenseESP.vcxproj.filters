@@ -72,10 +72,10 @@
     <ClInclude Include="DisplayHandler\GUI\BluetoothConfiguratorScreen_Functions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="DisplayHandler\GUI\HS_HomeScreen_B.h">
+    <ClInclude Include="DisplayHandler\GUI\HS_GameScreen.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="DisplayHandler\GUI\HomeScreenB_Functions.h">
+    <ClInclude Include="DisplayHandler\GUI\GameScreen_Functions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -110,7 +110,7 @@
     <ClCompile Include="DisplayHandler\GUI\HS_BluetoothConfiguratorScreen.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="DisplayHandler\GUI\HS_HomeScreen_B.cpp">
+    <ClCompile Include="DisplayHandler\GUI\HS_GameScreen.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -7,7 +7,7 @@
 #include "GUI//SplashScreen_Functions.h"
 #include "GUI//ConnectToNetworkScreen_Functions.h"
 #include "GUI/BluetoothConfiguratorScreen_Functions.h"
-#include "GUI/HomeScreenB_Functions.h"
+#include "GUI/GameScreen_Functions.h"
 
 DisplayHandler::DisplayHandler()
 {
@@ -104,13 +104,13 @@ void DisplayHandler::LoadNewScreen(char screenID)
 		Set_Home_Screen_SensorList(AddItemToOutputQueue);
 		Set_HomeScreen_DisplayQueue(AddItemToDisplayQueue);
 		break;
-	case ScreenTypes::HomeB:
-		DestoryCurrentScreen = Destroy_HomeScreenB;
-		UpdateCurentScreen = Update_HomeScreenB;
-		HandleTouchPoint = Handle_HomeScreenB_Touch;
-		Create_HomeScreenB(&tftDisplay);
-		Set_Home_ScreenB_SensorList(AddItemToOutputQueue);
-		Set_HomeScreenB_DisplayQueue(AddItemToDisplayQueue);
+	case ScreenTypes::Game:
+		DestoryCurrentScreen = Destroy_GameScreen;
+		UpdateCurentScreen = Update_GameScreen;
+		HandleTouchPoint = Handle_GameScreen_Touch;
+		Create_GameScreen(&tftDisplay);
+		Set_GameScreen_SensorList(AddItemToOutputQueue);
+		Set_GameScreen_DisplayQueue(AddItemToDisplayQueue);
 		break;
 	default:
 		break;
