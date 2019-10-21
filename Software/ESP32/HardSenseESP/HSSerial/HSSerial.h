@@ -47,8 +47,6 @@ private:
 	bool IsPasswordSet();
 	bool UpdateSetting(char key, String value);
 	bool SaveSettingsToFS();
-	
-	//void UpdateSensorValuesToDisplay(String value);
 
 	void(*AddItemToDisplayQueue)(char key, String value);
 
@@ -57,6 +55,8 @@ private:
 	bool IncrementHeartbeatCounter();
 	void(*HeartbeatTimerEnabled)(bool);
 	volatile bool AddHeartbeatToOutput = false;
+
+	void Update_RTC_Time(String rawTime);
 
 public:
 	HSSerial();

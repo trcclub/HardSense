@@ -32,6 +32,7 @@ namespace HardSense.GUI.Bluetooth
             groupBox_UpdateSettings.Enabled = false;
             groupBox_HardSenseESPCurrentInfo.Enabled = false;
             button_DeleteTouchCalibrationFile.Enabled = false;
+            button_UpdateTime.Enabled = false;
 
             GetAvailablePorts();
         }
@@ -170,6 +171,7 @@ namespace HardSense.GUI.Bluetooth
                 groupBox_UpdateSettings.Enabled = true;
                 groupBox_HardSenseESPCurrentInfo.Enabled = true;
                 button_DeleteTouchCalibrationFile.Enabled = true;
+                button_UpdateTime.Enabled = true;
 
                 if (Properties.Settings.Default.DebugOutput)
                 {
@@ -473,6 +475,13 @@ namespace HardSense.GUI.Bluetooth
             {
                 AddKeyToMessage(ProtocolKeys.TRANSMISSION_KEYS["CONFIG_DELETE_TOUCH_CALIBRATION_FILE"]);
             }
+        }
+
+        private void button_UpdateTime_Click(object sender, EventArgs e)
+        {
+            DateTime localDate = DateTime.Now;
+            String dt = localDate.ToString("MMM dd yyyy,h:mm:ss");
+            AddStringToMessage(ProtocolKeys.TRANSMISSION_KEYS["CONFIG_UPDATE_TIME"], dt);
         }
     }
 }

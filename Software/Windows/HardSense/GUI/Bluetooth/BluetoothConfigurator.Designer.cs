@@ -60,6 +60,8 @@
             this.label4 = new System.Windows.Forms.Label();
             this.button_Exit = new System.Windows.Forms.Button();
             this.button_DeleteTouchCalibrationFile = new System.Windows.Forms.Button();
+            this.button_UpdateTime = new System.Windows.Forms.Button();
+            this.backgroundWorker2 = new System.ComponentModel.BackgroundWorker();
             ((System.ComponentModel.ISupportInitialize)(this.bindingSource1)).BeginInit();
             this.groupBox_Bluetooth.SuspendLayout();
             this.groupBox_HardSenseESPCurrentInfo.SuspendLayout();
@@ -344,11 +346,22 @@
             this.button_DeleteTouchCalibrationFile.UseVisualStyleBackColor = true;
             this.button_DeleteTouchCalibrationFile.Click += new System.EventHandler(this.button_DeleteTouchCalibrationFile_Click);
             // 
+            // button_UpdateTime
+            // 
+            this.button_UpdateTime.Location = new System.Drawing.Point(122, 237);
+            this.button_UpdateTime.Name = "button_UpdateTime";
+            this.button_UpdateTime.Size = new System.Drawing.Size(83, 23);
+            this.button_UpdateTime.TabIndex = 7;
+            this.button_UpdateTime.Text = "Update Time";
+            this.button_UpdateTime.UseVisualStyleBackColor = true;
+            this.button_UpdateTime.Click += new System.EventHandler(this.button_UpdateTime_Click);
+            // 
             // BluetoothConfigurator
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(383, 274);
+            this.Controls.Add(this.button_UpdateTime);
             this.Controls.Add(this.button_DeleteTouchCalibrationFile);
             this.Controls.Add(this.button_Exit);
             this.Controls.Add(this.groupBox_UpdateSettings);
@@ -403,5 +416,7 @@
         private System.Windows.Forms.TextBox textBox_ServerPort;
         private System.Windows.Forms.TextBox textBox_ServerName;
         private System.Windows.Forms.Button button_DeleteTouchCalibrationFile;
+        private System.Windows.Forms.Button button_UpdateTime;
+        private System.ComponentModel.BackgroundWorker backgroundWorker2;
     }
 }

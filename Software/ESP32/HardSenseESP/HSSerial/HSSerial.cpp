@@ -1,5 +1,6 @@
 #include "HSSerial.h"
 #include "../DisplayHandler/DisplayHandler.h"
+#include <RTClib.h>
 
 HSSerial::HSSerial()
 {
@@ -446,7 +447,6 @@ void HSSerial::DispatchCommand(char key, String val) {
 		break;
 	case TRANS__KEY::UPDATE_SENSOR_VALUE:
 		AddItemToDisplayQueue(DisplayCommands::UpdateValue, val);
-		//UpdateSensorValuesToDisplay(val);
 		break;
 	case TRANS__KEY::HEARTBEAT:
 		AddKeyToOutputMessage(TRANS__KEY::HEARTBEAT_ACK);
@@ -456,6 +456,9 @@ void HSSerial::DispatchCommand(char key, String val) {
 		break;
 	case TRANS__KEY::CONFIG_DELETE_TOUCH_CALIBRATION_FILE:
 		SPIFFS.remove(CALIBRATION_FILE);
+		break;
+	case TRANS__KEY::CONFIG_UPDATE_TIME:
+		Update_RTC_Time(val);
 		break;
 	default:
 		//Serial.print("Unknown Command: '");
@@ -481,4 +484,19 @@ bool HSSerial::IncrementHeartbeatCounter()
 	}
 	heartbeatCounter++;
 	return true;
+}
+
+void HSSerial::Update_RTC_Time(String rawTime)
+{
+	RTC_DS1307 rtc;
+	rtc.begin();
+
+	char date[12];
+	char time[9];
+	int sep = rawTime.indexOf(",");
+	
+	rawTime.substring(0, sep).toCharArray(date, 12);
+	rawTime.substring(sep + 1).toCharArray(time, 9);
+
+	rtc.adjust(DateTime(date,time));
 }
