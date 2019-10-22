@@ -2,12 +2,17 @@
 
 HS_HomeScreen::HS_HomeScreen(TFT_eSPI *newTFT) : HS_ScreenBase(newTFT)
 {
+	homeScreenTheme.panelBGColor = PANEL_BGCOLOR;
+	homeScreenTheme.panelBorderColor = BOX_BORDER_COLOR;
+	homeScreenTheme.panelDropShadowColor = BOX_DROP_SHADOW;
+	homeScreenTheme.panelHeaderColor = PANEL_HCOLOR;
+
 	TFT->loadFont(AA_FONT_18PT);
 	Home_Screen_cpuLoadDial_CurrentRingColor = TFT_GREEN;
 	cpuLoadWidget = new HS_Dial_Widget(*TFT);
 	gpuLoadWidget = new HS_Dial_Widget(*TFT);
 	rtc.begin();
-	
+
 	textPrinter_Sprite->setTextColor(TFT_WHITE, PANEL_BGCOLOR);
 
 	TFT->fillScreen(TFT_DARKGREY);
@@ -53,10 +58,10 @@ void HS_HomeScreen::UpdateScreen(String value)
 		Update_GPU_Panel_FanControl(dValue);
 		break;
 	case 'i':
-		Update_Net_DownloadSpeed(dValue);
+		netPanel.Update_Net_DownloadSpeed(dValue);
 		break;
 	case 'j':
-		Update_Net_UpLoadSpeed(dValue);
+		netPanel.Update_Net_UpLoadSpeed(dValue);
 		break;
 	case 'k':
 		Update_Ram_Useage(dValue);
@@ -343,10 +348,21 @@ void HS_HomeScreen::Update_GPU_Panel_ClockSpeed(double clock)
 	textPrinter_Sprite->deleteSprite();
 }
 
+
 void HS_HomeScreen::Draw_Net_Panel()
 {
+	netPanel.init(TFT, HS_Coords(NET_PANEL_X, NET_PANEL_Y, 113, 68), homeScreenTheme);
+	netPanel.DrawPanel();
+
+	/*
 	int x = NET_PANEL_X;
 	int y = NET_PANEL_Y;
+
+	HS_Theme theme;
+	theme.panelBGColor = PANEL_BGCOLOR;
+	theme.panelBorderColor = BOX_BORDER_COLOR;
+	theme.panelDropShadowColor = BOX_DROP_SHADOW;
+	theme.panelHeaderColor = PANEL_HCOLOR;
 
 	TFT->loadFont(AA_FONT_18PT);
 	DrawBoxWithBorderAndDropShadow(x, y, 113, 68, BOX_BORDER_COLOR, PANEL_BGCOLOR, BOX_DROP_SHADOW);
@@ -367,46 +383,7 @@ void HS_HomeScreen::Draw_Net_Panel()
 	
 	Update_Net_UpLoadSpeed(0.0);
 	Update_Net_DownloadSpeed(0.0);
-}
-
-void HS_HomeScreen::Update_Net_UpLoadSpeed(double uSpeed)
-{
-	int x = NET_PANEL_X;
-	int y = NET_PANEL_Y;
-
-	textPrinter_Sprite->createSprite(81, 16);
-	textPrinter_Sprite->fillSprite(PANEL_BGCOLOR);
-	textPrinter_Sprite->drawString(GetSpeedString(uSpeed), 81, 0);
-	textPrinter_Sprite->pushSprite(x+26, y+25);
-	textPrinter_Sprite->deleteSprite();
-}
-
-void HS_HomeScreen::Update_Net_DownloadSpeed(double dSpeed)
-{
-	int x = NET_PANEL_X;
-	int y = NET_PANEL_Y;
-
-	textPrinter_Sprite->createSprite(81, 16);
-	textPrinter_Sprite->fillSprite(PANEL_BGCOLOR);
-	textPrinter_Sprite->drawString(GetSpeedString(dSpeed), 81, 0);
-	textPrinter_Sprite->pushSprite(x+26, y+48);
-	textPrinter_Sprite->deleteSprite();
-}
-
-String HS_HomeScreen::GetSpeedString(double speed)
-{
-	char buf[32];
-	if (speed > 1000)
-	{
-		speed = speed / 1000;
-		sprintf(buf, "%.1f MBs", speed);
-	}
-	else
-	{
-		sprintf(buf, "%.1f KBs", speed);
-	}
-
-	return String(buf);
+	*/
 }
 
 void HS_HomeScreen::Draw_Ram_Panel()

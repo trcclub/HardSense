@@ -2,6 +2,7 @@
 #include "RTClib.h"
 #include "HS_ScreenBase.h"
 #include "Widgets/HS_Dial_Widget.h"
+#include "Panels/HS_NetPanel.h"
 
 #define SCREEN_HOME_LOAD_DIAL_MIN -120
 #define SCREEN_HOME_LOAD_DIAL_MAX 120
@@ -69,6 +70,8 @@ private:
 	HS_Dial_Widget* gpuLoadWidget;
 	uint16_t Home_Screen_gpuLoadDial_CurrentRingColor;
 
+	HS_Theme homeScreenTheme;
+
 	bool CPU_Panel_Touched(int x, int y);
 	bool GPU_Panel_Touched(int x, int y);
 
@@ -84,10 +87,9 @@ private:
 	void Update_GPU_Panel_ClockSpeed(double clock);
 	void Update_GPU_Panel_FanControl(double load);
 
+
+	HS_NetPanel netPanel;
 	void Draw_Net_Panel();
-	void Update_Net_DownloadSpeed(double dSpeed);
-	void Update_Net_UpLoadSpeed(double uSpeed);
-	String GetSpeedString(double speed);
 
 	void Draw_Ram_Panel();
 	void Update_Ram_Useage(double dPercent);

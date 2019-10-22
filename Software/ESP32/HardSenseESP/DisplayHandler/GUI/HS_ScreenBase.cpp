@@ -45,16 +45,6 @@ void HS_ScreenBase::DrawBoxWithBorderAndDropShadow(int32_t x, int32_t y, int32_t
 	TFT->drawFastVLine(x+2, y+3, h-6, dropShadowColor);
 	TFT->drawFastHLine(x, y+h-1, w, dropShadowColor);
 	TFT->drawFastVLine(x+w-1, y, h, dropShadowColor);
-
-	/*
-	TFT->fillRect(x, y, w, h, borderColor);
-	TFT->fillRect(x+2, y+2, w-4, h-4, boxColor);
-
-	TFT->drawFastHLine(x+3, y+3, w-5, dropShadowColor);
-	TFT->drawFastVLine(x+2, y+3, h-5, dropShadowColor);
-	TFT->drawFastHLine(x, y+h, w, dropShadowColor);
-	TFT->drawFastVLine(x+w, y, h, dropShadowColor);
-	*/
 }
 
 void HS_ScreenBase::HandleTouch(int x, int y)

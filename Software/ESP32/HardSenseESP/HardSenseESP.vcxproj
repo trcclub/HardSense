@@ -184,6 +184,8 @@
     <ClInclude Include="DisplayHandler\GUI\HS_GameScreen.h" />
     <ClInclude Include="DisplayHandler\GUI\HS_ScreenBase.h" />
     <ClInclude Include="DisplayHandler\GUI\HS_SplashScreen.h" />
+    <ClInclude Include="DisplayHandler\GUI\Panels\HS_NetPanel.h" />
+    <ClInclude Include="DisplayHandler\GUI\Panels\HS_PanelBase.h" />
     <ClInclude Include="DisplayHandler\GUI\SplashScreen_Functions.h" />
     <ClInclude Include="DisplayHandler\GUI\Widgets\HS_Dial_Widget.h" />
     <ClInclude Include="DisplayHandler\GUI\Widgets\HS_WidgetBase.h" />
@@ -202,6 +204,8 @@
     <ClCompile Include="DisplayHandler\GUI\HS_GameScreen.cpp" />
     <ClCompile Include="DisplayHandler\GUI\HS_ScreenBase.cpp" />
     <ClCompile Include="DisplayHandler\GUI\HS_SplashScreen.cpp" />
+    <ClCompile Include="DisplayHandler\GUI\Panels\HS_NetPanel.cpp" />
+    <ClCompile Include="DisplayHandler\GUI\Panels\HS_PanelBase.cpp" />
     <ClCompile Include="DisplayHandler\GUI\Widgets\HS_Dial_Widget.cpp" />
     <ClCompile Include="DisplayHandler\GUI\Widgets\HS_WidgetBase.cpp" />
     <ClCompile Include="HSFileSystem\HSFileSystem.cpp" />

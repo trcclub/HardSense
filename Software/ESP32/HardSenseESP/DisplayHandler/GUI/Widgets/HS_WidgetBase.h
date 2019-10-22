@@ -9,9 +9,10 @@
 class HS_WidgetBase
 {
 private:
-
+	
 public:
 	HS_WidgetBase();
 	~HS_WidgetBase();
+	
 };
 

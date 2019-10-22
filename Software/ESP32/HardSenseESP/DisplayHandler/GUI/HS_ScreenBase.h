@@ -15,6 +15,8 @@ class HS_ScreenBase
 {
 private:
 	void HS_Load_Fonts();
+
+
 public:
 	HS_ScreenBase(TFT_eSPI *newTFT);
 	~HS_ScreenBase();

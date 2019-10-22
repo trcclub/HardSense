@@ -7,7 +7,7 @@ private:
 	TFT_eSprite* dial;
 	TFT_eSprite* needle;
 	void CreateNeedle();
-	void DrawEmptyDial(String label, float val, uint32_t dialColo);
+	void DrawEmptyDial(String label, float val, uint32_t dialColor);
 
 public:
 	HS_Dial_Widget(TFT_eSPI TFT);

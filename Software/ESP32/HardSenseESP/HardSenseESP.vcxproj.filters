@@ -78,6 +78,12 @@
     <ClInclude Include="DisplayHandler\GUI\GameScreen_Functions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="DisplayHandler\GUI\Panels\HS_PanelBase.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DisplayHandler\GUI\Panels\HS_NetPanel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="HSFileSystem\HSFileSystem.cpp">
@@ -111,6 +117,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="DisplayHandler\GUI\HS_GameScreen.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DisplayHandler\GUI\Panels\HS_PanelBase.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DisplayHandler\GUI\Panels\HS_NetPanel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
