@@ -2,7 +2,7 @@
 
 HS_HomeScreen::HS_HomeScreen(TFT_eSPI *newTFT) : HS_ScreenBase(newTFT)
 {
-	TFT->loadFont(AA_FONT_LARGE);
+	TFT->loadFont(AA_FONT_18PT);
 	Home_Screen_cpuLoadDial_CurrentRingColor = TFT_GREEN;
 	cpuLoadWidget = new HS_Dial_Widget(*TFT);
 	gpuLoadWidget = new HS_Dial_Widget(*TFT);
@@ -99,7 +99,6 @@ void HS_HomeScreen::SetSensorList(void(*AddItemToOutputQueue_func)(char key, Str
 	AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/Ethernet/0/recv,i|/Ethernet/0/send,j");
 	AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/ram/load/0,k|/ram/data/0,l|/ram/data/1,m");
 	AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/hdd/2/load/0,n|/hdd/3/load/0,o|/hdd/1/load/0,p|/hdd/0/load/0,q");
-
 }
 
 
@@ -119,7 +118,7 @@ void HS_HomeScreen::Draw_CPU_Panel()
 	int x = CPU_PANEL_X;
 	int y = CPU_PANEL_Y;
 
-	TFT->loadFont(AA_FONT_LARGE);
+	TFT->loadFont(AA_FONT_18PT);
 	DrawBoxWithBorderAndDropShadow(x, y, 207, 95, BOX_BORDER_COLOR,PANEL_BGCOLOR, BOX_DROP_SHADOW);
 	TFT->fillRect(x+2, y+2, 18, 91, PANEL_HCOLOR);
 	TFT->drawFastVLine(x+19, y + 2, 91, BOX_BORDER_COLOR);
@@ -235,7 +234,7 @@ void HS_HomeScreen::Draw_GPU_Panel()
 {
 	int x = GPU_PANEL_X;
 	int y = GPU_PANEL_Y;
-	TFT->loadFont(AA_FONT_LARGE);
+	TFT->loadFont(AA_FONT_18PT);
 	DrawBoxWithBorderAndDropShadow(x, y, 207, 95, BOX_BORDER_COLOR, PANEL_BGCOLOR, BOX_DROP_SHADOW);
 	TFT->fillRect(x+2, y + 2, 18, 91, PANEL_HCOLOR);
 	TFT->drawFastVLine(x + 19, y + 2, 91, BOX_BORDER_COLOR);
@@ -349,7 +348,7 @@ void HS_HomeScreen::Draw_Net_Panel()
 	int x = NET_PANEL_X;
 	int y = NET_PANEL_Y;
 
-	TFT->loadFont(AA_FONT_LARGE);
+	TFT->loadFont(AA_FONT_18PT);
 	DrawBoxWithBorderAndDropShadow(x, y, 113, 68, BOX_BORDER_COLOR, PANEL_BGCOLOR, BOX_DROP_SHADOW);
 
 	TFT->fillRect(x+3, y+3, 107, 17, PANEL_HCOLOR);
@@ -415,7 +414,7 @@ void HS_HomeScreen::Draw_Ram_Panel()
 	int x = RAM_PANEL_X;
 	int y = RAM_PANEL_Y;
 
-	TFT->loadFont(AA_FONT_LARGE);
+	TFT->loadFont(AA_FONT_18PT);
 	DrawBoxWithBorderAndDropShadow(x, y, 113, 68, BOX_BORDER_COLOR, PANEL_BGCOLOR, BOX_DROP_SHADOW);
 
 	TFT->fillRect(x + 3, y + 3, 107, 17, PANEL_HCOLOR);
@@ -485,7 +484,7 @@ void HS_HomeScreen::Update_Ram_Free(double free)
 
 void HS_HomeScreen::Draw_HDD_Panel()
 {
-	TFT->loadFont(AA_FONT_LARGE);
+	TFT->loadFont(AA_FONT_18PT);
 	TFT->setTextColor(TFT_WHITE, PANEL_HCOLOR);
 
 	// C:  /hdd/2/load/0	n
@@ -596,7 +595,7 @@ void HS_HomeScreen::Draw_Time_Panel()
 	int x = TIME_PANEL_X;
 	int y = TIME_PANEL_Y;
 
-	TFT->loadFont(AA_FONT_LARGE);
+	TFT->loadFont(AA_FONT_18PT);
 	DrawBoxWithBorderAndDropShadow(x, y, 113, 52, BOX_BORDER_COLOR, PANEL_BGCOLOR, BOX_DROP_SHADOW);
 	Update_Time();
 }

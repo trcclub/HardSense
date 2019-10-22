@@ -8,7 +8,7 @@ HS_ScreenBase::HS_ScreenBase(TFT_eSPI *newTFT)
 
 	textPrinter_Sprite = new TFT_eSprite(TFT);
 	textPrinter_Sprite->setColorDepth(16);
-	textPrinter_Sprite->loadFont(AA_FONT_LARGE);
+	textPrinter_Sprite->loadFont(AA_FONT_18PT);
 	textPrinter_Sprite->setTextDatum(TR_DATUM);
 
 	char d = 0xB0;
@@ -62,6 +62,15 @@ void HS_ScreenBase::HandleTouch(int x, int y)
 
 }
 
+bool HS_ScreenBase::HiddenHomeScreen_Touched(int x, int y)
+{
+	if ((x >= HIDDEN_HOMESCREEN_TOUCH_PANEL_LOW_X && x <= HIDDEN_HOMESCREEN_TOUCH_PANEL_HIGH_X) && (y >= HIDDEN_HOMESCREEN_TOUCH_PANEL_LOW_Y && y <= HIDDEN_HOMESCREEN_TOUCH_PANEL_HIGH_Y))
+	{
+		return true;
+	}
+	return false;
+}
+
 void HS_ScreenBase::HS_Load_Fonts()
 {
 
@@ -79,6 +88,8 @@ void HS_ScreenBase::HS_Load_Fonts()
 
 		// ESP32 will crash if any of the fonts are missing
 		bool font_missing = false;
+		if (SPIFFS.exists("/SegoeUI-10.vlw") == false) font_missing = true;
+		if (SPIFFS.exists("/SegoeUI-12.vlw") == false) font_missing = true;
 		if (SPIFFS.exists("/SegoeUI-14.vlw") == false) font_missing = true;
 		if (SPIFFS.exists("/SegoeUI-18.vlw") == false) font_missing = true;
 

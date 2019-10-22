@@ -39,12 +39,6 @@ namespace HardSense.DataStreamingServer
 
         public bool StartStreaming()
         {
-            /*
-            if(listOfSensorsToRetrieve.Count == 0)
-            {
-                return false;
-            }
-            */
             continueRunning = true;
             monitorThread.Start();
 

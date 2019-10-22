@@ -6,6 +6,10 @@
 #include "../../GlobalDefinitions.h"
 #include "../../HSSerial/SerialInterface.h"
 
+#define HIDDEN_HOMESCREEN_TOUCH_PANEL_LOW_X 270
+#define HIDDEN_HOMESCREEN_TOUCH_PANEL_HIGH_X 320
+#define HIDDEN_HOMESCREEN_TOUCH_PANEL_LOW_Y 190
+#define HIDDEN_HOMESCREEN_TOUCH_PANEL_HIGH_Y 240
 
 class HS_ScreenBase
 {
@@ -25,6 +29,7 @@ public:
 	virtual void UpdateScreen(String value);
 	virtual void SetSensorList(void(*AddItemToOutputQueue_func)(char key, char* value));
 	virtual void HandleTouch(int x, int y);
+	bool HiddenHomeScreen_Touched(int x, int y);
 	void SetDisplayQueue(void(*AddItemToDisplayQueue_func)(char key, String value));
 
 	void DrawBoxWithBorderAndDropShadow(int32_t x, int32_t, int32_t w, int32_t h, int32_t borderColor, int32_t boxColor, int32_t dropShadowColor);

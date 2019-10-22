@@ -210,7 +210,7 @@ void HSSerial::ConnectToHardsenseServer()
 
 void HSSerial::NewSocketRequestAccepted()
 {
-	Serial.println("NewSocketRequestAccepted()");
+//	Serial.println("NewSocketRequestAccepted()");
 	connectedToSomething = true;
 	Serial.print("Connected to: ");
 	Serial.println(hardsenseSettings.serverName);
@@ -219,7 +219,8 @@ void HSSerial::NewSocketRequestAccepted()
 	HandleOutput();
 
 	char buf[2];
-	sprintf(buf, "%c", ScreenTypes::Home);
+	//sprintf(buf, "%c", ScreenTypes::Home);
+	sprintf(buf, "%c", ScreenTypes::Game);
 	AddItemToDisplayQueue(DisplayCommands::ChangeScreen, buf);
 
 	//

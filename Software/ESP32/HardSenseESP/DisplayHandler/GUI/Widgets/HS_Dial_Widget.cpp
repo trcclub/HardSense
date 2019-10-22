@@ -13,7 +13,7 @@ HS_Dial_Widget::HS_Dial_Widget(TFT_eSPI TFT)
 	dial->setColorDepth(8);       // Size is odd (i.e. 91) so there is a centre pixel at 45,45
 	dial->createSprite(91, 91);   // 8bpp requires 91 * 91 = 8281 bytes
 	dial->setPivot(45, 45);       // set pivot in middle of dial Sprite
-	dial->loadFont(AA_FONT_SMALL);
+	dial->loadFont(AA_FONT_14PT);
 
 	CreateNeedle();
 }
