@@ -24,6 +24,11 @@ void Update_GameScreen(String value)
 	HS_Current_GameScreen->UpdateScreen(value);
 }
 
+void Update_GameScreen_OnInterval()
+{
+	HS_Current_GameScreen->UpdateScreenOnInterval();
+}
+
 char* Set_GameScreen_SensorList(void(*AddItemToOutputQueue_func)(char key, String value))
 {
 	HS_Current_GameScreen->SetSensorList(AddItemToOutputQueue_func);

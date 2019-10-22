@@ -88,7 +88,7 @@ private:
 	void Update_GPU_Panel_FanControl(double load);
 
 
-	HS_NetPanel netPanel;
+	HS_NetPanel *netPanel;
 	void Draw_Net_Panel();
 
 	void Draw_Ram_Panel();

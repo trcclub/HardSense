@@ -48,6 +48,7 @@ void DisplayHandler::Run()
 		}
 		DispatchCommand();
 
+
 		if (UpdateCurentScreenOnInterval != NULL)
 		{
 			UpdateCurentScreenOnInterval();
@@ -108,6 +109,7 @@ void DisplayHandler::LoadNewScreen(char screenID)
 		DestoryCurrentScreen = Destroy_GameScreen;
 		UpdateCurentScreen = Update_GameScreen;
 		HandleTouchPoint = Handle_GameScreen_Touch;
+		UpdateCurentScreenOnInterval = Update_GameScreen_OnInterval;
 		Create_GameScreen(&tftDisplay);
 		Set_GameScreen_SensorList(AddItemToOutputQueue);
 		Set_GameScreen_DisplayQueue(AddItemToDisplayQueue);

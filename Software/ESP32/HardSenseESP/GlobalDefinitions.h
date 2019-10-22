@@ -27,6 +27,7 @@ struct HS_Theme {
 	uint16_t panelBGColor;
 	uint16_t panelBorderColor;
 	uint16_t panelDropShadowColor;
+	uint16_t textColor;
 	
 
 	HS_Theme() {
@@ -34,18 +35,21 @@ struct HS_Theme {
 		panelBGColor = 0;
 		panelBorderColor = 0;
 		panelDropShadowColor = 0;
+		textColor = 0;
 	}
-	HS_Theme(uint16_t hColor, uint16_t bgColor, uint16_t bColor, uint16_t dColor) {
+	HS_Theme(uint16_t hColor, uint16_t bgColor, uint16_t bColor, uint16_t dColor, uint16_t tColor) {
 		panelHeaderColor = hColor;
 		panelBGColor = bgColor;
 		panelBorderColor = bColor;
 		panelDropShadowColor = dColor;
+		textColor = tColor;
 	}
 	HS_Theme(const HS_Theme &orig) {
 		panelHeaderColor = orig.panelHeaderColor;
 		panelBGColor = orig.panelBGColor;
 		panelBorderColor = orig.panelBorderColor;
 		panelDropShadowColor = orig.panelDropShadowColor;
+		textColor = orig.textColor;
 	}
 };
 

@@ -10,7 +10,7 @@ class HS_PanelBase
 private:
 
 public:
-	HS_PanelBase();
+	HS_PanelBase(TFT_eSPI* newTFT, HS_Coords newCoords, HS_Theme newTheme);
 	~HS_PanelBase();
 
 	TFT_eSPI* TFT;
@@ -18,7 +18,6 @@ public:
 	HS_Theme theme;
 	HS_Coords coords;
 
-	void init(TFT_eSPI* newTFT, HS_Coords newCoords, HS_Theme newTheme);
-	void DrawBoxWithBorderAndDropShadow(TFT_eSPI TFT, HS_Coords hs_coords, HS_Theme hs_theme);
+	void DrawBoxWithBorderAndDropShadow(HS_Coords hs_coords, HS_Theme hs_theme);
 };
 

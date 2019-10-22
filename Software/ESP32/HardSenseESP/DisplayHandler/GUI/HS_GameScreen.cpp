@@ -3,28 +3,41 @@
 
 HS_GameScreen::HS_GameScreen(TFT_eSPI* newTFT) : HS_ScreenBase(newTFT)
 {
-	TFT->loadFont(AA_FONT_18PT);
+	gameScreenTheme.panelBGColor = PANEL_BGCOLOR;
+	gameScreenTheme.panelBorderColor = BOX_BORDER_COLOR;
+	gameScreenTheme.panelDropShadowColor = BOX_DROP_SHADOW;
+	gameScreenTheme.panelHeaderColor = PANEL_HCOLOR;
+	gameScreenTheme.textColor = TEXT_COLOR;
+
+	TFT->loadFont(AA_FONT_14PT);
 	TFT->fillScreen(TFT_DARKGREY);
 	
 	textPrinter_Sprite->setTextColor(TEXT_COLOR, PANEL_BGCOLOR);
 
-	Draw_Temp_Panel();
+	//Draw_Temp_Panel();
+	Draw_Net_Panel();
 }
 
 HS_GameScreen::~HS_GameScreen()
 {
+	/*
 	if (graphGrid != NULL)
 	{
 		graphGrid->unloadFont();
 		graphGrid->deleteSprite();
 		delete(graphGrid);
 	}
-	
+	*/
+	delete(netPanel);
 }
 
 
 void HS_GameScreen::SetSensorList(void(*AddItemToOutputQueue_func)(char key, String value))
 {
+
+	AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/Ethernet/0/recv,i|/Ethernet/0/send,j");
+
+
 	//AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/intelcpu/0/load/0,a");
 
 	//AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/Ethernet/0/recv,i|/Ethernet/0/send,j");
@@ -56,11 +69,21 @@ void HS_GameScreen::UpdateScreen(String value)
 		break;
 	case 'c':
 		break;
+	case 'i':
+		netPanel->Update_Net_DownloadSpeed(dValue);
+		break;
+	case 'j':
+		netPanel->Update_Net_UpLoadSpeed(dValue);
+		break;
 	default:
 		break;
 	}
 
 	//Serial.println("HS_GameScreen::UpdateScreen 6");
+}
+
+void HS_GameScreen::UpdateScreenOnInterval()
+{
 }
 
 void HS_GameScreen::HandleTouch(int x, int y)
@@ -74,6 +97,7 @@ void HS_GameScreen::HandleTouch(int x, int y)
 	
 }
 
+/*
 void HS_GameScreen::Draw_Temp_Panel()
 {
 	int x = 0;
@@ -136,4 +160,11 @@ void HS_GameScreen::Draw_Temp_Panel()
 
 	textPrinter_Sprite->unloadFont();
 	textPrinter_Sprite->deleteSprite();
+}
+*/
+
+void HS_GameScreen::Draw_Net_Panel()
+{
+	netPanel = new HS_NetPanel(TFT, HS_Coords(NET_PANEL_X, NET_PANEL_Y, 0, 0), gameScreenTheme);
+	netPanel->DrawPanel(true);
 }
