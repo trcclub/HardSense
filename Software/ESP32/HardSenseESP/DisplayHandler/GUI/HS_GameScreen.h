@@ -28,7 +28,7 @@
 #define SCREEN_GAME_LOAD_DIAL_MAX 120
 
 #define SCREEN_GAME_GPU_LOAD_DIAL_X 227
-#define SCREEN_GAME_GPU_LOAD_DIAL_Y 57
+#define SCREEN_GAME_GPU_LOAD_DIAL_Y 56
 
 class HS_GameScreen :
 	public HS_ScreenBase

@@ -115,7 +115,7 @@ void HS_GameScreen::Draw_Net_Panel()
 
 void HS_GameScreen::DrawGPUCoreLoadPanel()
 {
-	DrawBoxWithBorderAndDropShadow(227, 51, 93, 96, gameScreenTheme.panelBorderColor, gameScreenTheme.panelBGColor, gameScreenTheme.panelDropShadowColor);
+	DrawBoxWithBorderAndDropShadow(227, 51, 93, 99, gameScreenTheme.panelBorderColor, gameScreenTheme.panelBGColor, gameScreenTheme.panelDropShadowColor);
 	gpuCoreLoadWidget = new HS_Dial_Widget(*TFT);
 	gpuCoreLoadWidget->DrawDialScale(*TFT, SCREEN_GAME_LOAD_DIAL_MIN, SCREEN_GAME_LOAD_DIAL_MAX, 30, gpuCoreLoadDial_CurrentRingColor);
 	UpdateGPUCoreLoad(0.0);
