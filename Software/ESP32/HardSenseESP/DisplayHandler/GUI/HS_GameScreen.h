@@ -2,7 +2,7 @@
 #include "HS_ScreenBase.h"
 #include "Panels/HS_NetPanel.h"
 #include "Panels/HS_GPU_TempAndFanChart_Panel.h"
-//#include "Widgets/HS_Dial_Widget.h"
+#include "Widgets/HS_Dial_Widget.h"
 
 /*  Light Blue
 #define TEXT_COLOR TFT_WHITE
@@ -24,6 +24,12 @@
 #define GPU_TEMP_PANEL_X 0
 #define GPU_TEMP_PANEL_Y 0
 
+#define SCREEN_GAME_LOAD_DIAL_MIN -120
+#define SCREEN_GAME_LOAD_DIAL_MAX 120
+
+#define SCREEN_GAME_GPU_LOAD_DIAL_X 227
+#define SCREEN_GAME_GPU_LOAD_DIAL_Y 57
+
 class HS_GameScreen :
 	public HS_ScreenBase
 {
@@ -31,11 +37,16 @@ private:
 	HS_Theme gameScreenTheme;
 
 	HS_GPU_TempAndFanChart_Panel* GPU_TempAndFanChart;
-
 	void Draw_Temp_Panel();
 
 	HS_NetPanel *netPanel;
 	void Draw_Net_Panel();
+
+
+	HS_Dial_Widget* gpuCoreLoadWidget;
+	uint16_t gpuCoreLoadDial_CurrentRingColor;
+	void DrawGPUCoreLoadPanel();
+	void UpdateGPUCoreLoad(double load);
 
 	unsigned long lastUpdate = 0;
 	int gpuTempAndFanGraphUpdateTime = 500;
@@ -47,6 +58,5 @@ public:
 	void UpdateScreenOnInterval();
 	void SetSensorList(void(*AddItemToOutputQueue_func)(char key, String value));
 	void HandleTouch(int x, int y);
-
 };
 
