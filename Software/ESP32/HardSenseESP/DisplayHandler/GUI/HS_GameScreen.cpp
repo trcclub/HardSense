@@ -10,24 +10,17 @@ HS_GameScreen::HS_GameScreen(TFT_eSPI* newTFT) : HS_ScreenBase(newTFT)
 	gameScreenTheme.textColor = TEXT_COLOR;
 
 	TFT->loadFont(AA_FONT_14PT);
-	TFT->fillScreen(TFT_DARKGREY);
+	TFT->fillScreen(TFT_BLACK);
 	
 	textPrinter_Sprite->setTextColor(TEXT_COLOR, PANEL_BGCOLOR);
 
-	//Draw_Temp_Panel();
+	Draw_Temp_Panel();
 	Draw_Net_Panel();
 }
 
 HS_GameScreen::~HS_GameScreen()
 {
-	/*
-	if (graphGrid != NULL)
-	{
-		graphGrid->unloadFont();
-		graphGrid->deleteSprite();
-		delete(graphGrid);
-	}
-	*/
+	delete(GPU_TempAndFanChart);
 	delete(netPanel);
 }
 
@@ -36,7 +29,7 @@ void HS_GameScreen::SetSensorList(void(*AddItemToOutputQueue_func)(char key, Str
 {
 
 	AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/Ethernet/0/recv,i|/Ethernet/0/send,j");
-
+	AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/nvidiagpu/0/temperature/0,a|/nvidiagpu/0/control/0,b");
 
 	//AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/intelcpu/0/load/0,a");
 
@@ -64,8 +57,10 @@ void HS_GameScreen::UpdateScreen(String value)
 
 	switch (key) {
 	case 'a':
+		GPU_TempAndFanChart->UpdateGPUTemp(dValue);
 		break;
 	case 'b':
+		GPU_TempAndFanChart->UpdateGPUFanLoad(dValue);
 		break;
 	case 'c':
 		break;
@@ -84,6 +79,11 @@ void HS_GameScreen::UpdateScreen(String value)
 
 void HS_GameScreen::UpdateScreenOnInterval()
 {
+	if (millis() - lastUpdate > gpuTempAndFanGraphUpdateTime)
+	{
+		GPU_TempAndFanChart->UpdateGraph();
+		lastUpdate = millis();
+	}
 }
 
 void HS_GameScreen::HandleTouch(int x, int y)
@@ -97,9 +97,13 @@ void HS_GameScreen::HandleTouch(int x, int y)
 	
 }
 
-/*
+
 void HS_GameScreen::Draw_Temp_Panel()
 {
+	GPU_TempAndFanChart = new HS_GPU_TempAndFanChart_Panel(TFT, HS_Coords(GPU_TEMP_PANEL_X, GPU_TEMP_PANEL_Y, 0, 0), gameScreenTheme);
+	GPU_TempAndFanChart->DrawPanel();
+
+	/*
 	int x = 0;
 	int y = 0;
 
@@ -160,8 +164,8 @@ void HS_GameScreen::Draw_Temp_Panel()
 
 	textPrinter_Sprite->unloadFont();
 	textPrinter_Sprite->deleteSprite();
-}
 */
+}
 
 void HS_GameScreen::Draw_Net_Panel()
 {

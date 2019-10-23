@@ -21,11 +21,12 @@ public:
 	HS_ScreenBase(TFT_eSPI *newTFT);
 	~HS_ScreenBase();
 
+	String degreesC = "";
+	char degreesC_char[3];
+
 	TFT_eSPI *TFT;
 	TFT_eSprite* textPrinter_Sprite;
 
-	String degreesC = "";
-	char degreesC_char[3];
 	void(*AddItemToDisplayQueue)(char key, String value);
 
 	virtual void UpdateScreen(String value);

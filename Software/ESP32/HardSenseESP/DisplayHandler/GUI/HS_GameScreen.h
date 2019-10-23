@@ -1,6 +1,7 @@
 #pragma once
 #include "HS_ScreenBase.h"
 #include "Panels/HS_NetPanel.h"
+#include "Panels/HS_GPU_TempAndFanChart_Panel.h"
 //#include "Widgets/HS_Dial_Widget.h"
 
 /*  Light Blue
@@ -20,17 +21,24 @@
 #define NET_PANEL_X 227
 #define NET_PANEL_Y 0
 
+#define GPU_TEMP_PANEL_X 0
+#define GPU_TEMP_PANEL_Y 0
+
 class HS_GameScreen :
 	public HS_ScreenBase
 {
 private:
-	//TFT_eSprite* graphGrid = NULL;
 	HS_Theme gameScreenTheme;
 
-	//void Draw_Temp_Panel();
+	HS_GPU_TempAndFanChart_Panel* GPU_TempAndFanChart;
+
+	void Draw_Temp_Panel();
 
 	HS_NetPanel *netPanel;
 	void Draw_Net_Panel();
+
+	unsigned long lastUpdate = 0;
+	int gpuTempAndFanGraphUpdateTime = 500;
 
 public:
 	HS_GameScreen(TFT_eSPI* newTFT);

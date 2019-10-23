@@ -6,7 +6,7 @@ HS_HomeScreen::HS_HomeScreen(TFT_eSPI *newTFT) : HS_ScreenBase(newTFT)
 	homeScreenTheme.panelBorderColor = BOX_BORDER_COLOR;
 	homeScreenTheme.panelDropShadowColor = BOX_DROP_SHADOW;
 	homeScreenTheme.panelHeaderColor = PANEL_HCOLOR;
-	homeScreenTheme.textColor = TFT_WHITE;
+	homeScreenTheme.textColor = TEXT_COLOR;
 
 	TFT->loadFont(AA_FONT_18PT);
 	Home_Screen_cpuLoadDial_CurrentRingColor = TFT_GREEN;

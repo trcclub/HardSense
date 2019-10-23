@@ -219,8 +219,8 @@ void HSSerial::NewSocketRequestAccepted()
 	HandleOutput();
 
 	char buf[2];
-	//sprintf(buf, "%c", ScreenTypes::Home);
-	sprintf(buf, "%c", ScreenTypes::Game);
+	sprintf(buf, "%c", ScreenTypes::Home);
+	//sprintf(buf, "%c", ScreenTypes::Game);
 	AddItemToDisplayQueue(DisplayCommands::ChangeScreen, buf);
 
 	//

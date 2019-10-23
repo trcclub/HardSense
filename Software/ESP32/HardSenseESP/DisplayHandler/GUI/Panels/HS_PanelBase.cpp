@@ -12,6 +12,11 @@ HS_PanelBase::HS_PanelBase(TFT_eSPI* newTFT, HS_Coords newCoords, HS_Theme newTh
 	textPrinter_Sprite = new TFT_eSprite(TFT);
 	textPrinter_Sprite->setColorDepth(16);
 	textPrinter_Sprite->loadFont(AA_FONT_18PT);
+
+	char d = 0xB0;
+	degreesC = String(d);
+	degreesC += "C";
+	sprintf(degreesC_char, "%cC", d);
 }
 
 HS_PanelBase::~HS_PanelBase()

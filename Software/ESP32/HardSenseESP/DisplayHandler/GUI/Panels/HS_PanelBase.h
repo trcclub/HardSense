@@ -13,6 +13,9 @@ public:
 	HS_PanelBase(TFT_eSPI* newTFT, HS_Coords newCoords, HS_Theme newTheme);
 	~HS_PanelBase();
 
+	String degreesC = "";
+	char degreesC_char[3];
+
 	TFT_eSPI* TFT;
 	TFT_eSprite* textPrinter_Sprite;
 	HS_Theme theme;

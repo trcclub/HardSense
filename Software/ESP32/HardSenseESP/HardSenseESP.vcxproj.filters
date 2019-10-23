@@ -84,6 +84,9 @@
     <ClInclude Include="DisplayHandler\GUI\Panels\HS_NetPanel.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="DisplayHandler\GUI\Panels\HS_GPU_TempAndFanChart_Panel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="HSFileSystem\HSFileSystem.cpp">
@@ -123,6 +126,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="DisplayHandler\GUI\Panels\HS_NetPanel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DisplayHandler\GUI\Panels\HS_GPU_TempAndFanChart_Panel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
