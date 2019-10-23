@@ -80,13 +80,10 @@ void HS_GameScreen::UpdateScreen(String value)
 		break;
 	case 'd':
 		gpuMemoryTotal = dValue;
-		//memPanel->Update_Mem_Load(dValue,true);
-		//netPanel->Update_Net_DownloadSpeed(dValue);
 		break;
 	case 'e':
-		memPanel->Update_Mem_Load((dValue / gpuMemoryTotal) * 100, true);
+		memPanel->Update_Mem_Load((dValue/gpuMemoryTotal)*100, true);
 		memPanel->Update_Mem_Used(dValue / 1000);
-		//netPanel->Update_Net_UpLoadSpeed(dValue);
 		break;
 	case 'f':
 		memPanel->Update_Mem_Free(dValue / 1000);
@@ -132,13 +129,6 @@ void HS_GameScreen::Draw_Temp_Panel()
 	GPU_TempAndFanChart->DrawPanel();
 }
 
-/*
-void HS_GameScreen::Draw_Net_Panel()
-{
-	netPanel = new HS_NetPanel(TFT, HS_Coords(NET_PANEL_X, NET_PANEL_Y, 0, 0), gameScreenTheme);
-	netPanel->DrawPanel(true);
-}
-*/
 void HS_GameScreen::Draw_Mem_Panel()
 {
 	memPanel = new HS_MemPanel(TFT, HS_Coords(RAM_PANEL_X, RAM_PANEL_Y, 0, 0), gameScreenTheme);

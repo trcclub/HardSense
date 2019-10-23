@@ -72,6 +72,9 @@ void HS_MemPanel::DrawPanel(bool small)
 
 	textPrinter_Sprite->deleteSprite();
 
+	Update_Mem_Free(0.0);
+	Update_Mem_Used(0.0);
+	Update_Mem_Load(0.0);
 
 	/*
 	TFT->setTextColor(TFT_RED, homeScreenTheme.panelBGColor);

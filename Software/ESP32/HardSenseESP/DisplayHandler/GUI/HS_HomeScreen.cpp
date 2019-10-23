@@ -158,9 +158,9 @@ void HS_HomeScreen::Draw_CPU_Panel()
 	// CPU Clock Speed
 	DrawBoxWithBorderAndDropShadow(x + 111, y + 64, 93, 26, homeScreenTheme.panelBorderColor, homeScreenTheme.panelBGColor, homeScreenTheme.panelDropShadowColor);
 
-	//Update_CPU_Panel_Temperature(0.0);
-	//Update_CPU_Panel_Power(00.0);
-	//Update_CPU_Panel_ClockSpeed(0000.0);
+	Update_CPU_Panel_Temperature(0.0);
+	Update_CPU_Panel_Power(00.0);
+	Update_CPU_Panel_ClockSpeed(0000.0);
 }
 
 bool HS_HomeScreen::CPU_Panel_Touched(int x, int y)
@@ -272,9 +272,9 @@ void HS_HomeScreen::Draw_GPU_Panel()
 	// GPU Clock Speed
 	DrawBoxWithBorderAndDropShadow(x + 111, y + 64, 93, 26, homeScreenTheme.panelBorderColor, homeScreenTheme.panelBGColor, homeScreenTheme.panelDropShadowColor);
 
-	//Update_GPU_Panel_Temperature(00.0);
-	//Update_GPU_Panel_FanControl(00.0);
-	//Update_GPU_Panel_ClockSpeed(0000.0);
+	Update_GPU_Panel_Temperature(00.0);
+	Update_GPU_Panel_FanControl(00.0);
+	Update_GPU_Panel_ClockSpeed(0000.0);
 }
 
 bool HS_HomeScreen::GPU_Panel_Touched(int x, int y)
@@ -364,84 +364,7 @@ void HS_HomeScreen::Draw_Mem_Panel()
 {
 	memPanel = new HS_MemPanel(TFT, HS_Coords(RAM_PANEL_X, RAM_PANEL_Y, 0, 0), homeScreenTheme);
 	memPanel->DrawPanel();
-
-
-	/*
-	int x = RAM_PANEL_X;
-	int y = RAM_PANEL_Y;
-
-	TFT->loadFont(AA_FONT_18PT);
-	DrawBoxWithBorderAndDropShadow(x, y, 113, 68, homeScreenTheme.panelBorderColor, homeScreenTheme.panelBGColor, homeScreenTheme.panelDropShadowColor);
-
-	TFT->fillRect(x + 3, y + 3, 107, 17, homeScreenTheme.panelHeaderColor);
-	TFT->setTextColor(homeScreenTheme.textColor, homeScreenTheme.panelHeaderColor);
-	TFT->setTextDatum(TL_DATUM);
-	TFT->drawString("RAM", x+4, y+4);
-
-	TFT->drawFastHLine(x + 3, y + 20, 107, homeScreenTheme.panelBorderColor);
-	TFT->drawFastHLine(x + 3, y + 21, 107, homeScreenTheme.panelBorderColor);
-	
-
-	TFT->setTextColor(TFT_RED, homeScreenTheme.panelBGColor);
-	TFT->drawString("U:", x+4, y+25);
-
-	TFT->drawFastHLine(x + 3, y + 43, 107, homeScreenTheme.panelBorderColor);
-	TFT->drawFastHLine(x + 3, y + 44, 107, homeScreenTheme.panelDropShadowColor);
-	
-	TFT->setTextColor(TFT_GREEN, homeScreenTheme.panelBGColor);
-	TFT->drawString("F:", x+4, y+47);
-
-	Update_Ram_Used(0.0);
-	Update_Ram_Useage(0.0);
-	*/
 }
-
-	/*
-void HS_HomeScreen::Update_Mem_Useage(double dPercent)
-{
-	int x = RAM_PANEL_X;
-	int y = RAM_PANEL_Y;
-	textPrinter_Sprite->createSprite(50, 16);
-	textPrinter_Sprite->fillSprite(homeScreenTheme.panelHeaderColor);
-	char buf[12];
-	sprintf(buf, "%.0f %%", dPercent);
-	textPrinter_Sprite->setTextColor(homeScreenTheme.textColor, homeScreenTheme.panelHeaderColor);
-	textPrinter_Sprite->drawString(String(buf), 50, 0);
-	textPrinter_Sprite->pushSprite(x+56,y+4);
-	textPrinter_Sprite->deleteSprite();
-	textPrinter_Sprite->setTextColor(homeScreenTheme.textColor, homeScreenTheme.panelBGColor);  //put the text color back.
-}
-	*/
-
-	/*
-void HS_HomeScreen::Update_Mem_Used(double used)
-{
-	int x = RAM_PANEL_X;
-	int y = RAM_PANEL_Y;
-	textPrinter_Sprite->createSprite(80, 16);
-	textPrinter_Sprite->fillSprite(homeScreenTheme.panelBGColor);
-	char buf[12];
-	sprintf(buf, "%.2f GB", used);
-	textPrinter_Sprite->drawString(String(buf), 80, 0);
-	textPrinter_Sprite->pushSprite(x+26, y+26);
-	textPrinter_Sprite->deleteSprite();
-}
-	*/
-
-	/*
-void HS_HomeScreen::Update_Mem_Free(double free)
-{
-	int x = RAM_PANEL_X;
-	int y = RAM_PANEL_Y;
-	textPrinter_Sprite->createSprite(80, 16);
-	textPrinter_Sprite->fillSprite(homeScreenTheme.panelBGColor);
-	char buf[12];
-	sprintf(buf, "%.2f GB", free);
-	textPrinter_Sprite->drawString(String(buf), 80, 0);
-	textPrinter_Sprite->pushSprite(x+26,y+48);
-	textPrinter_Sprite->deleteSprite();
-}
-	*/
 
 void HS_HomeScreen::Draw_HDD_Panel()
 {
@@ -452,7 +375,6 @@ void HS_HomeScreen::Draw_HDD_Panel()
 	// E:  /hdd/3/load/0	o
 	// F:  /hdd/1/load/0	p
 	// G:  /hdd/0/load/0	q
-
 
 	TFT->setTextColor(homeScreenTheme.textColor, homeScreenTheme.panelHeaderColor);
 	TFT->setTextDatum(TC_DATUM);
@@ -495,10 +417,10 @@ void HS_HomeScreen::Draw_HDD_Panel()
 	TFT->drawFastHLine(x, y + 26, 80, homeScreenTheme.panelBorderColor);
 
 
-	//Update_HDD_Useage('n', 0.0);
-	//Update_HDD_Useage('o', 0.0);
-	//Update_HDD_Useage('p', 0.0);
-	//Update_HDD_Useage('q', 0.0);
+	Update_HDD_Useage('n', 0.0);
+	Update_HDD_Useage('o', 0.0);
+	Update_HDD_Useage('p', 0.0);
+	Update_HDD_Useage('q', 0.0);
 }
 
 void HS_HomeScreen::Update_HDD_Useage(char key, double percent)
@@ -558,7 +480,7 @@ void HS_HomeScreen::Draw_Time_Panel()
 
 	TFT->loadFont(AA_FONT_18PT);
 	DrawBoxWithBorderAndDropShadow(x, y, 113, 52, homeScreenTheme.panelBorderColor, homeScreenTheme.panelBGColor, homeScreenTheme.panelDropShadowColor);
-	//Update_Time();
+	Update_Time();
 }
 
 void HS_HomeScreen::Update_Time()

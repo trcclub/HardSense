@@ -45,7 +45,8 @@ void HS_GPU_TempAndFanChart_Panel::DrawPanel()
 	textPrinter_Sprite->fillSprite(TFT_TRANSPARENT);
 	textPrinter_Sprite->setTextDatum(TC_DATUM);
 	textPrinter_Sprite->setTextColor(theme.textColor, theme.panelHeaderColor);
-	textPrinter_Sprite->drawString("GPU Core Temp & Fan", (coords.w - 6) / 2, 0);
+	//textPrinter_Sprite->drawString("GPU Core Temp & Fan", (coords.w - 6) / 2, 0);
+	textPrinter_Sprite->drawString("EVGA NVIDIA GeForce GTX 1080 Ti", (coords.w - 8) / 2, 0);
 	textPrinter_Sprite->pushSprite(coords.x + 3, coords.y + 4,TFT_TRANSPARENT);
 	textPrinter_Sprite->deleteSprite();
 

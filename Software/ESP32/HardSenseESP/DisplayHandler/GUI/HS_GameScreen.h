@@ -42,8 +42,6 @@ private:
 	HS_GPU_TempAndFanChart_Panel* GPU_TempAndFanChart;
 	void Draw_Temp_Panel();
 
-	//HS_NetPanel *netPanel;
-	//void Draw_Net_Panel();
 	HS_MemPanel* memPanel;
 	double gpuMemoryTotal = 1;
 	void Draw_Mem_Panel();
