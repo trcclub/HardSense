@@ -68,15 +68,12 @@ void HS_HomeScreen::UpdateScreen(String value)
 		break;
 	case 'k':
 		memPanel->Update_Mem_Load(dValue);
-		//Update_Mem_Useage(dValue);
 		break;
 	case 'l':
 		memPanel->Update_Mem_Used(dValue);
-		//Update_Mem_Used(dValue);
 		break;
 	case 'm':
 		memPanel->Update_Mem_Free(dValue);
-		//Update_Mem_Free(dValue);
 	case 'n':
 	case 'o':
 	case 'p':
@@ -143,7 +140,6 @@ void HS_HomeScreen::Draw_CPU_Panel()
 
 
 	//CPU Package Load Dial Gauge
-
 	cpuLoadWidget->DrawDialScale(*TFT, SCREEN_HOME_LOAD_DIAL_MIN, SCREEN_HOME_LOAD_DIAL_MAX, 30, Home_Screen_cpuLoadDial_CurrentRingColor);
 	Update_CPU_Panel_Load(0.0);
 

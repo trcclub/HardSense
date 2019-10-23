@@ -32,28 +32,15 @@ HS_GameScreen::~HS_GameScreen()
 void HS_GameScreen::SetSensorList(void(*AddItemToOutputQueue_func)(char key, String value))
 {
 
-	//AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/Ethernet/0/recv,i|/Ethernet/0/send,j");
-
 	// a = GPU Core Temperature
 	// b = GPU Fan Load
 	// c = GPU Core Load
 	AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/nvidiagpu/0/temperature/0,a|/nvidiagpu/0/control/0,b|/nvidiagpu/0/load/0,c");
 
-	// d = GPU Memory Total
+	// d = GPU Memory Load
 	// e = GPU Memory Used
 	// f = GPU Memory Free
-	AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/nvidiagpu/0/smalldata/3,d|/nvidiagpu/0/smalldata/2,e|/nvidiagpu/0/smalldata/1,f");
-
-	//AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/intelcpu/0/load/0,a");
-
-	//AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/Ethernet/0/recv,i|/Ethernet/0/send,j");
-
-	/*
-	AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/intelcpu/0/load/0,a|/intelcpu/0/temperature/6,b|/intelcpu/0/clock/1,c|/intelcpu/0/power/0,d");
-	AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/nvidiagpu/0/load/0,e|/nvidiagpu/0/temperature/0,f|/nvidiagpu/0/clock/0,g|/nvidiagpu/0/control/0,h");
-	AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/Ethernet/0/recv,i|/Ethernet/0/send,j");
-	AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/ram/load/0,k");
-	*/
+	AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/nvidiagpu/0/load/3,d|/nvidiagpu/0/smalldata/2,e|/nvidiagpu/0/smalldata/1,f");
 }
 
 void HS_GameScreen::UpdateScreen(String value)
@@ -79,10 +66,9 @@ void HS_GameScreen::UpdateScreen(String value)
 		UpdateGPUCoreLoad(dValue);
 		break;
 	case 'd':
-		gpuMemoryTotal = dValue;
+		memPanel->Update_Mem_Load(dValue,true);
 		break;
 	case 'e':
-		memPanel->Update_Mem_Load((dValue/gpuMemoryTotal)*100, true);
 		memPanel->Update_Mem_Used(dValue / 1000);
 		break;
 	case 'f':

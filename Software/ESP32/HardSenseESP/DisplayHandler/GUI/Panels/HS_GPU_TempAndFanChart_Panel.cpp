@@ -70,11 +70,11 @@ void HS_GPU_TempAndFanChart_Panel::DrawPanel()
 	graphGridSprite->loadFont(AA_FONT_12PT);
 	graphGridSprite->setTextColor(TFT_YELLOW, theme.panelBGColor);
 	graphGridSprite->setTextDatum(TL_DATUM);
-	graphGridSprite->drawString("80", 201, 0);
+	graphGridSprite->drawString("100", 201, 0);
 	graphGridSprite->setTextDatum(ML_DATUM);
-	graphGridSprite->drawString("40", 201, 50);
+	graphGridSprite->drawString("50", 201, 50);
 	graphGridSprite->setTextDatum(BL_DATUM);
-	graphGridSprite->drawString("20", 201, 100);
+	graphGridSprite->drawString("0", 201, 100);
 
 	graphGridSprite->setTextColor(TFT_GREEN, theme.panelBGColor);
 	graphGridSprite->setTextDatum(TR_DATUM);
@@ -144,8 +144,7 @@ void HS_GPU_TempAndFanChart_Panel::UpdateGraph()
 	gpuTempSprite->scroll(-1, 0);
 	gpuTempSprite->drawFastVLine(177, 0, 100, TFT_TRANSPARENT);
 	
-	int y = map(temperature, 20, 80, 0, 100);
-	gpuTempSprite->drawFastVLine(177, 100-y, 2, TFT_YELLOW);
+	gpuTempSprite->drawFastVLine(177, 100-temperature, 2, TFT_YELLOW);
 	gpuTempSprite->drawFastVLine(177, 100-fanLoad, 2, TFT_GREEN);
 
 	graphGridSprite->pushSprite(coords.x + 3, coords.y + 23);

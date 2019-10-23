@@ -43,7 +43,6 @@ private:
 	void Draw_Temp_Panel();
 
 	HS_MemPanel* memPanel;
-	double gpuMemoryTotal = 1;
 	void Draw_Mem_Panel();
 
 	HS_Dial_Widget* gpuCoreLoadWidget;
