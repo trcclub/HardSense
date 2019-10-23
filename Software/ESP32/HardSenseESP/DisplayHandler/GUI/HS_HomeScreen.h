@@ -3,6 +3,7 @@
 #include "HS_ScreenBase.h"
 #include "Widgets/HS_Dial_Widget.h"
 #include "Panels/HS_NetPanel.h"
+#include "Panels/HS_MemPanel.h"
 
 #define SCREEN_HOME_LOAD_DIAL_MIN -120
 #define SCREEN_HOME_LOAD_DIAL_MAX 120
@@ -100,10 +101,11 @@ private:
 	HS_NetPanel *netPanel;
 	void Draw_Net_Panel();
 
-	void Draw_Ram_Panel();
-	void Update_Ram_Useage(double dPercent);
-	void Update_Ram_Used(double used);
-	void Update_Ram_Free(double free);
+	HS_MemPanel* memPanel;
+	void Draw_Mem_Panel();
+	//void Update_Mem_Useage(double dPercent);
+	//void Update_Mem_Used(double used);
+	//void Update_Mem_Free(double free);
 
 	void Draw_HDD_Panel();
 	void Update_HDD_Useage(char key, double percent);

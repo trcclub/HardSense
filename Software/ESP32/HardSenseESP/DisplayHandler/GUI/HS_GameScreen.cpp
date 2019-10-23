@@ -15,7 +15,8 @@ HS_GameScreen::HS_GameScreen(TFT_eSPI* newTFT) : HS_ScreenBase(newTFT)
 	textPrinter_Sprite->setTextColor(TEXT_COLOR, PANEL_BGCOLOR);
 
 	Draw_Temp_Panel();
-	Draw_Net_Panel();
+	//Draw_Net_Panel();
+	Draw_Mem_Panel();
 	DrawGPUCoreLoadPanel();
 }
 
@@ -23,15 +24,25 @@ HS_GameScreen::~HS_GameScreen()
 {
 	delete(gpuCoreLoadWidget);
 	delete(GPU_TempAndFanChart);
-	delete(netPanel);
+	delete(memPanel);
+	//delete(netPanel);
 }
 
 
 void HS_GameScreen::SetSensorList(void(*AddItemToOutputQueue_func)(char key, String value))
 {
 
-	AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/Ethernet/0/recv,i|/Ethernet/0/send,j");
+	//AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/Ethernet/0/recv,i|/Ethernet/0/send,j");
+
+	// a = GPU Core Temperature
+	// b = GPU Fan Load
+	// c = GPU Core Load
 	AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/nvidiagpu/0/temperature/0,a|/nvidiagpu/0/control/0,b|/nvidiagpu/0/load/0,c");
+
+	// d = GPU Memory Total
+	// e = GPU Memory Used
+	// f = GPU Memory Free
+	AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/nvidiagpu/0/smalldata/3,d|/nvidiagpu/0/smalldata/2,e|/nvidiagpu/0/smalldata/1,f");
 
 	//AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/intelcpu/0/load/0,a");
 
@@ -67,11 +78,26 @@ void HS_GameScreen::UpdateScreen(String value)
 	case 'c':
 		UpdateGPUCoreLoad(dValue);
 		break;
+	case 'd':
+		gpuMemoryTotal = dValue;
+		//memPanel->Update_Mem_Load(dValue,true);
+		//netPanel->Update_Net_DownloadSpeed(dValue);
+		break;
+	case 'e':
+		memPanel->Update_Mem_Load((dValue / gpuMemoryTotal) * 100, true);
+		memPanel->Update_Mem_Used(dValue / 1000);
+		//netPanel->Update_Net_UpLoadSpeed(dValue);
+		break;
+	case 'f':
+		memPanel->Update_Mem_Free(dValue / 1000);
+		break;
+	case 'g':
+		break;
+	case 'h':
+		break;
 	case 'i':
-		netPanel->Update_Net_DownloadSpeed(dValue);
 		break;
 	case 'j':
-		netPanel->Update_Net_UpLoadSpeed(dValue);
 		break;
 	default:
 		break;
@@ -100,17 +126,23 @@ void HS_GameScreen::HandleTouch(int x, int y)
 	
 }
 
-
 void HS_GameScreen::Draw_Temp_Panel()
 {
 	GPU_TempAndFanChart = new HS_GPU_TempAndFanChart_Panel(TFT, HS_Coords(GPU_TEMP_PANEL_X, GPU_TEMP_PANEL_Y, 0, 0), gameScreenTheme);
 	GPU_TempAndFanChart->DrawPanel();
 }
 
+/*
 void HS_GameScreen::Draw_Net_Panel()
 {
 	netPanel = new HS_NetPanel(TFT, HS_Coords(NET_PANEL_X, NET_PANEL_Y, 0, 0), gameScreenTheme);
 	netPanel->DrawPanel(true);
+}
+*/
+void HS_GameScreen::Draw_Mem_Panel()
+{
+	memPanel = new HS_MemPanel(TFT, HS_Coords(RAM_PANEL_X, RAM_PANEL_Y, 0, 0), gameScreenTheme);
+	memPanel->DrawPanel(true);
 }
 
 void HS_GameScreen::DrawGPUCoreLoadPanel()

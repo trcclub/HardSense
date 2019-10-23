@@ -66,8 +66,8 @@ void HS_NetPanel::DrawPanel(bool small)
 
 	textPrinter_Sprite->setTextDatum(TR_DATUM);
 	textPrinter_Sprite->setTextColor(theme.textColor, theme.panelBGColor);
-	Update_Net_UpLoadSpeed(0.0);
-	Update_Net_DownloadSpeed(0.0);
+	//Update_Net_UpLoadSpeed(0.0);
+	//Update_Net_DownloadSpeed(0.0);
 }
 
 void HS_NetPanel::Update_Net_UpLoadSpeed(double uSpeed)

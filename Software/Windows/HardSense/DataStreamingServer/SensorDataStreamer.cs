@@ -20,7 +20,7 @@ namespace HardSense.DataStreamingServer
         {
             sensorId = id;
             key = newKey;
-            lastValue = 0;
+            lastValue = -1;
         }
     }
     public class SensorDataStreamer

@@ -185,6 +185,7 @@
     <ClInclude Include="DisplayHandler\GUI\HS_ScreenBase.h" />
     <ClInclude Include="DisplayHandler\GUI\HS_SplashScreen.h" />
     <ClInclude Include="DisplayHandler\GUI\Panels\HS_GPU_TempAndFanChart_Panel.h" />
+    <ClInclude Include="DisplayHandler\GUI\Panels\HS_MemPanel.h" />
     <ClInclude Include="DisplayHandler\GUI\Panels\HS_NetPanel.h" />
     <ClInclude Include="DisplayHandler\GUI\Panels\HS_PanelBase.h" />
     <ClInclude Include="DisplayHandler\GUI\SplashScreen_Functions.h" />
@@ -206,6 +207,7 @@
     <ClCompile Include="DisplayHandler\GUI\HS_ScreenBase.cpp" />
     <ClCompile Include="DisplayHandler\GUI\HS_SplashScreen.cpp" />
     <ClCompile Include="DisplayHandler\GUI\Panels\HS_GPU_TempAndFanChart_Panel.cpp" />
+    <ClCompile Include="DisplayHandler\GUI\Panels\HS_MemPanel.cpp" />
     <ClCompile Include="DisplayHandler\GUI\Panels\HS_NetPanel.cpp" />
     <ClCompile Include="DisplayHandler\GUI\Panels\HS_PanelBase.cpp" />
     <ClCompile Include="DisplayHandler\GUI\Widgets\HS_Dial_Widget.cpp" />
