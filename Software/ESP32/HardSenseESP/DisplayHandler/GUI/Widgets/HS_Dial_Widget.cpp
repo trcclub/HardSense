@@ -1,16 +1,16 @@
 #include "HS_Dial_Widget.h"
 #include "../../../GlobalDefinitions.h"
 
-HS_Dial_Widget::HS_Dial_Widget(TFT_eSPI TFT)
+HS_Dial_Widget::HS_Dial_Widget(TFT_eSPI *TFT)
 {
 	//if (!TFT.fontsLoaded()) {
 	//	HS_Load_Fonts();
 	//}
 
-	dial = new TFT_eSprite(&TFT);
-	needle = new TFT_eSprite(&TFT);
+	dial = new TFT_eSprite(TFT);
+	needle = new TFT_eSprite(TFT);
 	// Create the dial Sprite
-	dial->setColorDepth(8);       // Size is odd (i.e. 91) so there is a centre pixel at 45,45
+	dial->setColorDepth(16);       // Size is odd (i.e. 91) so there is a centre pixel at 45,45
 	dial->createSprite(91, 91);   // 8bpp requires 91 * 91 = 8281 bytes
 	dial->setPivot(45, 45);       // set pivot in middle of dial Sprite
 	dial->loadFont(AA_FONT_14PT);
@@ -29,14 +29,14 @@ HS_Dial_Widget::~HS_Dial_Widget()
 	delete(needle);
 }
 
-void HS_Dial_Widget::DrawDialScale(TFT_eSPI TFT, int16_t start_angle, int16_t end_angle, int16_t increment, uint16_t ringColor)
+void HS_Dial_Widget::DrawDialScale(TFT_eSPI *TFT, int16_t start_angle, int16_t end_angle, int16_t increment, uint16_t ringColor)
 {
 	// Draw dial outline
 	dial->fillSprite(TFT_TRANSPARENT);           // Fill with transparent colour
 	dial->fillCircle(45, 45, 43, ringColor);  // Draw dial outer
 	
-	TFT_eSprite tickSprite = TFT_eSprite(&TFT);
-	tickSprite.setColorDepth(8);
+	TFT_eSprite tickSprite = TFT_eSprite(TFT);
+	tickSprite.setColorDepth(16);
 	tickSprite.createSprite(3, 3);     // 3 pixels wide, 3 high
 	tickSprite.fillSprite(TFT_WHITE);  // Fill with white
 	tickSprite.setPivot(1, 43);        //  Set pivot point x to the Sprite centre and y to marker radius
@@ -51,7 +51,7 @@ void HS_Dial_Widget::DrawDialScale(TFT_eSPI TFT, int16_t start_angle, int16_t en
 
 void HS_Dial_Widget::CreateNeedle()
 {
-	needle->setColorDepth(8);
+	needle->setColorDepth(16);
 	needle->createSprite(11, 49); // create the needle Sprite 11 pixels wide by 49 high
 
 	needle->fillSprite(TFT_BLACK);          // Fill with black

@@ -9,14 +9,16 @@ HS_GameScreen::HS_GameScreen(TFT_eSPI* newTFT) : HS_ScreenBase(newTFT)
 	gameScreenTheme.panelHeaderColor = PANEL_HCOLOR;
 	gameScreenTheme.textColor = TEXT_COLOR;
 
+	gpuCoreLoadWidget = new HS_Dial_Widget(TFT);
+
 	TFT->loadFont(AA_FONT_14PT);
 	TFT->fillScreen(TFT_BLACK);
 	
 	textPrinter_Sprite->setTextColor(TEXT_COLOR, PANEL_BGCOLOR);
 
-	Draw_Temp_Panel();
+	DrawTempPanel();
 	//Draw_Net_Panel();
-	Draw_Mem_Panel();
+	DrawMemPanel();
 	DrawGPUCoreLoadPanel();
 }
 
@@ -45,15 +47,10 @@ void HS_GameScreen::SetSensorList(void(*AddItemToOutputQueue_func)(char key, Str
 
 void HS_GameScreen::UpdateScreen(String value)
 {
-	//Serial.println("HS_GameScreen::UpdateScreen 1");
-
-	char key = value.charAt(0);
-	String subValue = value.substring(value.indexOf(",") + 1);
-
-	//Serial.println("HS_GameScreen::UpdateScreen 2");
-
-	double dValue = subValue.toDouble();
-	//Serial.println("HS_GameScreen::UpdateScreen 3");
+	String str(value);
+	char key = str.charAt(0);
+	String subStr = str.substring(str.indexOf(",") + 1);
+	double dValue = subStr.toDouble();
 
 	switch (key) {
 	case 'a':
@@ -109,13 +106,13 @@ void HS_GameScreen::HandleTouch(int x, int y)
 	
 }
 
-void HS_GameScreen::Draw_Temp_Panel()
+void HS_GameScreen::DrawTempPanel()
 {
 	GPU_TempAndFanChart = new HS_GPU_TempAndFanChart_Panel(TFT, HS_Coords(GPU_TEMP_PANEL_X, GPU_TEMP_PANEL_Y, 0, 0), gameScreenTheme);
 	GPU_TempAndFanChart->DrawPanel();
 }
 
-void HS_GameScreen::Draw_Mem_Panel()
+void HS_GameScreen::DrawMemPanel()
 {
 	memPanel = new HS_MemPanel(TFT, HS_Coords(RAM_PANEL_X, RAM_PANEL_Y, 0, 0), gameScreenTheme);
 	memPanel->DrawPanel(true);
@@ -123,9 +120,8 @@ void HS_GameScreen::Draw_Mem_Panel()
 
 void HS_GameScreen::DrawGPUCoreLoadPanel()
 {
-	DrawBoxWithBorderAndDropShadow(227, 51, 93, 99, gameScreenTheme.panelBorderColor, gameScreenTheme.panelBGColor, gameScreenTheme.panelDropShadowColor);
-	gpuCoreLoadWidget = new HS_Dial_Widget(*TFT);
-	gpuCoreLoadWidget->DrawDialScale(*TFT, SCREEN_GAME_LOAD_DIAL_MIN, SCREEN_GAME_LOAD_DIAL_MAX, 30, gpuCoreLoadDial_CurrentRingColor);
+	DrawBoxWithBorderAndDropShadow(HS_Coords(227, 51, 93, 99), gameScreenTheme);
+	gpuCoreLoadWidget->DrawDialScale(TFT, SCREEN_GAME_LOAD_DIAL_MIN, SCREEN_GAME_LOAD_DIAL_MAX, 24, gpuCoreLoadDial_CurrentRingColor);
 	UpdateGPUCoreLoad(0.0);
 }
 
@@ -153,7 +149,12 @@ void HS_GameScreen::UpdateGPUCoreLoad(double load)
 	if (ringColor != gpuCoreLoadDial_CurrentRingColor)
 	{
 		gpuCoreLoadDial_CurrentRingColor = ringColor;
-		gpuCoreLoadWidget->DrawDialScale(*TFT, SCREEN_GAME_LOAD_DIAL_MIN, SCREEN_GAME_LOAD_DIAL_MAX, 30, gpuCoreLoadDial_CurrentRingColor);
+		gpuCoreLoadWidget->DrawDialScale(TFT, SCREEN_GAME_LOAD_DIAL_MIN, SCREEN_GAME_LOAD_DIAL_MAX, 24, gpuCoreLoadDial_CurrentRingColor);
 	}
-	gpuCoreLoadWidget->PlotDial(SCREEN_GAME_GPU_LOAD_DIAL_X, SCREEN_GAME_GPU_LOAD_DIAL_Y, angle, "Load", load, gameScreenTheme.panelDropShadowColor);
+	gpuCoreLoadWidget->PlotDial(SCREEN_GAME_GPU_LOAD_DIAL_X, SCREEN_GAME_GPU_LOAD_DIAL_Y, angle, "Core", load, gameScreenTheme.panelDropShadowColor);
+}
+
+void HS_GameScreen::DrawClockSpeedPanel()
+{
+
 }

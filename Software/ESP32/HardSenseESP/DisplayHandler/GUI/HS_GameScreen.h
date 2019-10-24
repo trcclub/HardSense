@@ -40,18 +40,19 @@ private:
 	HS_Theme gameScreenTheme;
 
 	HS_GPU_TempAndFanChart_Panel* GPU_TempAndFanChart;
-	void Draw_Temp_Panel();
+	void DrawTempPanel();
 
 	HS_MemPanel* memPanel;
-	void Draw_Mem_Panel();
+	void DrawMemPanel();
 
 	HS_Dial_Widget* gpuCoreLoadWidget;
 	uint16_t gpuCoreLoadDial_CurrentRingColor;
 	void DrawGPUCoreLoadPanel();
 	void UpdateGPUCoreLoad(double load);
-
 	unsigned long lastUpdate = 0;
 	int gpuTempAndFanGraphUpdateTime = 500;
+
+	void DrawClockSpeedPanel();
 
 public:
 	HS_GameScreen(TFT_eSPI* newTFT);

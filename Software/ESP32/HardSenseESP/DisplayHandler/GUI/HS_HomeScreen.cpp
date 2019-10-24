@@ -10,8 +10,8 @@ HS_HomeScreen::HS_HomeScreen(TFT_eSPI *newTFT) : HS_ScreenBase(newTFT)
 
 	TFT->loadFont(AA_FONT_18PT);
 	Home_Screen_cpuLoadDial_CurrentRingColor = TFT_GREEN;
-	cpuLoadWidget = new HS_Dial_Widget(*TFT);
-	gpuLoadWidget = new HS_Dial_Widget(*TFT);
+	cpuLoadWidget = new HS_Dial_Widget(TFT);
+	gpuLoadWidget = new HS_Dial_Widget(TFT);
 	rtc.begin();
 
 	textPrinter_Sprite->setTextColor(homeScreenTheme.textColor, homeScreenTheme.panelBGColor);
@@ -127,7 +127,7 @@ void HS_HomeScreen::Draw_CPU_Panel()
 	int y = CPU_PANEL_Y;
 
 	TFT->loadFont(AA_FONT_18PT);
-	DrawBoxWithBorderAndDropShadow(x, y, 207, 95, homeScreenTheme.panelBorderColor,homeScreenTheme.panelBGColor, homeScreenTheme.panelDropShadowColor);
+	DrawBoxWithBorderAndDropShadow(HS_Coords(CPU_PANEL_X, CPU_PANEL_Y, 207, 95),homeScreenTheme);
 	TFT->fillRect(x+2, y+2, 18, 91, homeScreenTheme.panelHeaderColor);
 	TFT->drawFastVLine(x+19, y + 2, 91, homeScreenTheme.panelBorderColor);
 	TFT->drawFastVLine(x + 20, y + 2, 91, homeScreenTheme.panelBorderColor);
@@ -140,19 +140,19 @@ void HS_HomeScreen::Draw_CPU_Panel()
 
 
 	//CPU Package Load Dial Gauge
-	cpuLoadWidget->DrawDialScale(*TFT, SCREEN_HOME_LOAD_DIAL_MIN, SCREEN_HOME_LOAD_DIAL_MAX, 30, Home_Screen_cpuLoadDial_CurrentRingColor);
+	cpuLoadWidget->DrawDialScale(TFT, SCREEN_HOME_LOAD_DIAL_MIN, SCREEN_HOME_LOAD_DIAL_MAX, 30, Home_Screen_cpuLoadDial_CurrentRingColor);
 	Update_CPU_Panel_Load(0.0);
 
 	//CPU Package Temperature
-	DrawBoxWithBorderAndDropShadow(x + 123, y + 4,67,26, homeScreenTheme.panelBorderColor, homeScreenTheme.panelBGColor, homeScreenTheme.panelDropShadowColor);
+	DrawBoxWithBorderAndDropShadow(HS_Coords(CPU_PANEL_X + 123, CPU_PANEL_Y + 4, 37,26), homeScreenTheme);
 	TFT->setTextColor(homeScreenTheme.textColor, homeScreenTheme.panelBGColor);
 	TFT->setTextDatum(TR_DATUM);
 
 	// CPU Power
-	DrawBoxWithBorderAndDropShadow(x + 118, y + 34, 77, 26, homeScreenTheme.panelBorderColor, homeScreenTheme.panelBGColor, homeScreenTheme.panelDropShadowColor);
+	DrawBoxWithBorderAndDropShadow(HS_Coords(CPU_PANEL_X + 118, CPU_PANEL_Y + 34, 77, 26), homeScreenTheme);
 
 	// CPU Clock Speed
-	DrawBoxWithBorderAndDropShadow(x + 111, y + 64, 93, 26, homeScreenTheme.panelBorderColor, homeScreenTheme.panelBGColor, homeScreenTheme.panelDropShadowColor);
+	DrawBoxWithBorderAndDropShadow(HS_Coords(CPU_PANEL_X + 111, CPU_PANEL_Y + 64, 93,26), homeScreenTheme);
 
 	Update_CPU_Panel_Temperature(0.0);
 	Update_CPU_Panel_Power(00.0);
@@ -192,7 +192,7 @@ void HS_HomeScreen::Update_CPU_Panel_Load(double percentage)
 	if (ringColor != Home_Screen_cpuLoadDial_CurrentRingColor)
 	{
 		Home_Screen_cpuLoadDial_CurrentRingColor = ringColor;
-		cpuLoadWidget->DrawDialScale(*TFT, SCREEN_HOME_LOAD_DIAL_MIN, SCREEN_HOME_LOAD_DIAL_MAX, 30, Home_Screen_cpuLoadDial_CurrentRingColor);
+		cpuLoadWidget->DrawDialScale(TFT, SCREEN_HOME_LOAD_DIAL_MIN, SCREEN_HOME_LOAD_DIAL_MAX, 30, Home_Screen_cpuLoadDial_CurrentRingColor);
 	}
 
 	cpuLoadWidget->PlotDial(SCREEN_HOME_CPU_LOAD_DIAL_X, SCREEN_HOME_CPU_LOAD_DIAL_Y, angle, "Load", percentage, homeScreenTheme.panelDropShadowColor);
@@ -241,8 +241,9 @@ void HS_HomeScreen::Draw_GPU_Panel()
 {
 	int x = GPU_PANEL_X;
 	int y = GPU_PANEL_Y;
+
 	TFT->loadFont(AA_FONT_18PT);
-	DrawBoxWithBorderAndDropShadow(x, y, 207, 95, homeScreenTheme.panelBorderColor, homeScreenTheme.panelBGColor, homeScreenTheme.panelDropShadowColor);
+	DrawBoxWithBorderAndDropShadow(HS_Coords(GPU_PANEL_X, GPU_PANEL_Y, 207, 95), homeScreenTheme);
 	TFT->fillRect(x+2, y + 2, 18, 91, homeScreenTheme.panelHeaderColor);
 	TFT->drawFastVLine(x + 19, y + 2, 91, homeScreenTheme.panelBorderColor);
 	TFT->drawFastVLine(x + 20, y + 2, 91, homeScreenTheme.panelBorderColor);
@@ -253,20 +254,18 @@ void HS_HomeScreen::Draw_GPU_Panel()
 	TFT->drawString("P", x + 9, y + 47);
 	TFT->drawString("U", x + 8, y + 69);
 
-
-
 	//GPU Package Load Dial Gauge
-	gpuLoadWidget->DrawDialScale(*TFT, SCREEN_HOME_LOAD_DIAL_MIN, SCREEN_HOME_LOAD_DIAL_MAX, 30, Home_Screen_gpuLoadDial_CurrentRingColor);
+	gpuLoadWidget->DrawDialScale(TFT, SCREEN_HOME_LOAD_DIAL_MIN, SCREEN_HOME_LOAD_DIAL_MAX, 30, Home_Screen_gpuLoadDial_CurrentRingColor);
 	Update_GPU_Panel_Load(0.0);
 
 	//GPU Package Temperature
-	DrawBoxWithBorderAndDropShadow(x + 123, y + 4, 67, 26, homeScreenTheme.panelBorderColor, homeScreenTheme.panelBGColor, homeScreenTheme.panelDropShadowColor);
+	DrawBoxWithBorderAndDropShadow(HS_Coords(GPU_PANEL_X + 123, GPU_PANEL_Y + 4, 37, 26), homeScreenTheme);
 
 	// Fan load
-	DrawBoxWithBorderAndDropShadow(x + 123, y + 34, 67, 26, homeScreenTheme.panelBorderColor, homeScreenTheme.panelBGColor, homeScreenTheme.panelDropShadowColor);
+	DrawBoxWithBorderAndDropShadow(HS_Coords(GPU_PANEL_X + 123, GPU_PANEL_Y + 4, 67, 26), homeScreenTheme);
 
 	// GPU Clock Speed
-	DrawBoxWithBorderAndDropShadow(x + 111, y + 64, 93, 26, homeScreenTheme.panelBorderColor, homeScreenTheme.panelBGColor, homeScreenTheme.panelDropShadowColor);
+	DrawBoxWithBorderAndDropShadow(HS_Coords(GPU_PANEL_X + 111, GPU_PANEL_Y + 64, 93, 26), homeScreenTheme);
 
 	Update_GPU_Panel_Temperature(00.0);
 	Update_GPU_Panel_FanControl(00.0);
@@ -306,7 +305,7 @@ void HS_HomeScreen::Update_GPU_Panel_Load(double percentage)
 	if (ringColor != Home_Screen_gpuLoadDial_CurrentRingColor)
 	{
 		Home_Screen_gpuLoadDial_CurrentRingColor = ringColor;
-		gpuLoadWidget->DrawDialScale(*TFT, SCREEN_HOME_LOAD_DIAL_MIN, SCREEN_HOME_LOAD_DIAL_MAX, 30, Home_Screen_gpuLoadDial_CurrentRingColor);
+		gpuLoadWidget->DrawDialScale(TFT, SCREEN_HOME_LOAD_DIAL_MIN, SCREEN_HOME_LOAD_DIAL_MAX, 30, Home_Screen_gpuLoadDial_CurrentRingColor);
 	}
 	gpuLoadWidget->PlotDial(SCREEN_HOME_GPU_LOAD_DIAL_X, SCREEN_HOME_GPU_LOAD_DIAL_Y, angle, "Load", percentage, homeScreenTheme.panelDropShadowColor);
 }
@@ -382,7 +381,7 @@ void HS_HomeScreen::Draw_HDD_Panel()
 	int multiplier = 0;
 
 	// C:
-	DrawBoxWithBorderAndDropShadow(x, y, 80, 50, homeScreenTheme.panelBorderColor, homeScreenTheme.panelBGColor, homeScreenTheme.panelDropShadowColor);
+	DrawBoxWithBorderAndDropShadow(HS_Coords(x, y, 80, 50), homeScreenTheme);
 	TFT->fillRect(x+3, y+3, 75, 22, homeScreenTheme.panelHeaderColor);
 	TFT->drawString("C:", x+42, y+6);
 	TFT->drawFastHLine(x, y+25, 80, homeScreenTheme.panelBorderColor);
@@ -390,7 +389,7 @@ void HS_HomeScreen::Draw_HDD_Panel()
 
 	// E:
 	x = xStart + xAdd;
-	DrawBoxWithBorderAndDropShadow(x, y, 80, 50, homeScreenTheme.panelBorderColor, homeScreenTheme.panelBGColor, homeScreenTheme.panelDropShadowColor);
+	DrawBoxWithBorderAndDropShadow(HS_Coords(x, y, 80, 50), homeScreenTheme);
 	TFT->fillRect(x + 3, y + 3, 75, 22, homeScreenTheme.panelHeaderColor);
 	TFT->drawString("E:", x + 42, y + 6);
 	TFT->drawFastHLine(x, y + 25, 80, homeScreenTheme.panelBorderColor);
@@ -398,7 +397,7 @@ void HS_HomeScreen::Draw_HDD_Panel()
 
 	// F:
 	x = xStart + (xAdd*2);
-	DrawBoxWithBorderAndDropShadow(x, y, 80, 50, homeScreenTheme.panelBorderColor, homeScreenTheme.panelBGColor, homeScreenTheme.panelDropShadowColor);
+	DrawBoxWithBorderAndDropShadow(HS_Coords(x, y, 80, 50), homeScreenTheme);
 	TFT->fillRect(x + 3, y + 3, 75, 22, homeScreenTheme.panelHeaderColor);
 	TFT->drawString("F:", x + 42, y + 6);
 	TFT->drawFastHLine(x, y + 25, 80, homeScreenTheme.panelBorderColor);
@@ -406,7 +405,7 @@ void HS_HomeScreen::Draw_HDD_Panel()
 
 	// G:
 	x = xStart + (xAdd*3);
-	DrawBoxWithBorderAndDropShadow(x, y, 80, 50, homeScreenTheme.panelBorderColor, homeScreenTheme.panelBGColor, homeScreenTheme.panelDropShadowColor);
+	DrawBoxWithBorderAndDropShadow(HS_Coords(x, y, 80, 50), homeScreenTheme);
 	TFT->fillRect(x + 3, y + 3, 75, 22, homeScreenTheme.panelHeaderColor);
 	TFT->drawString("G:", x + 42, y + 6);
 	TFT->drawFastHLine(x, y + 25, 80, homeScreenTheme.panelBorderColor);
@@ -471,11 +470,8 @@ void HS_HomeScreen::Update_HDD_Useage(char key, double percent)
 
 void HS_HomeScreen::Draw_Time_Panel()
 {
-	int x = TIME_PANEL_X;
-	int y = TIME_PANEL_Y;
-
 	TFT->loadFont(AA_FONT_18PT);
-	DrawBoxWithBorderAndDropShadow(x, y, 113, 52, homeScreenTheme.panelBorderColor, homeScreenTheme.panelBGColor, homeScreenTheme.panelDropShadowColor);
+	DrawBoxWithBorderAndDropShadow(HS_Coords(TIME_PANEL_X, TIME_PANEL_Y, 113, 52), homeScreenTheme);
 	Update_Time();
 }
 

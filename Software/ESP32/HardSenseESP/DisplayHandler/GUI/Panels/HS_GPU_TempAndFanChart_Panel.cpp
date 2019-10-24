@@ -103,7 +103,6 @@ void HS_GPU_TempAndFanChart_Panel::DrawPanel()
 	textPrinter_Sprite->setTextColor(TFT_YELLOW, theme.panelBGColor);
 	textPrinter_Sprite->drawString("Temp", 0, 0);
 	textPrinter_Sprite->pushSprite(coords.x + 115, coords.y + 130, TFT_TRANSPARENT);
-
 	textPrinter_Sprite->deleteSprite();
 
 

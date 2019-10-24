@@ -36,6 +36,18 @@ void HS_ScreenBase::SetSensorList(void(*AddItemToOutputQueue_func)(char key, cha
 
 }
 
+
+void HS_ScreenBase::DrawBoxWithBorderAndDropShadow(HS_Coords hs_coords, HS_Theme hs_theme)
+{
+	TFT->fillRect(hs_coords.x, hs_coords.y, hs_coords.w - 1, hs_coords.h - 1, hs_theme.panelBorderColor);
+	TFT->fillRect(hs_coords.x + 2, hs_coords.y + 2, hs_coords.w - 5, hs_coords.h - 5, hs_theme.panelBGColor);
+
+	TFT->drawFastHLine(hs_coords.x + 3, hs_coords.y + 3, hs_coords.w - 6, hs_theme.panelDropShadowColor);
+	TFT->drawFastVLine(hs_coords.x + 2, hs_coords.y + 3, hs_coords.h - 6, hs_theme.panelDropShadowColor);
+	TFT->drawFastHLine(hs_coords.x, hs_coords.y + hs_coords.h - 1, hs_coords.w, hs_theme.panelDropShadowColor);
+	TFT->drawFastVLine(hs_coords.x + hs_coords.w - 1, hs_coords.y, hs_coords.h, hs_theme.panelDropShadowColor);
+}
+/*
 void HS_ScreenBase::DrawBoxWithBorderAndDropShadow(int32_t x, int32_t y, int32_t w, int32_t h, int32_t borderColor, int32_t boxColor, int32_t dropShadowColor)
 {			   	//0, 0, 200, 94
 	TFT->fillRect(x, y, w-1, h-1, borderColor);
@@ -46,7 +58,7 @@ void HS_ScreenBase::DrawBoxWithBorderAndDropShadow(int32_t x, int32_t y, int32_t
 	TFT->drawFastHLine(x, y+h-1, w, dropShadowColor);
 	TFT->drawFastVLine(x+w-1, y, h, dropShadowColor);
 }
-
+*/
 void HS_ScreenBase::HandleTouch(int x, int y)
 {
 
