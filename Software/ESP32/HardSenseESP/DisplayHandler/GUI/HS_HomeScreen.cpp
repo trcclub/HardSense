@@ -144,7 +144,7 @@ void HS_HomeScreen::Draw_CPU_Panel()
 	Update_CPU_Panel_Load(0.0);
 
 	//CPU Package Temperature
-	DrawBoxWithBorderAndDropShadow(HS_Coords(CPU_PANEL_X + 123, CPU_PANEL_Y + 4, 37,26), homeScreenTheme);
+	DrawBoxWithBorderAndDropShadow(HS_Coords(CPU_PANEL_X + 123, CPU_PANEL_Y + 4, 67,26), homeScreenTheme);
 	TFT->setTextColor(homeScreenTheme.textColor, homeScreenTheme.panelBGColor);
 	TFT->setTextDatum(TR_DATUM);
 
@@ -259,10 +259,10 @@ void HS_HomeScreen::Draw_GPU_Panel()
 	Update_GPU_Panel_Load(0.0);
 
 	//GPU Package Temperature
-	DrawBoxWithBorderAndDropShadow(HS_Coords(GPU_PANEL_X + 123, GPU_PANEL_Y + 4, 37, 26), homeScreenTheme);
+	DrawBoxWithBorderAndDropShadow(HS_Coords(GPU_PANEL_X + 123, GPU_PANEL_Y + 4, 67, 26), homeScreenTheme);
 
 	// Fan load
-	DrawBoxWithBorderAndDropShadow(HS_Coords(GPU_PANEL_X + 123, GPU_PANEL_Y + 4, 67, 26), homeScreenTheme);
+	DrawBoxWithBorderAndDropShadow(HS_Coords(GPU_PANEL_X + 123, GPU_PANEL_Y + 34, 67, 26), homeScreenTheme);
 
 	// GPU Clock Speed
 	DrawBoxWithBorderAndDropShadow(HS_Coords(GPU_PANEL_X + 111, GPU_PANEL_Y + 64, 93, 26), homeScreenTheme);

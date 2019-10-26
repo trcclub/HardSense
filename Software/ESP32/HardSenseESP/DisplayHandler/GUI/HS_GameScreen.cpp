@@ -12,14 +12,15 @@ HS_GameScreen::HS_GameScreen(TFT_eSPI* newTFT) : HS_ScreenBase(newTFT)
 	gpuCoreLoadWidget = new HS_Dial_Widget(TFT);
 
 	TFT->loadFont(AA_FONT_14PT);
-	TFT->fillScreen(TFT_BLACK);
+	TFT->fillScreen(TFT_WHITE);
 	
 	textPrinter_Sprite->setTextColor(TEXT_COLOR, PANEL_BGCOLOR);
-
+	textPrinter_Sprite->unloadFont();
+	textPrinter_Sprite->loadFont(AA_FONT_14PT);
 	DrawTempPanel();
-	//Draw_Net_Panel();
 	DrawMemPanel();
 	DrawGPUCoreLoadPanel();
+	DrawClockSpeedPanel();
 }
 
 HS_GameScreen::~HS_GameScreen()
@@ -27,13 +28,11 @@ HS_GameScreen::~HS_GameScreen()
 	delete(gpuCoreLoadWidget);
 	delete(GPU_TempAndFanChart);
 	delete(memPanel);
-	//delete(netPanel);
 }
 
 
 void HS_GameScreen::SetSensorList(void(*AddItemToOutputQueue_func)(char key, String value))
 {
-
 	// a = GPU Core Temperature
 	// b = GPU Fan Load
 	// c = GPU Core Load
@@ -43,6 +42,11 @@ void HS_GameScreen::SetSensorList(void(*AddItemToOutputQueue_func)(char key, Str
 	// e = GPU Memory Used
 	// f = GPU Memory Free
 	AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/nvidiagpu/0/load/3,d|/nvidiagpu/0/smalldata/2,e|/nvidiagpu/0/smalldata/1,f");
+
+	// g = GPU Core Clock
+	// h = GPU Memory Clock
+	// i = GPU Shader Clock
+	AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/nvidiagpu/0/clock/0,g|/nvidiagpu/0/clock/1,h|/nvidiagpu/0/clock/2,i");
 }
 
 void HS_GameScreen::UpdateScreen(String value)
@@ -72,18 +76,17 @@ void HS_GameScreen::UpdateScreen(String value)
 		memPanel->Update_Mem_Free(dValue / 1000);
 		break;
 	case 'g':
+		UpdateGPUCoreClock(dValue);
 		break;
 	case 'h':
+		UpdateGPUMemoryClock(dValue);
 		break;
 	case 'i':
-		break;
-	case 'j':
+		UpdateGPUShaderClock(dValue);
 		break;
 	default:
 		break;
 	}
-
-	//Serial.println("HS_GameScreen::UpdateScreen 6");
 }
 
 void HS_GameScreen::UpdateScreenOnInterval()
@@ -103,7 +106,6 @@ void HS_GameScreen::HandleTouch(int x, int y)
 		sprintf(buf, "%c", ScreenTypes::Home);
 		AddItemToDisplayQueue(DisplayCommands::ChangeScreen, buf);
 	}
-	
 }
 
 void HS_GameScreen::DrawTempPanel()
@@ -120,7 +122,7 @@ void HS_GameScreen::DrawMemPanel()
 
 void HS_GameScreen::DrawGPUCoreLoadPanel()
 {
-	DrawBoxWithBorderAndDropShadow(HS_Coords(227, 51, 93, 99), gameScreenTheme);
+	DrawBoxWithBorderAndDropShadow(HS_Coords(GPU_LOAD_PANEL_X, GPU_LOAD_PANEL_Y, 93, 99), gameScreenTheme);
 	gpuCoreLoadWidget->DrawDialScale(TFT, SCREEN_GAME_LOAD_DIAL_MIN, SCREEN_GAME_LOAD_DIAL_MAX, 24, gpuCoreLoadDial_CurrentRingColor);
 	UpdateGPUCoreLoad(0.0);
 }
@@ -156,5 +158,66 @@ void HS_GameScreen::UpdateGPUCoreLoad(double load)
 
 void HS_GameScreen::DrawClockSpeedPanel()
 {
+	HS_Coords coords(GPU_CLOCKS_PANEL_X, GPU_CLOCKS_PANEL_Y, 162, 90);
+
+	DrawBoxWithBorderAndDropShadow(coords, gameScreenTheme);
+	TFT->fillRect(coords.x + 3, coords.y + 3, 17, coords.h - 6, gameScreenTheme.panelHeaderColor);
+	TFT->drawFastVLine(coords.x + 20, coords.y + 3, coords.h - 6, gameScreenTheme.panelBorderColor);
+	TFT->drawFastVLine(coords.x + 21, coords.y + 3, coords.h - 6, gameScreenTheme.panelBorderColor);
+
+	TFT->setTextDatum(TL_DATUM);
+	TFT->setTextColor(gameScreenTheme.textColor, gameScreenTheme.panelHeaderColor);
+
+	TFT->drawString("C", coords.x + 6, coords.y + 7);
+	TFT->drawString("l", coords.x + 7, coords.y + 20);
+	TFT->drawString("o", coords.x + 6, coords.y + 33);
+	TFT->drawString("c", coords.x + 6, coords.y + 46);
+	TFT->drawString("k", coords.x + 6, coords.y + 59);
+	TFT->drawString("s", coords.x + 6, coords.y + 72);
+
+	TFT->setTextColor(gameScreenTheme.textColor, gameScreenTheme.panelBGColor);
+	TFT->drawString("Core", coords.x + 25, coords.y + 9);
+	TFT->drawString("Memory", coords.x + 25, coords.y + 38);
+	TFT->drawString("Shader", coords.x + 25, coords.y + 67);
+
+	DrawBoxWithBorderAndDropShadow(HS_Coords(coords.x + 80, coords.y + 6, coords.w - 86, 20), gameScreenTheme);
+	DrawBoxWithBorderAndDropShadow(HS_Coords(coords.x + 80, coords.y + 35, coords.w - 86, 20), gameScreenTheme);
+	DrawBoxWithBorderAndDropShadow(HS_Coords(coords.x + 80, coords.y + 64, coords.w - 86, 20), gameScreenTheme);
+
+	UpdateGPUClockField(0, GPU_CLOCKS_PANEL_CORE_CLOCK_YOFFSET);
+	UpdateGPUClockField(0, GPU_CLOCKS_PANEL_MEMORY_CLOCK_YOFFSET);
+	UpdateGPUClockField(0, GPU_CLOCKS_PANEL_SHADER_CLOCK_YOFFSET);
+}
+
+
+void HS_GameScreen::UpdateGPUCoreClock(double clock)
+{
+	UpdateGPUClockField(clock, GPU_CLOCKS_PANEL_CORE_CLOCK_YOFFSET);
+}
+
+void HS_GameScreen::UpdateGPUMemoryClock(double clock)
+{
+	UpdateGPUClockField(clock, GPU_CLOCKS_PANEL_MEMORY_CLOCK_YOFFSET);
+}
+
+void HS_GameScreen::UpdateGPUShaderClock(double clock)
+{
+
+	UpdateGPUClockField(clock, GPU_CLOCKS_PANEL_SHADER_CLOCK_YOFFSET);
+}
+
+void HS_GameScreen::UpdateGPUClockField(double clock, int yOffset)
+{
+	int x = GPU_CLOCKS_PANEL_X;
+	int y = GPU_CLOCKS_PANEL_Y;
+	
+	textPrinter_Sprite->setTextDatum(TR_DATUM);
+	textPrinter_Sprite->createSprite(67, 10);
+	textPrinter_Sprite->fillSprite(gameScreenTheme.panelBGColor);
+	char buf[12];
+	sprintf(buf, "%.0f MHz", clock);
+	textPrinter_Sprite->drawString(String(buf), 80, 0);
+	textPrinter_Sprite->pushSprite(x + 83, y + yOffset);
+	textPrinter_Sprite->deleteSprite();
 
 }

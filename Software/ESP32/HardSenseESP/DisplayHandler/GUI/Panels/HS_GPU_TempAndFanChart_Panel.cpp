@@ -33,7 +33,6 @@ HS_GPU_TempAndFanChart_Panel::~HS_GPU_TempAndFanChart_Panel()
 
 void HS_GPU_TempAndFanChart_Panel::DrawPanel()
 {
-	graphGridSprite = new TFT_eSprite(TFT);
 	coords.w = 227;
 	coords.h = 150;
 	int textSpriteH = 10;
