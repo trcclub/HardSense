@@ -43,7 +43,7 @@ void setup() {
 	xTaskCreatePinnedToCore(
 		TFT_Core_Proc,                  /* pvTaskCode */
 		"DisplayHandlerTask",            /* pcName */
-		4000,                   /* usStackDepth */
+		6000,                   /* usStackDepth */
 		NULL,                   /* pvParameters */
 		1,                      /* uxPriority */
 		&Display_Core_Task_Handle,                 /* pxCreatedTask */

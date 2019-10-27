@@ -107,6 +107,10 @@ void HS_GPU_TempAndFanChart_Panel::DrawPanel()
 
 	gpuTempSprite->createSprite(178, 100);
 	gpuTempSprite->fillScreen(TFT_TRANSPARENT);
+	
+	UpdateGPUTemp(0.0);
+	UpdateGPUFanLoad(0.0);
+	UpdateGraph();
 }
 
 void HS_GPU_TempAndFanChart_Panel::UpdateGPUTemp(double temp)
