@@ -16,7 +16,7 @@ TaskHandle_t Display_Core_Task_Handle;
 TaskHandle_t Serial_Core_Task_Handle;
 
 DataQueue<QUEUE_ITEM> displayQueue(20);
-DataQueue<QUEUE_ITEM> outputQueue(5);
+DataQueue<QUEUE_ITEM> outputQueue(10);
 
 DisplayHandler displayHandler;
 HSSerial hsSerial;
@@ -91,7 +91,6 @@ void loop()
 
 	hsSerial.HandleInput();
 	hsSerial.HandleOutput();
-	yield();
 	delay(20);
 }
 
@@ -112,7 +111,6 @@ void Serial_Core_Proc(void* parameter)
 
 		hsSerial.HandleInput();
 		hsSerial.HandleOutput();
-		yield();
 		delay(20);
 	}
 }

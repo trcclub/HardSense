@@ -33,6 +33,8 @@ private:
 	unsigned long lastTouch = 0;
 	void SetTouch();
 
+	void UnloadOldDataFromDisplayQueue();
+
 public:
 	DisplayHandler();
 	~DisplayHandler();

@@ -42,6 +42,9 @@ void HS_HomeScreen::UpdateScreen(String value)
 	double dValue = subStr.toDouble();
 
 	switch (key) {
+	case 'a':
+		Update_CPU_Panel_Load(dValue);
+		break;
 	case 'b':
 		Update_CPU_Panel_Temperature(dValue);
 		break;
@@ -50,6 +53,9 @@ void HS_HomeScreen::UpdateScreen(String value)
 		break;
 	case 'd':
 		Update_CPU_Panel_Power(dValue);
+		break;
+	case 'e':
+		Update_GPU_Panel_Load(dValue);
 		break;
 	case 'f':
 		Update_GPU_Panel_Temperature(dValue);
@@ -79,12 +85,6 @@ void HS_HomeScreen::UpdateScreen(String value)
 	case 'p':
 	case 'q':
 		Update_HDD_Useage(key,dValue);
-		break;
-	case 'a':
-		Update_CPU_Panel_Load(dValue);
-		break;
-	case 'e':
-		Update_GPU_Panel_Load(dValue);
 		break;
 	default:
 		break;

@@ -43,7 +43,7 @@ void HS_Dial_Widget::DrawDialScale(TFT_eSPI *TFT, int16_t start_angle, int16_t e
 
 	for (int16_t angle = start_angle; angle <= end_angle; angle += increment) {
 		tickSprite.pushRotated(dial, angle); // Sprite is used to make scale markers
-		yield(); // Avoid a watchdog time-out
+		//yield(); 
 	}
 	tickSprite.deleteSprite();
 }

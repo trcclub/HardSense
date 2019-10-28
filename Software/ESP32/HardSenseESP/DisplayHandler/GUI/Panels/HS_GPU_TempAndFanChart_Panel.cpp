@@ -66,7 +66,7 @@ void HS_GPU_TempAndFanChart_Panel::DrawPanel()
 	for (int i = 20; i < 180; i += 20) {
 		graphGridSprite->drawFastVLine(i + 19, 0, 100, theme.panelBorderColor);
 	}
-	graphGridSprite->loadFont(AA_FONT_12PT);
+	graphGridSprite->loadFont(AA_FONT_10PT);
 	graphGridSprite->setTextColor(TFT_YELLOW, theme.panelBGColor);
 	graphGridSprite->setTextDatum(TL_DATUM);
 	graphGridSprite->drawString("100", 201, 0);
@@ -106,6 +106,7 @@ void HS_GPU_TempAndFanChart_Panel::DrawPanel()
 
 
 	gpuTempSprite->createSprite(178, 100);
+	gpuTempSprite->setTextWrap(false);
 	gpuTempSprite->fillScreen(TFT_TRANSPARENT);
 	
 	UpdateGPUTemp(0.0);

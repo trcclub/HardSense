@@ -34,6 +34,7 @@ void DisplayHandler::Init(DataQueue<QUEUE_ITEM>* newDisplayQueue, portMUX_TYPE& 
 
 void DisplayHandler::Run()
 {
+	int counter = 0;
 	unsigned long last = millis();
 	uint16_t x, y;
 	while (true)
@@ -54,16 +55,18 @@ void DisplayHandler::Run()
 			UpdateCurentScreenOnInterval();
 		}
 
-		/*
+		
 		if (millis() - last > 1000)
 		{
+			counter++;
+			Serial.print(counter);
+			Serial.print(": ");
 			Serial.println(ESP.getFreeHeap());
 			last = millis();
 		}
-		*/
+		
 
 		//HandleButtons();
-		yield();
 		delay(20);
 
 	}
@@ -77,6 +80,7 @@ void DisplayHandler::LoadNewScreen(char screenID)
 		UpdateCurentScreen = NULL;
 		UpdateCurentScreenOnInterval = NULL;
 		HandleTouchPoint = NULL;
+		UnloadOldDataFromDisplayQueue();
 	}
 	AddItemToOutputQueue(TRANS__KEY::CLEAR_SENSOR_LIST, "");
 	char key = screenID;
@@ -150,6 +154,16 @@ void DisplayHandler::DispatchCommand()
 	}
 }
 
+void DisplayHandler::UnloadOldDataFromDisplayQueue()
+{
+	while (!displayDataQueue->isEmpty())
+	{
+		portENTER_CRITICAL(&displayQueueMux);
+		displayDataQueue->dequeue();
+		portEXIT_CRITICAL(&displayQueueMux);
+	}
+}
+
 void DisplayHandler::SetTouch()
 {
 	uint16_t calibrationData[5];
@@ -187,5 +201,4 @@ void DisplayHandler::SetTouch()
 			Serial.println("'");
 		}
 	}
-
 }

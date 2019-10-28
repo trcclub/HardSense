@@ -118,7 +118,6 @@ void HSSerial::HandleBluetoothConnection()
 
 			HandleOutput();
 
-			yield();
 			delay(20);
 		}
 	}
@@ -134,7 +133,7 @@ bool HSSerial::WaitForBTConnection()
 		{
 			break;
 		}
-		yield();
+
 		delay(20);
 	}
 }
@@ -384,7 +383,7 @@ void HSSerial::HandleInput() {
 	if (!(this->*InputAvailable)())
 		return;
 
-	while ((this->*InputAvailable)() && (this->*ReadInputByte)() != TRANS__KEY::STX) { /*yield();*/ }
+	while ((this->*InputAvailable)() && (this->*ReadInputByte)() != TRANS__KEY::STX) {  }
 
 	ParseInput((this->*ReadInputStringUntil)(TRANS__KEY::ETX));
 }
@@ -404,7 +403,7 @@ void HSSerial::ParseInput(String input)
 
 		start = currIndex + 1;
 		currIndex = input.indexOf(TRANS__KEY::PACKET_END, start);
-		yield(); // Avoid a watchdog time-out
+		//yield(); // Avoid a watchdog time-out
 	}
 	//Serial.println("ParseInput 2");
 }
