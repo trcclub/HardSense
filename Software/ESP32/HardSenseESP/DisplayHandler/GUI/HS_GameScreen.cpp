@@ -12,7 +12,7 @@ HS_GameScreen::HS_GameScreen(TFT_eSPI* newTFT) : HS_ScreenBase(newTFT)
 	gpuCoreLoadWidget = new HS_Dial_Widget(TFT);
 
 	TFT->loadFont(AA_FONT_14PT);
-	TFT->fillScreen(TFT_WHITE);
+	TFT->fillScreen(TFT_BLACK);
 	
 	textPrinter_Sprite->setTextColor(TEXT_COLOR, PANEL_BGCOLOR);
 	textPrinter_Sprite->unloadFont();
