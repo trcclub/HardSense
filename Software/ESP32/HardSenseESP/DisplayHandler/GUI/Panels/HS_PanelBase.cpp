@@ -21,7 +21,6 @@ HS_PanelBase::HS_PanelBase(TFT_eSPI* newTFT, HS_Coords newCoords, HS_Theme newTh
 
 HS_PanelBase::~HS_PanelBase()
 {
-	TFT->unloadFont();
 	textPrinter_Sprite->unloadFont();
 	textPrinter_Sprite->deleteSprite();
 	delete(textPrinter_Sprite);

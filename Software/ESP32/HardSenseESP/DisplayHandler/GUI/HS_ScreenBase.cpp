@@ -19,11 +19,11 @@ HS_ScreenBase::HS_ScreenBase(TFT_eSPI *newTFT)
 
 HS_ScreenBase::~HS_ScreenBase()
 {
-	TFT->unloadFont();
-
 	textPrinter_Sprite->unloadFont();
 	textPrinter_Sprite->deleteSprite();
 	delete(textPrinter_Sprite);
+	AddItemToDisplayQueue = NULL;
+	TFT = NULL;
 }
 
 void HS_ScreenBase::UpdateScreen(String value)

@@ -119,12 +119,12 @@ void HS_GPU_TempAndFanChart_Panel::UpdateGPUTemp(double temp)
 	temperature = temp;
 
 	textPrinter_Sprite->createSprite(45, 10);
-	textPrinter_Sprite->fillSprite(TFT_TRANSPARENT);
+	textPrinter_Sprite->fillSprite(theme.panelBGColor);
 	textPrinter_Sprite->setTextColor(TFT_YELLOW, theme.panelBGColor);
 	char buf[12];
 	sprintf(buf, "%.1f %s", temp,degreesC_char);
 	textPrinter_Sprite->drawString(String(buf), 40, 0);
-	textPrinter_Sprite->pushSprite(coords.x + 155, coords.y + 131, TFT_TRANSPARENT);
+	textPrinter_Sprite->pushSprite(coords.x + 155, coords.y + 131);
 	textPrinter_Sprite->deleteSprite();
 }
 
@@ -133,12 +133,12 @@ void HS_GPU_TempAndFanChart_Panel::UpdateGPUFanLoad(double load)
 	fanLoad = load;
 
 	textPrinter_Sprite->createSprite(40, 10);
-	textPrinter_Sprite->fillSprite(TFT_TRANSPARENT);
+	textPrinter_Sprite->fillSprite(theme.panelBGColor);
 	textPrinter_Sprite->setTextColor(TFT_GREEN, theme.panelBGColor);
 	char buf[12];
 	sprintf(buf, "%.1f %%", load);
 	textPrinter_Sprite->drawString(String(buf), 40, 0);
-	textPrinter_Sprite->pushSprite(coords.x + 57, coords.y + 131, TFT_TRANSPARENT);
+	textPrinter_Sprite->pushSprite(coords.x + 57, coords.y + 131);
 	textPrinter_Sprite->deleteSprite();
 }
 

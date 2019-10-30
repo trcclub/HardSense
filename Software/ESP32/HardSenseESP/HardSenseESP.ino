@@ -13,7 +13,6 @@
 #define HEARTBEAT_TIMER_POLL_TIME 2000000
 
 TaskHandle_t Display_Core_Task_Handle;
-TaskHandle_t Serial_Core_Task_Handle;
 
 DataQueue<QUEUE_ITEM> displayQueue(20);
 DataQueue<QUEUE_ITEM> outputQueue(10);
@@ -22,8 +21,6 @@ DisplayHandler displayHandler;
 HSSerial hsSerial;
 
 byte btButton = 33;
-
-//int counter = 0;
 
 portMUX_TYPE displayQueueMux = portMUX_INITIALIZER_UNLOCKED;
 portMUX_TYPE outputQueueMux = portMUX_INITIALIZER_UNLOCKED;
@@ -35,7 +32,9 @@ void setup() {
 
 	displayHandler.Init(&displayQueue, displayQueueMux, AddItemToOutputQueue, AddItemToDisplayQueue);
 
-	InitButtons();
+	// Init the bluetooth button
+	pinMode(btButton, INPUT_PULLUP);
+
 	heartbeatTimer = timerBegin(0, 80, true);
 	timerAttachInterrupt(heartbeatTimer, &onTimer, true);
 	timerAlarmWrite(heartbeatTimer, HEARTBEAT_TIMER_POLL_TIME, true);
@@ -61,7 +60,9 @@ void setup() {
 	if (!hsSerial.Init(&outputQueue, outputQueueMux, AddItemToDisplayQueue, HeartbeatTimerEnabled))
 	{
 		Serial.println("Failed to init SPIFFS");
-		Spin();
+		while (true) {
+			delay(100);  // Spin because we can't go any further with SPIFFS
+		}
 	}
 
 	if (IsBTButtonPressed())
@@ -71,15 +72,6 @@ void setup() {
 	}
 
 	hsSerial.HandleWiFiConnection();
-
-	//xTaskCreatePinnedToCore(
-	//	Serial_Core_Proc,                  /* pvTaskCode */
-	//	"SerialHandlerTask",            /* pcName */
-	//	8000,                   /* usStackDepth */
-	//	NULL,                   /* pvParameters */
-	//	1,                      /* uxPriority */
-	//	&Serial_Core_Task_Handle,                 /* pxCreatedTask */
-	//	1);
 }
 
 
@@ -100,29 +92,6 @@ void TFT_Core_Proc(void* parameter)
 	
 	delay(20);
 }
-
-void Serial_Core_Proc(void* parameter)
-{
-	while (true)
-	{
-		if (!hsSerial.connectedToSomething) {
-			hsSerial.ConnectToHardsenseServer();
-		}
-
-		hsSerial.HandleInput();
-		hsSerial.HandleOutput();
-		delay(20);
-	}
-}
-
-
-
-
-void InitButtons()
-{
-	pinMode(btButton, INPUT_PULLUP);
-}
-
 
 bool IsBTButtonPressed()
 {
@@ -170,11 +139,4 @@ void AddItemToOutputQueue(char key, String value)
 void IRAM_ATTR onTimer()
 {
 	hsSerial.FireHeartbeat();
-}
-
-void Spin()
-{
-	while (true) {
-		delay(100);
-	}
 }

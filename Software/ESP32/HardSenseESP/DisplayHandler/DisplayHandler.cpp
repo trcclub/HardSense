@@ -55,7 +55,7 @@ void DisplayHandler::Run()
 			UpdateCurentScreenOnInterval();
 		}
 
-		
+		/*
 		if (millis() - last > 1000)
 		{
 			counter++;
@@ -64,7 +64,7 @@ void DisplayHandler::Run()
 			Serial.println(ESP.getFreeHeap());
 			last = millis();
 		}
-		
+		*/
 
 		//HandleButtons();
 		delay(20);
@@ -74,15 +74,25 @@ void DisplayHandler::Run()
 
 void DisplayHandler::LoadNewScreen(char screenID)
 {
+	AddItemToOutputQueue(TRANS__KEY::CLEAR_SENSOR_LIST, "");
+	
+	// Give the output handler enough time to send the clear sensor command.  
+	// Otherwise, the next few statement seem to run faster then the output queue.
+	// This causes invalid data to get injected into the new screen because the sensor keys get re-used, but for a different sensor.
+	//  All though that still seems to happen (sigh) just not as frequently.  So weird.
+	delay(20); 
+	
+	
 	if (DestoryCurrentScreen != NULL) {
 		DestoryCurrentScreen();
 		DestoryCurrentScreen = NULL;
-		UpdateCurentScreen = NULL;
-		UpdateCurentScreenOnInterval = NULL;
-		HandleTouchPoint = NULL;
-		UnloadOldDataFromDisplayQueue();
 	}
-	AddItemToOutputQueue(TRANS__KEY::CLEAR_SENSOR_LIST, "");
+	UpdateCurentScreen = NULL;
+	UpdateCurentScreenOnInterval = NULL;
+	HandleTouchPoint = NULL;
+	UnloadOldDataFromDisplayQueue();
+
+
 	char key = screenID;
 	switch (key) {
 	case ScreenTypes::SplashScreen:
@@ -106,8 +116,8 @@ void DisplayHandler::LoadNewScreen(char screenID)
 		HandleTouchPoint = Handle_HomeScreen_Touch;
 		UpdateCurentScreenOnInterval = Update_HomeScreen_OnInterval;
 		Create_HomeScreen(&tftDisplay);
-		Set_Home_Screen_SensorList(AddItemToOutputQueue);
 		Set_HomeScreen_DisplayQueue(AddItemToDisplayQueue);
+		Set_Home_Screen_SensorList(AddItemToOutputQueue);
 		break;
 	case ScreenTypes::Game:
 		DestoryCurrentScreen = Destroy_GameScreen;
@@ -115,8 +125,8 @@ void DisplayHandler::LoadNewScreen(char screenID)
 		HandleTouchPoint = Handle_GameScreen_Touch;
 		UpdateCurentScreenOnInterval = Update_GameScreen_OnInterval;
 		Create_GameScreen(&tftDisplay);
-		Set_GameScreen_SensorList(AddItemToOutputQueue);
 		Set_GameScreen_DisplayQueue(AddItemToDisplayQueue);
+		Set_GameScreen_SensorList(AddItemToOutputQueue);
 		break;
 	default:
 		break;
