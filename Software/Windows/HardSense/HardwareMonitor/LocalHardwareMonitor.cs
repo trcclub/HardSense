@@ -31,7 +31,8 @@ namespace HardSense.HardwareMonitor
         public List<LocalHardwareItem> hddInfo { get; private set; }
         public List<LocalHardwareItem> fanInfo { get; private set; }
         public List<LocalHardwareItem> nicInfo { get; private set; }
-        
+        public List<LocalHardwareItem> fpsInfo { get; private set; }
+
         public List<string> listOfHardwareIDsToIgnore { get; set; } = new List<string>();
         public List<string> listOfSensorIDsToIgnore { get; set; } = new List<string>();
         public static List<LocalSensor> allAvailableSensors { get; private set; } = new List<LocalSensor>();
@@ -52,7 +53,7 @@ namespace HardSense.HardwareMonitor
             listOfHardwareIDsToIgnore = newListOfHardwareIDsToIgnore;
             listOfSensorIDsToIgnore = newListOfSensorIDsToIgnore;
 
-            UpdateAllHardwareInfo();
+            FindAllHardwareItemsAndSensors();
             EnableAllHardwareItems();
             UpdateComputersSensorValues();
             initiationComplete = true;
@@ -169,7 +170,7 @@ namespace HardSense.HardwareMonitor
 
         }
 
-        public void UpdateAllHardwareInfo()
+        public void FindAllHardwareItemsAndSensors()
         {
             bool wasMonitorRuning = running;
             if (running)
@@ -180,13 +181,14 @@ namespace HardSense.HardwareMonitor
             mmFile.Clear();
             allAvailableSensors.Clear();
 
-            UpdateMainboardInfo();
-            UpdateCPUInfo();
-            UpdateGPUInfo();
-            UpdateRAMInfo();
-            UpdateHDDInfo();
-            UpdateFanInfo();
-            UpdateNicInfo();
+            BuildMainboardInfo();
+            BuildCPUInfo();
+            BuildGPUInfo();
+            BuildRAMInfo();
+            BuildHDDInfo();
+            BuildFanInfo();
+            BuildNicInfo();
+            BuildFPSInfo();
 
             mmFile.InitializeMemoryMappedFileWithData();
 
@@ -216,7 +218,7 @@ namespace HardSense.HardwareMonitor
             return ret;
         }
 
-        private void UpdateMainboardInfo()
+        private void BuildMainboardInfo()
         {
             DisableAllHardwareItems();
             computer.MainboardEnabled = true;
@@ -224,7 +226,7 @@ namespace HardSense.HardwareMonitor
             AddSensorsToAllAvailableList(motherBoardInfo);
             AddHardwareListToMMFileMap(motherBoardInfo);
         }
-        private void UpdateCPUInfo()
+        private void BuildCPUInfo()
         {
             DisableAllHardwareItems();
             computer.CPUEnabled = true;
@@ -233,7 +235,7 @@ namespace HardSense.HardwareMonitor
             AddHardwareListToMMFileMap(cpuInfo);
         }
 
-        private void UpdateGPUInfo()
+        private void BuildGPUInfo()
         {
             DisableAllHardwareItems();
             computer.GPUEnabled = true;
@@ -242,7 +244,7 @@ namespace HardSense.HardwareMonitor
             AddHardwareListToMMFileMap(gpuInfo);
         }
 
-        private void UpdateRAMInfo()
+        private void BuildRAMInfo()
         {
             DisableAllHardwareItems();
             computer.RAMEnabled = true;
@@ -251,7 +253,7 @@ namespace HardSense.HardwareMonitor
             AddHardwareListToMMFileMap(ramInfo);
         }
 
-        private void UpdateFanInfo()
+        private void BuildFanInfo()
         {
             DisableAllHardwareItems();
             computer.FanControllerEnabled = true;
@@ -260,7 +262,7 @@ namespace HardSense.HardwareMonitor
             AddHardwareListToMMFileMap(fanInfo);
         }
 
-        private void UpdateHDDInfo()
+        private void BuildHDDInfo()
         {
             DisableAllHardwareItems();
             computer.HDDEnabled = true;
@@ -285,7 +287,7 @@ namespace HardSense.HardwareMonitor
             AddHardwareListToMMFileMap(hddInfo);
         }
 
-        private void UpdateNicInfo()
+        private void BuildNicInfo()
         {
             netSpeedMonitor.FindNICs(listOfHardwareIDsToIgnore, listOfSensorIDsToIgnore);
             nicInfo = new List<LocalHardwareItem>();
@@ -298,6 +300,20 @@ namespace HardSense.HardwareMonitor
             AddSensorsToAllAvailableList(nicInfo);
         }
 
+        private void BuildFPSInfo()
+        {
+            fpsInfo = new List<LocalHardwareItem>();
+            LocalHardwareItem fpsItem = new LocalHardwareItem();
+            fpsItem.Name = "FPS Counter";
+            fpsItem.Id = "/fps/0";
+            LocalSensor fpsSensor = new LocalSensor("/fps/0/counter", "FPS Counter", "FPS", "FPS Counter", SensorType.FPS);
+            fpsItem.SensorList.Add(fpsSensor);
+            fpsInfo.Add(fpsItem);
+            AddHardwareListToMMFileMap(fpsInfo);
+            AddSensorsToAllAvailableList(fpsInfo);
+
+        }
+        
         private void AddSensorsToAllAvailableList(List<LocalHardwareItem> hardwareItemList)
         {
             foreach (LocalHardwareItem currHardwareItem in hardwareItemList)

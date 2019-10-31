@@ -214,7 +214,6 @@ namespace HardSense
                 }
             }
 
-
             if (computerMonitor.nicInfo.Count != 0)
             {
                 tempDisplayBox.AppendText("\n---\nNic Info\n");
@@ -242,6 +241,29 @@ namespace HardSense
             {
                 tempDisplayBox.AppendText("No network connections found\n");
             }
+
+
+            tempDisplayBox.AppendText("\n---\nFPS Info\n");
+            s = "Found " + computerMonitor.fpsInfo.Count.ToString() + " FPS Unit(s)\n";
+            tempDisplayBox.AppendText(s);
+            count = 0;
+            foreach (LocalHardwareItem currItem in computerMonitor.fpsInfo)
+            {
+                count++;
+                s = "\n";
+                s += "FPS #" + count.ToString() + "\n";
+                s += "Name: " + currItem.Name + "\n";
+                s += "Id: " + currItem.Id + "\n";
+                s += "Ignored: " + currItem.ignored.ToString() + "\n";
+                s += "Number of sensors: " + currItem.NumberOfSensors.ToString() + "\n\nSensor List:\n";
+                tempDisplayBox.AppendText(s);
+                foreach (LocalSensor currSensor in currItem.SensorList)
+                {
+                    DisplaySensorInfo(currSensor);
+                    tempDisplayBox.AppendText("\n");
+                }
+            }
+
             // NETWORK INTERFACE STUFF //
             /*
             tempDisplayBox.AppendText("\n-------------\n");
