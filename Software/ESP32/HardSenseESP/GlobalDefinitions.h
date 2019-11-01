@@ -2,6 +2,8 @@
 #ifndef HS_GLOBAL_DEFINITATIONS
 #define HS_GLOBAL_DEFINITATIONS
 
+#define HEARTBEAT_TIMER_POLL_TIME 2000000
+
 #define AA_FONT_10PT "SegoeUI-10"
 #define AA_FONT_14PT "SegoeUI-14"
 #define AA_FONT_18PT "SegoeUI-18"
@@ -77,5 +79,9 @@ struct HS_Coords {
 		h = orig.h;
 	}
 };
+
+
+static char daysOfTheWeek[7][5] = { "Sun", "Mon", "Tues", "Wed", "Thur", "Fri", "Sat" };
+static char monthsOfTheYear[12][4] = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
 
 #endif // !HS_GLOBAL_DEFINITATIONS

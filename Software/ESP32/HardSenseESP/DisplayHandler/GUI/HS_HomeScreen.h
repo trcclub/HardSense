@@ -113,8 +113,6 @@ private:
 	RTC_DS1307 rtc;
 	unsigned long lastTimeUpate = 0;
 	int updateTimeInterval = 1000;
-	char daysOfTheWeek[7][5] = { "Sun", "Mon", "Tues", "Wed", "Thur", "Fri", "Sat" };
-	char monthsOfTheYear[12][4] = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
 	void Draw_Time_Panel();
 	void Update_Time();
 

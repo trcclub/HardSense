@@ -499,4 +499,6 @@ void HSSerial::Update_RTC_Time(String rawTime)
 	rawTime.substring(sep + 1).toCharArray(time, 9);
 
 	rtc.adjust(DateTime(date,time));
+	
+	DateTime now = rtc.now();
 }

@@ -31,7 +31,7 @@ private:
 	void(*AddItemToDisplayQueue)(char key, String value);
 
 	unsigned long lastTouch = 0;
-	void SetTouch();
+	void CalibrateTouch();
 
 	void UnloadOldDataFromDisplayQueue();
 

@@ -29,7 +29,7 @@ void DisplayHandler::Init(DataQueue<QUEUE_ITEM>* newDisplayQueue, portMUX_TYPE& 
 
 	tftDisplay.setRotation(1);
 	tftDisplay.fillScreen(TFT_BLACK);
-	SetTouch();
+	CalibrateTouch();
 }
 
 void DisplayHandler::Run()
@@ -93,8 +93,7 @@ void DisplayHandler::LoadNewScreen(char screenID)
 	UnloadOldDataFromDisplayQueue();
 
 
-	char key = screenID;
-	switch (key) {
+	switch (screenID) {
 	case ScreenTypes::SplashScreen:
 		DestoryCurrentScreen = Destroy_SplashScreen;
 		UpdateCurentScreen = Update_SplashScreen;
@@ -117,7 +116,7 @@ void DisplayHandler::LoadNewScreen(char screenID)
 		UpdateCurentScreenOnInterval = Update_HomeScreen_OnInterval;
 		Create_HomeScreen(&tftDisplay);
 		Set_HomeScreen_DisplayQueue(AddItemToDisplayQueue);
-		Set_Home_Screen_SensorList(AddItemToOutputQueue);
+		Set_HomeScreen_SensorList(AddItemToOutputQueue);
 		break;
 	case ScreenTypes::Game:
 		DestoryCurrentScreen = Destroy_GameScreen;
@@ -149,12 +148,9 @@ void DisplayHandler::DispatchCommand()
 			}			
 			break;
 		case DisplayCommands::UpdateValue:
-			if (UpdateCurentScreen != NULL) {
-				if (currItem.value.length() >= 3)
-				{
-					UpdateCurentScreen(String(currItem.value));
-				}
-				
+			if (UpdateCurentScreen != NULL && currItem.value.length() >= 3) 
+			{
+				UpdateCurentScreen(String(currItem.value));
 			}
 			break;
 		default:
@@ -174,13 +170,13 @@ void DisplayHandler::UnloadOldDataFromDisplayQueue()
 	}
 }
 
-void DisplayHandler::SetTouch()
+void DisplayHandler::CalibrateTouch()
 {
 	uint16_t calibrationData[5];
 	uint8_t calDataOK = 0;
 
 	if (!SPIFFS.begin()) {
-		Serial.println("DisplayHandler::SetTouch(): SPIFFS initialisation failed!");
+		Serial.println("DisplayHandler::CalibrateTouch(): SPIFFS initialisation failed!");
 		while (1) yield(); // Stay here twiddling thumbs waiting
 	}
 

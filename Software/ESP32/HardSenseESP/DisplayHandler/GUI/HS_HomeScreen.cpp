@@ -481,10 +481,6 @@ void HS_HomeScreen::Update_Time()
 
 	DateTime now = rtc.now();
 	int d = now.day();
-	if (d < 10)
-	{
-		d = d + 10;
-	}
 	String date(daysOfTheWeek[now.dayOfTheWeek()]);
 	date += ", " + String(monthsOfTheYear[now.month()-1]);
 	date += " " + String(d);

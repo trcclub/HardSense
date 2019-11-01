@@ -10,8 +10,6 @@
 #include "QueueItem.h"
 #include "GlobalDefinitions.h"
 
-#define HEARTBEAT_TIMER_POLL_TIME 2000000
-
 TaskHandle_t Display_Core_Task_Handle;
 
 DataQueue<QUEUE_ITEM> displayQueue(20);

@@ -27,7 +27,7 @@ void Update_HomeScreen_OnInterval()
 	HS_Current_HomeScreen->UpdateScreenOnInterval();
 }
 
-char* Set_Home_Screen_SensorList(void(*AddItemToOutputQueue_func)(char key, String value))
+char* Set_HomeScreen_SensorList(void(*AddItemToOutputQueue_func)(char key, String value))
 {
 	HS_Current_HomeScreen->SetSensorList(AddItemToOutputQueue_func);
 	/*
