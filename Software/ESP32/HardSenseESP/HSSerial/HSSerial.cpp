@@ -107,7 +107,7 @@ void HSSerial::HandleBluetoothConnection()
 	PrintMessageToOutput = &HSSerial::BT_PrintChar;
 
 	btSerial->setTimeout(50);
-	btSerial->begin("HardSenseESP");
+	btSerial->begin("HardSenseESP1");
 
 	while (true)
 	{
@@ -409,6 +409,7 @@ void HSSerial::ParseInput(String input)
 }
 
 void HSSerial::DispatchCommand(char key, String val) {
+	Serial.println("HERE");
 
 	switch (key) {
 	case TRANS__KEY::NEW_CONNECTION_APPROVED:

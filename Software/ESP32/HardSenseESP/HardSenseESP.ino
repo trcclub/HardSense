@@ -18,7 +18,7 @@ DataQueue<QUEUE_ITEM> outputQueue(10);
 DisplayHandler displayHandler;
 HSSerial hsSerial;
 
-byte btButton = 33;
+byte btButton = 5;
 
 portMUX_TYPE displayQueueMux = portMUX_INITIALIZER_UNLOCKED;
 portMUX_TYPE outputQueueMux = portMUX_INITIALIZER_UNLOCKED;

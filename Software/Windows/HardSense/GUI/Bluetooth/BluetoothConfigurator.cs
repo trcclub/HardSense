@@ -480,7 +480,7 @@ namespace HardSense.GUI.Bluetooth
         private void button_UpdateTime_Click(object sender, EventArgs e)
         {
             DateTime localDate = DateTime.Now;
-            String dt = localDate.ToString("MMM dd yyyy,hh:mm:ss");
+            String dt = localDate.ToString("MMM dd yyyy,HH:mm:ss");
             AddStringToMessage(ProtocolKeys.TRANSMISSION_KEYS["CONFIG_UPDATE_TIME"], dt);
         }
     }

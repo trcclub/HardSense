@@ -59,7 +59,7 @@ namespace HardSense.HardwareMonitor
             initiationComplete = true;
         }
         
-        private void ThreadProc()
+        private void MonitorThreadFunction()
         {
             if (!initiationComplete)
                 throw new Exception("ThreadPrc: Initiation has not been completed.  You must init().");
@@ -133,7 +133,7 @@ namespace HardSense.HardwareMonitor
         public void StartMonitor()
         {
             continueMonitoring = true;
-            monitorThread = new Thread(ThreadProc);
+            monitorThread = new Thread(MonitorThreadFunction);
             monitorThread.Start();
             running = true;
         }
