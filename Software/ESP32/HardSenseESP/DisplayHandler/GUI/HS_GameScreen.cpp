@@ -47,6 +47,9 @@ void HS_GameScreen::SetSensorList(void(*AddItemToOutputQueue_func)(char key, Str
 	// h = GPU Memory Clock
 	// i = GPU Shader Clock
 	AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/nvidiagpu/0/clock/0,g|/nvidiagpu/0/clock/1,h|/nvidiagpu/0/clock/2,i");
+
+	// j = FPS Counter
+	AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/fps/0/counter,j");
 }
 
 void HS_GameScreen::UpdateScreen(String value)
@@ -83,6 +86,11 @@ void HS_GameScreen::UpdateScreen(String value)
 		break;
 	case 'i':
 		UpdateGPUShaderClock(dValue);
+		break;
+	case 'j':
+		Serial.print("FPS: '");
+		Serial.print(dValue);
+		Serial.println("'");
 		break;
 	default:
 		break;

@@ -12,14 +12,15 @@ namespace HardSense.HardwareMonitor
     public class LocalHardwareMonitor
     {
         public bool running = false;
-
         private bool continueMonitoring = false;
         private Thread monitorThread;
 
         private UpdateVisitor updateVisitor = new UpdateVisitor();
         private Computer computer = new Computer();
         private NetSpeedMonitor netSpeedMonitor = new NetSpeedMonitor();
-                
+        private FPSMonitor fpsMonitor = new FPSMonitor();
+        
+
         private MemFile.HardSenseMemFile mmFile = new MemFile.HardSenseMemFile(true);
 
         private bool initiationComplete = false;
@@ -98,7 +99,7 @@ namespace HardSense.HardwareMonitor
                     mmFile.UpdateKeyWithValue(sendID, currNic.sendSpeed);
                 }
             }
-            
+            mmFile.UpdateKeyWithValue(Properties.Settings.Default.FPSSensorName, fpsMonitor.averageFPS);
         }
 
         private void UpdateHardwareItemsSensorValues(IHardware hardwareItem)
@@ -132,6 +133,7 @@ namespace HardSense.HardwareMonitor
         }
         public void StartMonitor()
         {
+            fpsMonitor.StartMonitor();
             continueMonitoring = true;
             monitorThread = new Thread(MonitorThreadFunction);
             monitorThread.Start();
@@ -144,6 +146,7 @@ namespace HardSense.HardwareMonitor
             {
                 return;
             }
+            fpsMonitor.StopMonitor();
             continueMonitoring = false;
             monitorThread.Join();
             running = false;
@@ -306,7 +309,7 @@ namespace HardSense.HardwareMonitor
             LocalHardwareItem fpsItem = new LocalHardwareItem();
             fpsItem.Name = "FPS Counter";
             fpsItem.Id = "/fps/0";
-            LocalSensor fpsSensor = new LocalSensor("/fps/0/counter", "FPS Counter", "FPS", "FPS Counter", SensorType.FPS);
+            LocalSensor fpsSensor = new LocalSensor(Properties.Settings.Default.FPSSensorName, "FPS Counter", "FPS", "FPS Counter", SensorType.FPS);
             fpsItem.SensorList.Add(fpsSensor);
             fpsInfo.Add(fpsItem);
             AddHardwareListToMMFileMap(fpsInfo);

@@ -211,5 +211,14 @@ namespace HardSense.Properties {
                 this["MainFormLastPosition"] = value;
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("/fps/0/counter")]
+        public string FPSSensorName {
+            get {
+                return ((string)(this["FPSSensorName"]));
+            }
+        }
     }
 }

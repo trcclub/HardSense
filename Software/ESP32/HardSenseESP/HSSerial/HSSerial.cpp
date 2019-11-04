@@ -409,8 +409,6 @@ void HSSerial::ParseInput(String input)
 }
 
 void HSSerial::DispatchCommand(char key, String val) {
-	Serial.println("HERE");
-
 	switch (key) {
 	case TRANS__KEY::NEW_CONNECTION_APPROVED:
 		NewSocketRequestAccepted();
