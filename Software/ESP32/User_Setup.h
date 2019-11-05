@@ -169,7 +169,7 @@
 //#define TFT_BL   32  // LED back-light (only for ST7789 with backlight control pin)
 
 //#define TOUCH_CS 21     // Chip select pin (T_CS) of touch screen
-#define TOUCH_CS 32
+#define TOUCH_CS 8
 
 //#define TFT_WR 22    // Write strobe for modified Raspberry Pi TFT only
 
@@ -254,8 +254,8 @@
 // #define SPI_FREQUENCY   5000000
 // #define SPI_FREQUENCY  10000000
 // #define SPI_FREQUENCY  20000000
-#define SPI_FREQUENCY  27000000 // Actually sets it to 26.67MHz = 80/3
-// #define SPI_FREQUENCY  40000000 // Maximum to use SPIFFS
+//  #define SPI_FREQUENCY  27000000 // Actually sets it to 26.67MHz = 80/3
+   #define SPI_FREQUENCY  40000000 // Maximum to use SPIFFS
 // #define SPI_FREQUENCY  80000000
 
 // Optional reduced SPI frequency for reading TFT

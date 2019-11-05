@@ -356,7 +356,7 @@ void HS_HomeScreen::Draw_Net_Panel()
 
 void HS_HomeScreen::Draw_Mem_Panel()
 {
-	memPanel = new HS_MemPanel(TFT, HS_Coords(RAM_PANEL_X, RAM_PANEL_Y, 0, 0), homeScreenTheme);
+	memPanel = new HS_MemPanel(TFT, HS_Coords(GPU_RAM_PANEL_X, GPU_RAM_PANEL_Y, 0, 0), homeScreenTheme);
 	memPanel->DrawPanel();
 }
 

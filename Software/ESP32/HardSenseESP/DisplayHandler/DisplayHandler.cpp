@@ -66,7 +66,6 @@ void DisplayHandler::Run()
 		}
 		*/
 
-		//HandleButtons();
 		delay(20);
 
 	}

@@ -40,7 +40,7 @@ void setup() {
 	xTaskCreatePinnedToCore(
 		TFT_Core_Proc,                  /* pvTaskCode */
 		"DisplayHandlerTask",            /* pcName */
-		6000,                   /* usStackDepth */
+		3000,                   /* usStackDepth */
 		NULL,                   /* pvParameters */
 		1,                      /* uxPriority */
 		&Display_Core_Task_Handle,                 /* pxCreatedTask */
@@ -68,6 +68,7 @@ void setup() {
 		Serial.println("Starting bluetooth...");
 		hsSerial.HandleBluetoothConnection();
 	}
+	
 
 	hsSerial.HandleWiFiConnection();
 }

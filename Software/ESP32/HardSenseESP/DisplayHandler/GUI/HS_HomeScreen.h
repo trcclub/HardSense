@@ -23,11 +23,8 @@
 #define NET_PANEL_X 207
 #define NET_PANEL_Y 53
 
-#define RAM_PANEL_X 207
-#define RAM_PANEL_Y 122
-
-#define RAM_PANEL_X 207
-#define RAM_PANEL_Y 122
+#define GPU_RAM_PANEL_X 207
+#define GPU_RAM_PANEL_Y 122
 
 #define HDD_PANEL_X 0
 #define HDD_PANEL_Y 190
