@@ -21,8 +21,9 @@ namespace HardSense.HardwareMonitor
         private readonly Guid D3D9_provider = Guid.Parse("{783ACA0A-790E-4D7F-8451-AA850511C6B9}");
 
         private TraceEventSession EtwSession;
-        private static int MaxNumberSamples = 1000;
-        private static int MaxNumberAverages = 40;
+        private static int MaxNumberSamples = 200;
+        private static int MaxNumberAverages = 25;
+        private static int PollTime = 20;
 
         private Thread EventThread;
         private Thread ProcessingThread;
@@ -130,7 +131,7 @@ namespace HardSense.HardwareMonitor
                 }
                 averageFPS = average / rollingAverage.Count;
 
-                Thread.Sleep(25);
+                Thread.Sleep(PollTime);
             }
         }
         private int CalculateAverageFPS(long from, long to)
