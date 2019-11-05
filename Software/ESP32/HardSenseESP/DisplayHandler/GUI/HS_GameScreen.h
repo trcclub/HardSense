@@ -4,6 +4,7 @@
 #include "Panels/HS_MemPanel.h"
 #include "Panels/HS_GPU_TempAndFanChart_Panel.h"
 #include "Widgets/HS_Dial_Widget.h"
+#include "Panels/HS_NetPanel.h"
 
 /*  Light Blue
 #define TEXT_COLOR TFT_WHITE
@@ -43,6 +44,9 @@
 #define FPS_PANEL_X 162
 #define FPS_PANEL_Y 150
 
+#define NET_PANEL_X 209
+#define NET_PANEL_Y 150
+
 class HS_GameScreen :
 	public HS_ScreenBase
 {
@@ -71,7 +75,9 @@ private:
 
 	void DrawFPSPanel();
 	void UpdateFPS(double fps);
-	
+
+	HS_NetPanel* netPanel;
+	void Draw_Net_Panel();
 public:
 	HS_GameScreen(TFT_eSPI* newTFT);
 	~HS_GameScreen();

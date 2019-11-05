@@ -23,6 +23,7 @@ HS_GameScreen::HS_GameScreen(TFT_eSPI* newTFT) : HS_ScreenBase(newTFT)
 	DrawGPUCoreLoadPanel();
 
 	DrawFPSPanel();
+	Draw_Net_Panel();
 }
 
 HS_GameScreen::~HS_GameScreen()
@@ -30,6 +31,7 @@ HS_GameScreen::~HS_GameScreen()
 	delete(gpuCoreLoadWidget);
 	delete(GPU_TempAndFanChart);
 	delete(memPanel);
+	delete(netPanel);
 }
 
 
@@ -54,6 +56,10 @@ void HS_GameScreen::SetSensorList(void(*AddItemToOutputQueue_func)(char key, Str
 	// k = GPU Mem Load
 	//AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/fps/0/counter,j|/nvidiagpu/0/load/1,k");
 	AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/fps/0/counter,j");
+
+	// k = Net download speed
+	// l = net upload speed
+	AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/Ethernet/0/recv,k|/Ethernet/0/send,l");
 }
 
 void HS_GameScreen::UpdateScreen(String value)
@@ -95,7 +101,10 @@ void HS_GameScreen::UpdateScreen(String value)
 		UpdateFPS(dValue);
 		break;
 	case 'k':
-		//UpdateGPUMemLoad(dValue);
+		netPanel->Update_Net_DownloadSpeed(dValue);
+		break;
+	case 'l':
+		netPanel->Update_Net_UpLoadSpeed(dValue);
 		break;
 	default:
 		break;
@@ -269,4 +278,11 @@ void HS_GameScreen::UpdateFPS(double fps)
 	textPrinter_Sprite->deleteSprite();
 	textPrinter_Sprite->setTextColor(gameScreenTheme.textColor, gameScreenTheme.panelBGColor);
 
+}
+
+
+void HS_GameScreen::Draw_Net_Panel()
+{
+	netPanel = new HS_NetPanel(TFT, HS_Coords(NET_PANEL_X, NET_PANEL_Y, 0, 0), gameScreenTheme);
+	netPanel->DrawPanel();
 }

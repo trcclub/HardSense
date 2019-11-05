@@ -6,10 +6,10 @@ HS_GPU_TempAndFanChart_Panel::HS_GPU_TempAndFanChart_Panel(TFT_eSPI* newTFT, HS_
 	graphGridSprite->setColorDepth(16);
 
 	gpuTempSprite = new TFT_eSprite(TFT);
-	gpuTempSprite->setColorDepth(16);
+	gpuTempSprite->setColorDepth(8);
 	
 	gpuFanSprite = new TFT_eSprite(TFT);
-	gpuFanSprite->setColorDepth(16);
+	gpuFanSprite->setColorDepth(8);
 
 
 	textPrinter_Sprite->unloadFont();
