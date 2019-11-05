@@ -65,8 +65,6 @@
 #define GPU_PANEL_LOW_Y GPU_PANEL_Y
 #define GPU_PANEL_HIGH_Y (GPU_PANEL_Y + 95)
 
-
-
 class HS_HomeScreen :
 	public HS_ScreenBase
 {

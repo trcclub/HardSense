@@ -40,6 +40,8 @@
 #define GPU_CLOCKS_PANEL_MEMORY_CLOCK_YOFFSET 40
 #define GPU_CLOCKS_PANEL_SHADER_CLOCK_YOFFSET 69
 
+#define FPS_PANEL_X 162
+#define FPS_PANEL_Y 150
 
 class HS_GameScreen :
 	public HS_ScreenBase
@@ -67,12 +69,9 @@ private:
 	void UpdateGPUShaderClock(double clock);
 	void UpdateGPUClockField(double clock, int yOffset);
 
-
-	//HS_Dial_Widget* gpuMemLoadWidget;
-	//uint16_t gpuMemLoadDial_CurrentRingColor;
-	//void DrawGPUMemLoadPanel();
-	//void UpdateGPUMemLoad(double load);
-
+	void DrawFPSPanel();
+	void UpdateFPS(double fps);
+	
 public:
 	HS_GameScreen(TFT_eSPI* newTFT);
 	~HS_GameScreen();

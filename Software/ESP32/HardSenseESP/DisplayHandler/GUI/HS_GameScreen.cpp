@@ -21,6 +21,8 @@ HS_GameScreen::HS_GameScreen(TFT_eSPI* newTFT) : HS_ScreenBase(newTFT)
 	DrawMemPanel();
 	DrawClockSpeedPanel();
 	DrawGPUCoreLoadPanel();
+
+	DrawFPSPanel();
 }
 
 HS_GameScreen::~HS_GameScreen()
@@ -90,9 +92,7 @@ void HS_GameScreen::UpdateScreen(String value)
 		UpdateGPUShaderClock(dValue);
 		break;
 	case 'j':
-		//Serial.print("FPS: '");
-		//Serial.print(dValue);
-		//Serial.println("'");
+		UpdateFPS(dValue);
 		break;
 	case 'k':
 		//UpdateGPUMemLoad(dValue);
@@ -233,5 +233,40 @@ void HS_GameScreen::UpdateGPUClockField(double clock, int yOffset)
 	textPrinter_Sprite->drawString(String(buf), 80, 0);
 	textPrinter_Sprite->pushSprite(x + 83, y + yOffset);
 	textPrinter_Sprite->deleteSprite();
+
+}
+
+void HS_GameScreen::DrawFPSPanel()
+{
+	HS_Coords localCoords(FPS_PANEL_X, FPS_PANEL_Y, 47, 47);
+	DrawBoxWithBorderAndDropShadow(localCoords, gameScreenTheme);
+	textPrinter_Sprite->setTextDatum(TC_DATUM);
+	textPrinter_Sprite->createSprite(localCoords.w - 10, 10);
+	textPrinter_Sprite->fillSprite(gameScreenTheme.panelBGColor);
+	textPrinter_Sprite->setTextColor(TFT_CYAN, gameScreenTheme.panelBGColor);
+	textPrinter_Sprite->drawString("FPS", (localCoords.w / 2)-4, 0);
+	textPrinter_Sprite->pushSprite(localCoords.x + 5, localCoords.y + 7);
+	textPrinter_Sprite->deleteSprite();
+	textPrinter_Sprite->setTextColor(gameScreenTheme.textColor, gameScreenTheme.panelBGColor);
+
+	DrawBoxWithBorderAndDropShadow(HS_Coords(localCoords.x + 5, localCoords.y + 22, localCoords.w - 10, 20), gameScreenTheme);
+	UpdateFPS(0.0);
+}
+
+void HS_GameScreen::UpdateFPS(double fps)
+{
+	int x = FPS_PANEL_X;
+	int y = FPS_PANEL_Y;
+	int w = 27;
+
+	textPrinter_Sprite->setTextDatum(TR_DATUM);
+	textPrinter_Sprite->createSprite(w, 10);
+	textPrinter_Sprite->setTextColor(TFT_CYAN, gameScreenTheme.panelBGColor);
+	textPrinter_Sprite->fillSprite(gameScreenTheme.panelBGColor);
+	textPrinter_Sprite->drawNumber(long(fps), w, 0);
+	
+	textPrinter_Sprite->pushSprite(x + 8, y + 27);
+	textPrinter_Sprite->deleteSprite();
+	textPrinter_Sprite->setTextColor(gameScreenTheme.textColor, gameScreenTheme.panelBGColor);
 
 }
