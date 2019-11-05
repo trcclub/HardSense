@@ -23,6 +23,7 @@ HS_GameScreen::HS_GameScreen(TFT_eSPI* newTFT) : HS_ScreenBase(newTFT)
 	DrawGPUCoreLoadPanel();
 
 	DrawFPSPanel();
+	DrawCPULoadPanel();
 	Draw_Net_Panel();
 }
 
@@ -60,6 +61,9 @@ void HS_GameScreen::SetSensorList(void(*AddItemToOutputQueue_func)(char key, Str
 	// k = Net download speed
 	// l = net upload speed
 	AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/Ethernet/0/recv,k|/Ethernet/0/send,l");
+
+	// m = CPU Load
+	AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/intelcpu/0/load/0,m");
 }
 
 void HS_GameScreen::UpdateScreen(String value)
@@ -105,6 +109,9 @@ void HS_GameScreen::UpdateScreen(String value)
 		break;
 	case 'l':
 		netPanel->Update_Net_UpLoadSpeed(dValue);
+		break;
+	case 'm':
+		UpdateCPULoad(dValue);
 		break;
 	default:
 		break;
@@ -247,7 +254,7 @@ void HS_GameScreen::UpdateGPUClockField(double clock, int yOffset)
 
 void HS_GameScreen::DrawFPSPanel()
 {
-	HS_Coords localCoords(FPS_PANEL_X, FPS_PANEL_Y, 47, 47);
+	HS_Coords localCoords(FPS_PANEL_X, FPS_PANEL_Y, 47, 45);
 	DrawBoxWithBorderAndDropShadow(localCoords, gameScreenTheme);
 	textPrinter_Sprite->setTextDatum(TC_DATUM);
 	textPrinter_Sprite->createSprite(localCoords.w - 10, 10);
@@ -280,9 +287,44 @@ void HS_GameScreen::UpdateFPS(double fps)
 
 }
 
-
 void HS_GameScreen::Draw_Net_Panel()
 {
 	netPanel = new HS_NetPanel(TFT, HS_Coords(NET_PANEL_X, NET_PANEL_Y, 0, 0), gameScreenTheme);
 	netPanel->DrawPanel();
+}
+
+void HS_GameScreen::DrawCPULoadPanel()
+{
+	HS_Coords localCoords(CPU_LOAD_PANEL_X, CPU_LOAD_PANEL_Y, 47, 45);
+	DrawBoxWithBorderAndDropShadow(localCoords, gameScreenTheme);
+	textPrinter_Sprite->setTextDatum(TC_DATUM);
+	textPrinter_Sprite->createSprite(localCoords.w - 10, 10);
+	textPrinter_Sprite->setTextColor(0x3708, gameScreenTheme.panelBGColor);
+	textPrinter_Sprite->fillSprite(gameScreenTheme.panelBGColor);
+	textPrinter_Sprite->drawString("CPU", (localCoords.w / 2) - 6, 0);
+	textPrinter_Sprite->pushSprite(localCoords.x + 5, localCoords.y + 7);
+	textPrinter_Sprite->deleteSprite();
+	textPrinter_Sprite->setTextColor(gameScreenTheme.textColor, gameScreenTheme.panelBGColor);
+
+	DrawBoxWithBorderAndDropShadow(HS_Coords(localCoords.x + 5, localCoords.y + 22, localCoords.w - 10, 20), gameScreenTheme);
+	UpdateCPULoad(0.0);
+
+}
+
+void HS_GameScreen::UpdateCPULoad(double load)
+{
+	int x = CPU_LOAD_PANEL_X;
+	int y = CPU_LOAD_PANEL_Y;
+	int w = 27;
+
+	textPrinter_Sprite->setTextDatum(TR_DATUM);
+	textPrinter_Sprite->createSprite(w, 10);
+	textPrinter_Sprite->setTextColor(0x3708, gameScreenTheme.panelBGColor);
+	textPrinter_Sprite->fillSprite(gameScreenTheme.panelBGColor);
+	textPrinter_Sprite->drawFloat(load,1, w, 0);
+
+	textPrinter_Sprite->pushSprite(x + 8, y + 27);
+	textPrinter_Sprite->deleteSprite();
+	textPrinter_Sprite->setTextColor(gameScreenTheme.textColor, gameScreenTheme.panelBGColor);
+
 }

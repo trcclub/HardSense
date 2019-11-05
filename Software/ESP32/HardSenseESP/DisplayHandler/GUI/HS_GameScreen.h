@@ -44,6 +44,9 @@
 #define FPS_PANEL_X 162
 #define FPS_PANEL_Y 150
 
+#define CPU_LOAD_PANEL_X 162
+#define CPU_LOAD_PANEL_Y 195
+
 #define NET_PANEL_X 209
 #define NET_PANEL_Y 150
 
@@ -75,6 +78,9 @@ private:
 
 	void DrawFPSPanel();
 	void UpdateFPS(double fps);
+
+	void DrawCPULoadPanel();
+	void UpdateCPULoad(double load);
 
 	HS_NetPanel* netPanel;
 	void Draw_Net_Panel();
