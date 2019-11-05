@@ -20,6 +20,7 @@ enum ScreenTypes {
 	BluetoothConfigurator,
 	Home,
 	Game,
+	CpuDetails,
 };
 
 

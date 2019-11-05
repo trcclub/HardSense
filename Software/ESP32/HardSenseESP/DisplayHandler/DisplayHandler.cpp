@@ -8,6 +8,7 @@
 #include "GUI//ConnectToNetworkScreen_Functions.h"
 #include "GUI/BluetoothConfiguratorScreen_Functions.h"
 #include "GUI/GameScreen_Functions.h"
+#include "GUI/CpuDetailsScreen_Functions.h"
 
 DisplayHandler::DisplayHandler()
 {
@@ -126,6 +127,16 @@ void DisplayHandler::LoadNewScreen(char screenID)
 		Set_GameScreen_DisplayQueue(AddItemToDisplayQueue);
 		Set_GameScreen_SensorList(AddItemToOutputQueue);
 		break;
+	case ScreenTypes::CpuDetails:
+		DestoryCurrentScreen = Destroy_CpuScreen;
+		UpdateCurentScreen = Update_CpuScreen;
+		HandleTouchPoint = Handle_CpuScreen_Touch;
+		UpdateCurentScreenOnInterval = Update_CpuScreen_OnInterval;
+		Create_CpuScreen(&tftDisplay);
+		Set_CpuScreen_DisplayQueue(AddItemToDisplayQueue);
+		Set_CpuScreen_SensorList(AddItemToOutputQueue);
+		break;
+		
 	default:
 		break;
 	}

@@ -118,6 +118,12 @@ void HS_HomeScreen::HandleTouch(int x, int y)
 		sprintf(buf, "%c", ScreenTypes::Game);
 		AddItemToDisplayQueue(DisplayCommands::ChangeScreen, buf);
 	}
+	if (CPU_Panel_Touched(x, y))
+	{
+		char buf[2];
+		sprintf(buf, "%c", ScreenTypes::CpuDetails);
+		AddItemToDisplayQueue(DisplayCommands::ChangeScreen, buf);
+	}
 }
 
 void HS_HomeScreen::Draw_CPU_Panel()

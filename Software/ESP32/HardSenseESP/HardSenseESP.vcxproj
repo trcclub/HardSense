@@ -176,10 +176,12 @@
     <ClInclude Include="DisplayHandler\DisplayHandler.h" />
     <ClInclude Include="DisplayHandler\GUI\BluetoothConfiguratorScreen_Functions.h" />
     <ClInclude Include="DisplayHandler\GUI\ConnectToNetworkScreen_Functions.h" />
+    <ClInclude Include="DisplayHandler\GUI\CpuDetailsScreen_Functions.h" />
     <ClInclude Include="DisplayHandler\GUI\GameScreen_Functions.h" />
     <ClInclude Include="DisplayHandler\GUI\HomeScreen_Functions.h" />
     <ClInclude Include="DisplayHandler\GUI\HS_BluetoothConfiguratorScreen.h" />
     <ClInclude Include="DisplayHandler\GUI\HS_ConnectToNetworkScreen.h" />
+    <ClInclude Include="DisplayHandler\GUI\HS_CPUScreen.h" />
     <ClInclude Include="DisplayHandler\GUI\HS_HomeScreen.h" />
     <ClInclude Include="DisplayHandler\GUI\HS_GameScreen.h" />
     <ClInclude Include="DisplayHandler\GUI\HS_ScreenBase.h" />
@@ -202,6 +204,7 @@
     <ClCompile Include="DisplayHandler\DisplayHandler.cpp" />
     <ClCompile Include="DisplayHandler\GUI\HS_BluetoothConfiguratorScreen.cpp" />
     <ClCompile Include="DisplayHandler\GUI\HS_ConnectToNetworkScreen.cpp" />
+    <ClCompile Include="DisplayHandler\GUI\HS_CPUScreen.cpp" />
     <ClCompile Include="DisplayHandler\GUI\HS_HomeScreen.cpp" />
     <ClCompile Include="DisplayHandler\GUI\HS_GameScreen.cpp" />
     <ClCompile Include="DisplayHandler\GUI\HS_ScreenBase.cpp" />
