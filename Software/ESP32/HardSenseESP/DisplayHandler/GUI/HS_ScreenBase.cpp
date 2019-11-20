@@ -98,3 +98,8 @@ void HS_ScreenBase::SetDisplayQueue(void(*AddItemToDisplayQueue_func)(char key, 
 {
 	AddItemToDisplayQueue = AddItemToDisplayQueue_func;
 }
+
+void HS_ScreenBase::DisplayFreeHeap()
+{
+	Serial.println(ESP.getFreeHeap());
+}

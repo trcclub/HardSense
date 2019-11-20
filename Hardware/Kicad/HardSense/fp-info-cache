@@ -1,4 +1,4 @@
-17033796219187151
+17052413377515915
 Battery
 BatteryHolder_Bulgin_BX0036_1xC
 Bulgin Battery Holder, BX0036, Battery Type C (https://www.bulgin.com/products/pub/media/bulgin/data/Battery_holders.pdf)
@@ -44512,27 +44512,6 @@ single digit 7 segemnt red/green LED
 0
 10
 10
-ESP32-footprints-Lib
-ESP32
-
-
-0
-49
-49
-ESP32-footprints-Lib
-ESP32-WROOM
-
-
-0
-39
-39
-ESP32-footprints-Lib
-ESP3212
-
-
-0
-31
-30
 Ferrite_THT
 LairdTech_28C0236-0JW-10
 Ferrite, vertical, LairdTech 28C0236-0JW-10, https://assets.lairdtech.com/home/brandworld/files/28C0236-0JW-10.pdf, JW Miller core https://www.bourns.com/products/magnetic-products/j.w.-miller-through-hole-ferrite-beads-emi-filters
@@ -48572,6 +48551,111 @@ solder jumper open
 0
 5
 3
+Kitecraft_Boards
+3.5_TFT_Shield
+ARDUINO UNO-COMPATIBLE FOOTPRINT
+ARDUINO UNO-COMPATIBLE FOOTPRINT
+0
+32
+32
+Kitecraft_Boards
+Arduino_Pro_Mini-No_Prog_Header
+ARDUINO PRO MINI FOOTPRINT
+ARDUINO PRO MINI FOOTPRINT
+0
+28
+28
+Kitecraft_Boards
+Arduino_Pro_Mini-No_Prog_Header-No_A4-A7
+ARDUINO PRO MINI FOOTPRINT
+ARDUINO PRO MINI FOOTPRINT
+0
+24
+24
+Kitecraft_Boards
+TEENSY-3.2
+TEENSY 3 FOOTPRINT
+TEENSY 3 FOOTPRINT
+0
+37
+37
+Kitecraft_Boards
+TEENSY-3.2_No_Inner_Pins
+TEENSY 3 FOOTPRINT
+TEENSY 3 FOOTPRINT
+0
+33
+33
+Kitecraft_Boards
+UNO_R3_SHIELD
+ARDUINO UNO-COMPATIBLE FOOTPRINT
+ARDUINO UNO-COMPATIBLE FOOTPRINT
+0
+32
+32
+Kitecraft_Boards
+UNO_R3_SHIELD-No_USB_Power_Outline
+ARDUINO UNO-COMPATIBLE FOOTPRINT
+ARDUINO UNO-COMPATIBLE FOOTPRINT
+0
+32
+32
+Kitecraft_Inductors
+L_12x12mm_H8mm
+Choke, SMD, 12x12mm 8mm height
+Choke SMD
+0
+2
+2
+Kitecraft_LED-Displays
+LTP-587G
+
+
+0
+18
+18
+Kitecraft_Pin_Headers
+PinHeader_1x02_P2.54_Friction_Lock
+
+
+0
+2
+2
+Kitecraft_Pin_Headers
+PinHeader_1x03_P2.54_Friction_Lock
+
+
+0
+3
+3
+Kitecraft_Terminal_Blocks
+TerminalBlock_Phoenix_MKDS-1,5-2-5.08_1x02_P5.08mm_Horizontal
+Terminal Block Phoenix MKDS-1,5-2-5.08, 2 pins, pitch 5.08mm, size 10.2x9.8mm^2, drill diamater 1.3mm, pad diameter 2.6mm, see http://www.farnell.com/datasheets/100425.pdf, script-generated using https://github.com/pointhi/kicad-footprint-generator/scripts/TerminalBlock_Phoenix
+THT Terminal Block Phoenix MKDS-1,5-2-5.08 pitch 5.08mm size 10.2x9.8mm^2 drill 1.3mm pad 2.6mm
+0
+2
+2
+Kitecraft_Voltage_Regulators
+LM2576
+
+
+0
+5
+5
+Kitecraft_Voltage_Regulators
+TO-220-5_Vertical
+TO-220-5, Vertical, RM 1.7mm, Pentawatt, Multiwatt-5, see http://www.analog.com/media/en/package-pcb-resources/package/pkg_pdf/ltc-legacy-to-220/to-220_5_05-08-1421_straight_lead.pdf
+TO-220-5 Vertical RM 1.7mm Pentawatt Multiwatt-5
+0
+5
+5
+Kitecraft_Voltage_Regulators
+TO-220-5_Vertical_Heatsink
+TO-220-5, Vertical, RM 1.7mm, Pentawatt, Multiwatt-5, see http://www.analog.com/media/en/package-pcb-resources/package/pkg_pdf/ltc-legacy-to-220/to-220_5_05-08-1421_straight_lead.pdf
+TO-220-5 Vertical RM 1.7mm Pentawatt Multiwatt-5
+0
+5
+5
 LED_SMD
 LED-APA102-2020
 http://www.led-color.com/upload/201604/APA102-2020%20SMD%20LED.pdf

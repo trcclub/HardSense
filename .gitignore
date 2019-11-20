@@ -338,3 +338,5 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
+*.sch-bak
+/Hardware/Kicad/HardSense/HardSense-cache.lib

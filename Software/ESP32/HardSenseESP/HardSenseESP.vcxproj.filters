@@ -96,6 +96,9 @@
     <ClInclude Include="DisplayHandler\GUI\CpuDetailsScreen_Functions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="DisplayHandler\GUI\Panels\HS_CPU_Core_Panel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="HSFileSystem\HSFileSystem.cpp">
@@ -144,6 +147,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="DisplayHandler\GUI\HS_CPUScreen.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DisplayHandler\GUI\Panels\HS_CPU_Core_Panel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

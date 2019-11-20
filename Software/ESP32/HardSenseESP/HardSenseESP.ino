@@ -3,7 +3,7 @@
  Created:	10/7/2019 7:07:38 AM
  Author:	Kitecraft
 */
-
+#include "freertos/portmacro.h"
 #include "DisplayHandler/DisplayHandler.h"
 #include "HSSerial/HSSerial.h"
 #include <Queue.h>
@@ -25,6 +25,12 @@ portMUX_TYPE outputQueueMux = portMUX_INITIALIZER_UNLOCKED;
 
 hw_timer_t* heartbeatTimer = NULL;
 
+
+void IRAM_ATTR onTimer()
+{
+  hsSerial.FireHeartbeat();
+}
+
 void setup() {
 	Serial.begin(115200);
 
@@ -39,7 +45,7 @@ void setup() {
 	
 	xTaskCreatePinnedToCore(
 		TFT_Core_Proc,                  /* pvTaskCode */
-		"DisplayHandlerTask",            /* pcName */
+		"DisplayHandler",            /* pcName */
 		3000,                   /* usStackDepth */
 		NULL,                   /* pvParameters */
 		1,                      /* uxPriority */
@@ -132,10 +138,4 @@ void AddItemToOutputQueue(char key, String value)
 	portENTER_CRITICAL(&outputQueueMux);
 	outputQueue.enqueue(qi);
 	portEXIT_CRITICAL(&outputQueueMux);
-}
-
-
-void IRAM_ATTR onTimer()
-{
-	hsSerial.FireHeartbeat();
 }

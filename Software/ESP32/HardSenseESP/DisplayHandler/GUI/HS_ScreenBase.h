@@ -39,6 +39,6 @@ public:
 
 	void DrawBoxWithBorderAndDropShadow(HS_Coords hs_coords, HS_Theme hs_theme);
 	//void DrawBoxWithBorderAndDropShadow(int32_t x, int32_t, int32_t w, int32_t h, int32_t borderColor, int32_t boxColor, int32_t dropShadowColor);
-	
+	void DisplayFreeHeap();
 };
 
