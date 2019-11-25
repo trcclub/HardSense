@@ -102,8 +102,10 @@ bool IsBTButtonPressed()
 {
 	if (!digitalRead(btButton))
 	{
+		Serial.println("PRESSED");
 		return true;
 	}
+	Serial.println("NOT PRESSED");
 	return false;
 }
 

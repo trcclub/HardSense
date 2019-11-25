@@ -1,6 +1,5 @@
 #pragma once
 #include "HS_ScreenBase.h"
-//#include "Panels/HS_CPU_Core_Panel.h"
 
 #define TEXT_COLOR 0xCE59
 #define PANEL_HCOLOR 0x5AEB

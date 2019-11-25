@@ -166,7 +166,7 @@ void DisplayHandler::DispatchCommand()
 		default:
 			break;
 		}
-		yield();
+		//yield();
 	}
 }
 

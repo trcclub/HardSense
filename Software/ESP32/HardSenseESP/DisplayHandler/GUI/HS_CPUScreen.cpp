@@ -208,7 +208,7 @@ void HS_CPUScreen::UpdateScreenOnInterval()
 		{
 			cpuCorePanelGridSprite->pushSprite(cores[i].localCoords.x, cores[i].localCoords.y);
 			UpdateCPUCorePanel(i);
-			yield();
+			//yield();
 		}
 
 		//cpuCorePanelGridSprite->pushSprite(cores[0].coords.x, cores[0].coords.y);
@@ -383,50 +383,6 @@ void HS_CPUScreen::UpdatePackageLoadGraph()
 	textPrinter_Sprite->pushSprite(localCoords.x + 11, localCoords.y + 19, TFT_TRANSPARENT);
 	textPrinter_Sprite->deleteSprite();
 }
-
-/*
-void HS_CPUScreen::InitCPUCorePanels()
-{
-	cpuCorePanelGridSprite = new TFT_eSprite(TFT);
-	cpuCorePanelGridSprite->setColorDepth(16);
-	cpuCorePanelGridSprite->createSprite(CPU_CORE_GRID_WIDTH, CPU_CORE_GRID_HEIGHT);
-	cpuCorePanelGridSprite->fillSprite(cpuScreenTheme.panelBGColor);
-
-	cpuCorePanelGridSprite->drawFastHLine(0, 30, CPU_CORE_GRID_WIDTH, cpuScreenTheme.panelBorderColor);
-	cpuCorePanelGridSprite->drawFastHLine(0, 60, CPU_CORE_GRID_WIDTH, cpuScreenTheme.panelBorderColor);
-	cpuCorePanelGridSprite->drawFastHLine(0, 90, CPU_CORE_GRID_WIDTH, cpuScreenTheme.panelBorderColor);
-
-	for (int x = 10; x < CPU_CORE_GRID_WIDTH; x += 10)
-	{
-		cpuCorePanelGridSprite->drawFastVLine(x, 0, CPU_CORE_GRID_HEIGHT, cpuScreenTheme.panelBorderColor);
-	}
-
-	for (int i = 0; i < CPU_NUMBER_OF_CORES; i++)
-	{
-		DisplayFreeHeap();
-		CreateCPUCorePanel(i);
-		yield();
-	}
-}
-
-void HS_CPUScreen::CreateCPUCorePanel(int core)
-{
-	HS_Coords localCoords(CPU_CORE_PANEL_START_X+3, CPU_CORE_PANEL_START_Y+4, CPU_CORE_GRID_WIDTH, CPU_CORE_GRID_HEIGHT);
-
-	if (core > 2)
-	{
-		localCoords.y += CPU_CORE_PANEL_HEIGHT;
-		localCoords.x += ((core - 3) * CPU_CORE_PANEL_WIDTH);
-	}
-	else {
-		localCoords.x += ((core)*CPU_CORE_PANEL_WIDTH);
-	}
-
-	DrawBoxWithBorderAndDropShadow(HS_Coords(localCoords.x - 3, localCoords.y - 3, CPU_CORE_PANEL_WIDTH, CPU_CORE_PANEL_HEIGHT), cpuScreenTheme);
-	cpuCorePanelGridSprite->pushSprite(localCoords.x, localCoords.y);
-	cores[core] = new HS_CPU_Core_Panel(TFT, localCoords, cpuScreenTheme);
-}
-*/
 
 void HS_CPUScreen::InitCPUCorePanels()
 {

@@ -219,18 +219,10 @@ void HSSerial::NewSocketRequestAccepted()
 
 	char buf[2];
 	sprintf(buf, "%c", ScreenTypes::Home);
-	//sprintf(buf, "%c", ScreenTypes::Game);
+	//sprintf(buf, "%c", ScreenTypes::CpuDetails);
 	AddItemToDisplayQueue(DisplayCommands::ChangeScreen, buf);
 
-	//
-	// ** RE-ENABLE THE HEARTBEAT
-	//
-
 	HeartbeatTimerEnabled(true);
-
-	//
-	// ** RE-ENABLE THE HEARTBEAT
-	//
 }
 
 void HSSerial::AcceptNewBTConnection()
