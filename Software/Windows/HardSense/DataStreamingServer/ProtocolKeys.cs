@@ -65,6 +65,9 @@ namespace HardSense.DataStreamingServer
             TRANSMISSION_KEYS.Add("CONFIG_DELETE_TOUCH_CALIBRATION_FILE", '\u0036'); // 6
             TRANSMISSION_KEYS.Add("CONFIG_UPDATE_TIME", '\u0037'); // 7
 
+            TRANSMISSION_KEYS.Add("INCREASE_VOLUME", '\u0038'); // 8
+            TRANSMISSION_KEYS.Add("DECREASE_VOLUME", '\u0039'); // 9
+
         }
     }
 
@@ -116,6 +119,9 @@ namespace HardSense.DataStreamingServer
 
         CONFIG_DELETE_TOUCH_CALIBRATION_FILE = 0X36, // 6
         CONFIG_UPDATE_TIME = 0X37, // 7
+
+        INCREASE_VOLUME = 0x38, // 8
+        DECREASE_VOLUME = 0x39, // 9
     };
 
     

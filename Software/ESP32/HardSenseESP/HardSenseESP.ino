@@ -3,6 +3,7 @@
  Created:	10/7/2019 7:07:38 AM
  Author:	Kitecraft
 */
+#include <ESP32Encoder.h>
 #include "freertos/portmacro.h"
 #include "DisplayHandler/DisplayHandler.h"
 #include "HSSerial/HSSerial.h"
@@ -25,6 +26,8 @@ portMUX_TYPE outputQueueMux = portMUX_INITIALIZER_UNLOCKED;
 
 hw_timer_t* heartbeatTimer = NULL;
 
+ESP32Encoder volumeEncoder;
+volatile int32_t volumeLevel = 0;
 
 void IRAM_ATTR onTimer()
 {
@@ -77,6 +80,10 @@ void setup() {
 	
 
 	hsSerial.HandleWiFiConnection();
+
+	ESP32Encoder::useInternalWeakPullResistors = true;
+	volumeEncoder.clearCount();
+	volumeEncoder.attachHalfQuad(36, 39);
 }
 
 
@@ -85,8 +92,8 @@ void loop()
 	if (!hsSerial.connectedToSomething) {
 		hsSerial.ConnectToHardsenseServer();
 	}
-
 	hsSerial.HandleInput();
+	HandleVolumeEncoder();
 	hsSerial.HandleOutput();
 	delay(20);
 }
@@ -107,6 +114,23 @@ bool IsBTButtonPressed()
 	}
 	Serial.println("NOT PRESSED");
 	return false;
+}
+
+void HandleVolumeEncoder()
+{
+	uint32_t currValue = volumeEncoder.getCount();
+	if (currValue != volumeLevel)
+	{
+		if (currValue > volumeLevel)
+		{
+			AddItemToOutputQueue(TRANS__KEY::INCREASE_VOLUME, "");
+		}
+		else 
+		{
+			AddItemToOutputQueue(TRANS__KEY::DECREASE_VOLUME, "");
+		}
+		volumeLevel = currValue;
+	}
 }
 
 void HeartbeatTimerEnabled(bool enabled)

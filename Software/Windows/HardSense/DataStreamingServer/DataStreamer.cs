@@ -8,6 +8,7 @@ using System.Timers;
 using System.Net.Sockets;
 using System.Threading;
 using HardSense.MemFile;
+using System.Runtime.InteropServices;
 
 namespace HardSense.DataStreamingServer
 {
@@ -37,7 +38,9 @@ namespace HardSense.DataStreamingServer
 
         int heartbeatsMissed = 0;
         System.Timers.Timer heartbeatTimer = new System.Timers.Timer();
-
+        
+        [DllImport("User32.dll")]
+        static extern void keybd_event(byte bVk, byte bScan, uint dwFlags, int dwExtraInfo);
 
         public DataStreamer(Socket socket)
         {
@@ -224,6 +227,12 @@ namespace HardSense.DataStreamingServer
                 case (char)TRANS__KEY.HEARTBEAT:
                     sender.AddKeyToMessage(ProtocolKeys.TRANSMISSION_KEYS["HEARTBEAT_ACK"]);
                     break;
+                case (char)TRANS__KEY.INCREASE_VOLUME:
+                    keybd_event(0xAF, 0, 0, 0);
+                    break;
+                case (char)TRANS__KEY.DECREASE_VOLUME:
+                    keybd_event(0xAE, 0, 0, 0);
+                    break;
                 default:
                     break;
             }
@@ -262,6 +271,5 @@ namespace HardSense.DataStreamingServer
             {
             }
         }
-        
     }
 }
