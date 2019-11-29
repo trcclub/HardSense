@@ -80,6 +80,7 @@ void HS_HomeScreen::UpdateScreen(String value)
 		break;
 	case 'm':
 		memPanel->Update_Mem_Free(dValue);
+		break;
 	case 'n':
 	case 'o':
 	case 'p':
@@ -429,7 +430,6 @@ void HS_HomeScreen::Update_HDD_Useage(char key, double percent)
 	// E:  /hdd/3/load/0	o
 	// F:  /hdd/1/load/0	p
 	// G:  /hdd/0/load/0	q
-	
 	uint32_t circleColor = TFT_GREEN;
 	if (percent > 95) {
 		circleColor = TFT_RED;
