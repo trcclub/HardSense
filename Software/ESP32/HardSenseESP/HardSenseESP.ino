@@ -81,9 +81,10 @@ void setup() {
 
 	hsSerial.HandleWiFiConnection();
 
-	ESP32Encoder::useInternalWeakPullResistors = true;
-	volumeEncoder.clearCount();
+	//ESP32Encoder::useInternalWeakPullResistors = true;
 	volumeEncoder.attachHalfQuad(36, 39);
+	volumeEncoder.clearCount();
+	//volumeEncoder.attachSingleEdge(36, 39);
 }
 
 
@@ -109,15 +110,14 @@ bool IsBTButtonPressed()
 {
 	if (!digitalRead(btButton))
 	{
-		Serial.println("PRESSED");
 		return true;
 	}
-	Serial.println("NOT PRESSED");
 	return false;
 }
 
 void HandleVolumeEncoder()
 {
+	
 	uint32_t currValue = volumeEncoder.getCount();
 	if (currValue != volumeLevel)
 	{
@@ -131,6 +131,7 @@ void HandleVolumeEncoder()
 		}
 		volumeLevel = currValue;
 	}
+	
 }
 
 void HeartbeatTimerEnabled(bool enabled)
