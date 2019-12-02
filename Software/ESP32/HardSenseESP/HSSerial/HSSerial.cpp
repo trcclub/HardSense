@@ -170,7 +170,7 @@ void HSSerial::HandleWiFiConnection()
 		return;
 	}
 	ConnectedToWifi = true;
-	Serial.printf("Hostname 1: %s\n", WiFi.getHostname());
+	Serial.printf("\nHostname 1: %s\n", WiFi.getHostname());
 	Serial.println("");
 	Serial.println("WiFi connected");
 	Serial.println("IP address: ");
@@ -351,9 +351,6 @@ void HSSerial::HandleOutput()
 
 	portEXIT_CRITICAL(&outputDataMux);
 
-	//Serial.print("OUTPUT: ");
-	//Serial.println(tmpOutputData);
-
 	(this->*PrintMessageToOutput)((char)TRANS__KEY::STX);
 	for (int x = 0; x < tmpOutputDataLength; x++) {
 		(this->*PrintMessageToOutput)(tmpOutputData[x]);
@@ -363,6 +360,7 @@ void HSSerial::HandleOutput()
 
 
 void HSSerial::HandleInput() {
+	/*
 	while (!outputDataQueue->isEmpty())
 	{
 		portENTER_CRITICAL(&outputQueueMux);
@@ -371,12 +369,13 @@ void HSSerial::HandleInput() {
 
 		AddStringToOutputMessage(TRANS__KEY(currItem.key), currItem.value);
 	}
-
+	*/
 	if (!(this->*InputAvailable)())
 		return;
 
 	while ((this->*InputAvailable)() && (this->*ReadInputByte)() != TRANS__KEY::STX) {  }
 
+	yield();
 	ParseInput((this->*ReadInputStringUntil)(TRANS__KEY::ETX));
 }
 

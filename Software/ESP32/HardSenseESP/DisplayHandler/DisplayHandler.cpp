@@ -50,7 +50,6 @@ void DisplayHandler::Run()
 		}
 		DispatchCommand();
 
-
 		if (UpdateCurentScreenOnInterval != NULL)
 		{
 			UpdateCurentScreenOnInterval();
@@ -66,7 +65,7 @@ void DisplayHandler::Run()
 			last = millis();
 		}
 		*/
-
+		yield();
 		delay(20);
 
 	}
@@ -97,6 +96,7 @@ void DisplayHandler::LoadNewScreen(char screenID)
 	case ScreenTypes::SplashScreen:
 		DestoryCurrentScreen = Destroy_SplashScreen;
 		UpdateCurentScreen = Update_SplashScreen;
+		UpdateCurentScreenOnInterval = Update_SplashScreen_OnInterval;
 		Create_SplashScreen(&tftDisplay);
 		break;
 	case ScreenTypes::ConnectToNetwork:

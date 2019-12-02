@@ -58,11 +58,12 @@ void setup() {
 	QUEUE_ITEM qi;
 	qi.key = DisplayCommands::ChangeScreen;
 	qi.value = String(ScreenTypes::SplashScreen);
-	//sprintf(qi.value, "%c", ScreenTypes::SplashScreen);
 	displayQueue.enqueue(qi);
 
 
-	delay(1000);
+	//delay(10000);
+
+
 
 	if (!hsSerial.Init(&outputQueue, outputQueueMux, AddItemToDisplayQueue, HeartbeatTimerEnabled))
 	{
@@ -78,13 +79,11 @@ void setup() {
 		hsSerial.HandleBluetoothConnection();
 	}
 	
-
 	hsSerial.HandleWiFiConnection();
 
-	//ESP32Encoder::useInternalWeakPullResistors = true;
+
 	volumeEncoder.attachHalfQuad(36, 39);
 	volumeEncoder.clearCount();
-	//volumeEncoder.attachSingleEdge(36, 39);
 }
 
 
@@ -95,6 +94,15 @@ void loop()
 	}
 	hsSerial.HandleInput();
 	HandleVolumeEncoder();
+
+	while (!outputQueue.isEmpty())
+	{
+		portENTER_CRITICAL(&outputQueueMux);
+		QUEUE_ITEM currItem = outputQueue.dequeue();
+		portEXIT_CRITICAL(&outputQueueMux);
+
+		hsSerial.AddStringToOutputMessage(TRANS__KEY(currItem.key), currItem.value);
+	}
 	hsSerial.HandleOutput();
 	delay(20);
 }

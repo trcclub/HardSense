@@ -21,3 +21,8 @@ void Update_SplashScreen(String value)
 {
 	HS_Current_SplashScreen->UpdateScreen(value);
 }
+
+void Update_SplashScreen_OnInterval()
+{
+	HS_Current_SplashScreen->UpdateScreenOnInterval();
+}
