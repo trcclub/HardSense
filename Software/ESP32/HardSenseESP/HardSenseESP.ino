@@ -20,7 +20,7 @@ DisplayHandler displayHandler;
 HSSerial hsSerial;
 
 //Chnage to pin 27
-const byte btButton = 5;
+const byte btButton = 27;
 
 portMUX_TYPE displayQueueMux = portMUX_INITIALIZER_UNLOCKED;
 portMUX_TYPE outputQueueMux = portMUX_INITIALIZER_UNLOCKED;
@@ -62,10 +62,6 @@ void setup() {
 	qi.key = DisplayCommands::ChangeScreen;
 	qi.value = String(ScreenTypes::SplashScreen);
 	displayQueue.enqueue(qi);
-
-
-	//delay(10000);
-
 
 
 	if (!hsSerial.Init(&outputQueue, outputQueueMux, AddItemToDisplayQueue, HeartbeatTimerEnabled))
