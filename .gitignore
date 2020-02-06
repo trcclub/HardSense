@@ -340,3 +340,5 @@ ASALocalRun/
 healthchecksdb
 *.sch-bak
 /Hardware/Kicad/HardSense/HardSense-cache.lib
+build
+/Software/ESP32/HardSenseESP/.vscode/c_cpp_properties.json
