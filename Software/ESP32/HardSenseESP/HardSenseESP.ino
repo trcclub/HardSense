@@ -62,7 +62,7 @@ void setup() {
 	qi.key = DisplayCommands::ChangeScreen;
 	qi.value = String(ScreenTypes::SplashScreen);
 	displayQueue.enqueue(qi);
-
+	
 
 	if (!hsSerial.Init(&outputQueue, outputQueueMux, AddItemToDisplayQueue, HeartbeatTimerEnabled))
 	{
