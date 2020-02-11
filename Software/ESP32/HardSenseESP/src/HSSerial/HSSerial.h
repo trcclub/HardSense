@@ -17,9 +17,7 @@ private:
 	BluetoothSerial *btSerial;
 	S_SETTNGS hardsenseSettings;
 	
-	DataQueue<QUEUE_ITEM>* outputDataQueue;
 	portMUX_TYPE outputDataMux;
-	portMUX_TYPE outputQueueMux;
 
 	char* OutputData;
 	int OutputDataLength = 0;
@@ -41,6 +39,7 @@ private:
 	int WiFi_Read();
 	String WiFi_ReadStringUntil(char terminator);
 	int WiFi_PrintChar(char c);
+	
 	void ParseInput(String input);
 	void DispatchCommand(char key, String val);
 
@@ -61,8 +60,7 @@ private:
 public:
 	HSSerial();
 	~HSSerial();
-	bool Init(DataQueue<QUEUE_ITEM> *newOutputQueue, portMUX_TYPE &newOutputQueueMux, void(*AddItemToDisplayQueue_Func)(char key, String value), void(*HeartbeatTimerEnabled_Func)(bool));
-
+	bool Init(void(*AddItemToDisplayQueue_Func)(char key, String value), void(*HeartbeatTimerEnabled_Func)(bool));
 
 	void AddKeyToOutputMessage(TRANS__KEY key);
 	void AddIntToOutputMessage(TRANS__KEY key, int val);

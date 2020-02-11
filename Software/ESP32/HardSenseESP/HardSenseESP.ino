@@ -19,7 +19,6 @@ DataQueue<QUEUE_ITEM> outputQueue(10);
 DisplayHandler displayHandler;
 HSSerial hsSerial;
 
-//Chnage to pin 27
 const byte btButton = 27;
 
 portMUX_TYPE displayQueueMux = portMUX_INITIALIZER_UNLOCKED;
@@ -49,6 +48,7 @@ void setup() {
 	timerAttachInterrupt(heartbeatTimer, &onTimer, true);
 	timerAlarmWrite(heartbeatTimer, HEARTBEAT_TIMER_POLL_TIME, true);
 	
+	
 	xTaskCreatePinnedToCore(
 		TFT_Core_Proc,                  /* pvTaskCode */
 		"DisplayHandler",            /* pcName */
@@ -64,7 +64,8 @@ void setup() {
 	displayQueue.enqueue(qi);
 	
 
-	if (!hsSerial.Init(&outputQueue, outputQueueMux, AddItemToDisplayQueue, HeartbeatTimerEnabled))
+	//if (!hsSerial.Init(&outputQueue, outputQueueMux, AddItemToDisplayQueue, HeartbeatTimerEnabled))
+	if (!hsSerial.Init(AddItemToDisplayQueue, HeartbeatTimerEnabled))
 	{
 		Serial.println("Failed to init SPIFFS");
 		while (true) {
@@ -72,25 +73,25 @@ void setup() {
 		}
 	}
 
-	if (IsBTButtonPressed())
-	{
-		Serial.println("Starting bluetooth...");
-		hsSerial.HandleBluetoothConnection();
-	}
-	
-	hsSerial.HandleWiFiConnection();
-
-
 	volumeEncoder.attachHalfQuad(encoderA_pin, encoderB_pin);
 	volumeEncoder.clearCount();
+
 }
 
 
 void loop() 
 {
 	if (!hsSerial.connectedToSomething) {
+		if(IsBTButtonPressed())
+		{
+			Serial.println("Starting bluetooth...");
+			hsSerial.HandleBluetoothConnection();
+		}
+		
+		hsSerial.HandleWiFiConnection();
 		hsSerial.ConnectToHardsenseServer();
 	}
+	
 	hsSerial.HandleInput();
 	HandleVolumeEncoder();
 

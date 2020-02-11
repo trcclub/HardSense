@@ -25,11 +25,10 @@ HSSerial::~HSSerial()
 	}
 }
 
-bool HSSerial::Init(DataQueue<QUEUE_ITEM>* newOutputQueue, portMUX_TYPE& newOutputQueueMux, void(*AddItemToDisplayQueue_Func)(char key, String value), void(*HeartbeatTimerEnabled_Func)(bool))
+//bool HSSerial::Init(DataQueue<QUEUE_ITEM>* newOutputQueue, portMUX_TYPE& newOutputQueueMux, void(*AddItemToDisplayQueue_Func)(char key, String value), void(*HeartbeatTimerEnabled_Func)(bool))
+bool HSSerial::Init(void(*AddItemToDisplayQueue_Func)(char key, String value), void(*HeartbeatTimerEnabled_Func)(bool))
 {
-	outputDataQueue = newOutputQueue;
 	AddItemToDisplayQueue = AddItemToDisplayQueue_Func;
-	outputQueueMux = newOutputQueueMux;
 	HeartbeatTimerEnabled = HeartbeatTimerEnabled_Func;
 
 	HSFileSystem hsFS;
@@ -97,8 +96,9 @@ bool HSSerial::SaveSettingsToFS()
 void HSSerial::HandleBluetoothConnection()
 {
 	char buf[2];
-	sprintf(buf, "%c", ScreenTypes::BluetoothConfigurator);
+	sprintf(buf, "%c", ScreenTypes::Game);
 	AddItemToDisplayQueue(DisplayCommands::ChangeScreen, buf);
+
 	connectedToSomething = false;
 	btSerial = new BluetoothSerial();
 	InputAvailable = &HSSerial::BT_Available;
@@ -209,7 +209,6 @@ void HSSerial::ConnectToHardsenseServer()
 
 void HSSerial::NewSocketRequestAccepted()
 {
-//	Serial.println("NewSocketRequestAccepted()");
 	connectedToSomething = true;
 	Serial.print("Connected to: ");
 	Serial.println(hardsenseSettings.serverName);
@@ -219,7 +218,6 @@ void HSSerial::NewSocketRequestAccepted()
 
 	char buf[2];
 	sprintf(buf, "%c", ScreenTypes::Home);
-	//sprintf(buf, "%c", ScreenTypes::Game);
 	AddItemToDisplayQueue(DisplayCommands::ChangeScreen, buf);
 
 	HeartbeatTimerEnabled(true);
@@ -359,17 +357,8 @@ void HSSerial::HandleOutput()
 }
 
 
-void HSSerial::HandleInput() {
-	/*
-	while (!outputDataQueue->isEmpty())
-	{
-		portENTER_CRITICAL(&outputQueueMux);
-		QUEUE_ITEM currItem = outputDataQueue->dequeue();
-		portEXIT_CRITICAL(&outputQueueMux);
-
-		AddStringToOutputMessage(TRANS__KEY(currItem.key), currItem.value);
-	}
-	*/
+void HSSerial::HandleInput() 
+{
 	if (!(this->*InputAvailable)())
 		return;
 
@@ -381,8 +370,6 @@ void HSSerial::HandleInput() {
 
 void HSSerial::ParseInput(String input)
 {
-	//Serial.print("ParseInput 1 ");
-	//Serial.println(input);
 	int currIndex = input.indexOf(TRANS__KEY::PACKET_END);
 	int start = 0;
 	while (currIndex != -1) {
@@ -396,7 +383,6 @@ void HSSerial::ParseInput(String input)
 		currIndex = input.indexOf(TRANS__KEY::PACKET_END, start);
 		yield(); // Avoid a watchdog time-out
 	}
-	//Serial.println("ParseInput 2");
 }
 
 void HSSerial::DispatchCommand(char key, String val) {

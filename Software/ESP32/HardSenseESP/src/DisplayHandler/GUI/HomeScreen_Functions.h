@@ -30,10 +30,6 @@ void Update_HomeScreen_OnInterval()
 char* Set_HomeScreen_SensorList(void(*AddItemToOutputQueue_func)(char key, String value))
 {
 	HS_Current_HomeScreen->SetSensorList(AddItemToOutputQueue_func);
-	/*
-	Serial.println("Home_Screen_SensorList():  Returning ret");
-	return HS_Current_HomeScreen->GetSensorList();
-	*/
 }
 
 bool Handle_HomeScreen_Touch(int x, int y)

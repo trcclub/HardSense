@@ -23,10 +23,11 @@ private:
 
 	void(*UpdateCurentScreen)(String value) = NULL;
 	void(*UpdateCurentScreenOnInterval)() = NULL;
-	void(*DestoryCurrentScreen)() = NULL;
+	void(*DestroyCurrentScreen)() = NULL;
 	bool(*HandleTouchPoint)(int x, int y) = NULL;
 
-	void LoadNewScreen(char screenID);
+	//void LoadNewScreen(char screenID);
+	void LoadNewScreen(ScreenTypes screenID);
 	void(*AddItemToOutputQueue)(char key, String value);
 	void(*AddItemToDisplayQueue)(char key, String value);
 
