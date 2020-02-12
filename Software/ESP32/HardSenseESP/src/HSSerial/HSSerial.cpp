@@ -90,14 +90,38 @@ bool HSSerial::SaveSettingsToFS()
 		return false;
 	}
 
+	UpdateDisplay();
 	return true;
+}
+
+void HSSerial::UpdateDisplay()
+{
+	String value = "a,";
+	value += hardsenseSettings.ssid;	
+	AddItemToDisplayQueue(DisplayCommands::UpdateValue, value);
+
+	value = "b,";
+	if(IsPasswordSet())
+	{
+		value += "******";
+	}
+	AddItemToDisplayQueue(DisplayCommands::UpdateValue, value);
+	
+	value = "c,";
+	value += hardsenseSettings.serverName;
+	AddItemToDisplayQueue(DisplayCommands::UpdateValue, value);
+	
+	value = "d,";
+	value += String(hardsenseSettings.serverPort);
+	AddItemToDisplayQueue(DisplayCommands::UpdateValue, value);
 }
 
 void HSSerial::HandleBluetoothConnection()
 {
-	char buf[2];
-	sprintf(buf, "%c", ScreenTypes::Game);
-	AddItemToDisplayQueue(DisplayCommands::ChangeScreen, buf);
+	AddItemToDisplayQueue(DisplayCommands::ChangeScreen, String(ScreenTypes::BluetoothConfigurator));
+	delay(50);
+
+	UpdateDisplay();
 
 	connectedToSomething = false;
 	btSerial = new BluetoothSerial();
@@ -140,9 +164,9 @@ bool HSSerial::WaitForBTConnection()
 
 void HSSerial::HandleWiFiConnection()
 {
-	char buf[2];
-	sprintf(buf, "%c", ScreenTypes::ConnectToNetwork);
-	AddItemToDisplayQueue(DisplayCommands::ChangeScreen, buf);
+//	char buf[2];
+//	sprintf(buf, "%c", ScreenTypes::ConnectToNetwork);
+//	AddItemToDisplayQueue(DisplayCommands::ChangeScreen, buf);
 
 	wifiSerial = new WiFiClient();
 	InputAvailable = &HSSerial::WiFi_Available;
@@ -186,9 +210,9 @@ void HSSerial::ConnectToHardsenseServer()
 		return;
 	}
 
-	char buf[2];
-	sprintf(buf, "%c", ScreenTypes::ConnectToNetwork);
-	AddItemToDisplayQueue(DisplayCommands::ChangeScreen, buf);
+//	char buf[2];
+//	sprintf(buf, "%c", ScreenTypes::ConnectToNetwork);
+//	AddItemToDisplayQueue(DisplayCommands::ChangeScreen, buf);
 
 	Serial.print("\n Connecting to socket on ");
 	Serial.print(hardsenseSettings.serverName);
@@ -216,9 +240,7 @@ void HSSerial::NewSocketRequestAccepted()
 	AddKeyToOutputMessage(TRANS__KEY::START_SENSOR_DATA_STREAM);
 	HandleOutput();
 
-	char buf[2];
-	sprintf(buf, "%c", ScreenTypes::Home);
-	AddItemToDisplayQueue(DisplayCommands::ChangeScreen, buf);
+	AddItemToDisplayQueue(DisplayCommands::ChangeScreen, String(ScreenTypes::Home));
 
 	HeartbeatTimerEnabled(true);
 }

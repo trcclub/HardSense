@@ -57,6 +57,7 @@ private:
 
 	void Update_RTC_Time(String rawTime);
 
+	void UpdateDisplay();
 public:
 	HSSerial();
 	~HSSerial();

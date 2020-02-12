@@ -5,9 +5,7 @@
 HS_BluetoothConfiguratorScreen* HS_Current_BluetoothConfiguratorScreen = NULL;
 
 void Create_BluetoothConfiguratorScreen(TFT_eSPI* TFT) {
-	Serial.println("START 1");
 	HS_Current_BluetoothConfiguratorScreen = new HS_BluetoothConfiguratorScreen(TFT);
-	Serial.println("START 2");
 }
 
 void Destroy_BluetoothConfiguratorScreen()
@@ -22,4 +20,9 @@ void Destroy_BluetoothConfiguratorScreen()
 void Update_BluetoothConfiguratorScreen(String value)
 {
 	HS_Current_BluetoothConfiguratorScreen->UpdateScreen(value);
+}
+
+void Update_BluetoothConfigurator_OnInterval()
+{
+	HS_Current_BluetoothConfiguratorScreen->UpdateScreenOnInterval();
 }

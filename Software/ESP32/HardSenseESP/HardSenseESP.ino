@@ -58,10 +58,10 @@ void setup() {
 		&Display_Core_Task_Handle,                 /* pxCreatedTask */
 		0);
 
-	QUEUE_ITEM qi;
-	qi.key = DisplayCommands::ChangeScreen;
-	qi.value = String(ScreenTypes::SplashScreen);
-	displayQueue.enqueue(qi);
+//	QUEUE_ITEM qi;
+//	qi.key = DisplayCommands::ChangeScreen;
+//	qi.value = String(ScreenTypes::SplashScreen);
+//	displayQueue.enqueue(qi);
 	
 
 	//if (!hsSerial.Init(&outputQueue, outputQueueMux, AddItemToDisplayQueue, HeartbeatTimerEnabled))
@@ -105,6 +105,7 @@ void loop()
 	}
 	hsSerial.HandleOutput();
 	delay(20);
+	//yield();
 }
 
 void TFT_Core_Proc(void* parameter)

@@ -84,10 +84,6 @@ void DisplayHandler::LoadNewScreen(ScreenTypes screenID)
 	HandleTouchPoint = NULL;
 	UnloadOldDataFromDisplayQueue();
 
-	Serial.print("Top of switch: '");
-	Serial.print(screenID);
-	Serial.println("'");
-	
 
 	switch (screenID) {
 	case ScreenTypes::SplashScreen:
@@ -102,9 +98,9 @@ void DisplayHandler::LoadNewScreen(ScreenTypes screenID)
 		Create_ConnectToNetworkScreen(&tftDisplay);
 		break;
 	case ScreenTypes::BluetoothConfigurator:
-		Serial.println("ScreenTypes::BluetoothConfigurator");
 		DestroyCurrentScreen = Destroy_BluetoothConfiguratorScreen;
 		UpdateCurentScreen = Update_BluetoothConfiguratorScreen;
+		UpdateCurentScreenOnInterval = Update_BluetoothConfigurator_OnInterval;
 		Create_BluetoothConfiguratorScreen(&tftDisplay);
 		break;
 	case ScreenTypes::Home:
@@ -152,7 +148,6 @@ void DisplayHandler::DispatchCommand()
 		case DisplayCommands::ChangeScreen:
 			if (currItem.value.length() == 1) 
 			{
-				//LoadNewScreen(currItem.value[0]);
 				LoadNewScreen(static_cast<ScreenTypes>(currItem.value.toInt()));
 			}			
 			break;

@@ -220,9 +220,7 @@ void HS_CPUScreen::HandleTouch(int x, int y)
 {
 	if (HiddenHomeScreen_Touched(x, y))
 	{
-		char buf[2];
-		sprintf(buf, "%c", ScreenTypes::Home);
-		AddItemToDisplayQueue(DisplayCommands::ChangeScreen, buf);
+		AddItemToDisplayQueue(DisplayCommands::ChangeScreen, String(ScreenTypes::Home));
 	}
 }
 
