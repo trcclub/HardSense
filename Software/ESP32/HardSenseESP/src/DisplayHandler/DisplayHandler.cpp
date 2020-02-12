@@ -87,7 +87,7 @@ void DisplayHandler::LoadNewScreen(ScreenTypes screenID)
 
 	switch (screenID) {
 	case ScreenTypes::SplashScreen:
-		Serial.println("Splash");
+		Serial.println("SplashScreen");
 		DestroyCurrentScreen = Destroy_SplashScreen;
 		UpdateCurentScreen = Update_SplashScreen;
 		UpdateCurentScreenOnInterval = Update_SplashScreen_OnInterval;
