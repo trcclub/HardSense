@@ -109,6 +109,8 @@ void HSSerial::UpdateBluetoothDisplay()
 	AddItemToDisplayQueue(DisplayCommands::UpdateValue, value);
 	AddItemToDisplayQueue(DisplayCommands::UpdateValue, String("c," + String(hardsenseSettings.serverName)));
 	AddItemToDisplayQueue(DisplayCommands::UpdateValue, String("d," + String(hardsenseSettings.serverPort)));
+	AddItemToDisplayQueue(DisplayCommands::UpdateValue, String("e," + String(hardsenseSettings.wifiDID)));
+	AddItemToDisplayQueue(DisplayCommands::UpdateValue, String("f," + String(hardsenseSettings.btDID)));
 }
 
 void HSSerial::HandleBluetoothConnection()

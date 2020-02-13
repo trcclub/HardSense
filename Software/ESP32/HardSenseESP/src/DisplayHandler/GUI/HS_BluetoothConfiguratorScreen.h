@@ -18,6 +18,9 @@
 #define SERVER_PANEL_X 0
 #define SERVER_PANEL_Y 64
 
+#define DEVICEID_PANEL_X 0
+#define DEVICEID_PANEL_Y 128
+
 
 class HS_BluetoothConfiguratorScreen :
 	public HS_ScreenBase
@@ -38,6 +41,10 @@ private:
 	void Draw_Server_Panel();
 	void Update_Server_Name(String serverName);
 	void Update_Server_Port(int port);
+
+	void Draw_DeviceID_Panel();
+	void Update_WiFi_DeviceID(String wifiDID);
+	void Update_BT_DeviceID(String btDID);
 
 public:
 	HS_BluetoothConfiguratorScreen(TFT_eSPI* newTFT);
