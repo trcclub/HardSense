@@ -152,7 +152,7 @@ void DisplayHandler::DispatchCommand()
 			}			
 			break;
 		case DisplayCommands::UpdateValue:
-			if (UpdateCurentScreen != NULL && currItem.value.length() >= 1) 
+			if (UpdateCurentScreen != NULL && currItem.value.length() >= 3) 
 			{
 				UpdateCurentScreen(String(currItem.value));
 			}

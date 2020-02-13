@@ -206,6 +206,8 @@ void HSSerial::ConnectToHardsenseServer()
 	}
 	AddItemToDisplayQueue(DisplayCommands::UpdateValue,String("b," + String(hardsenseSettings.ssid)));
 
+	AddItemToDisplayQueue(DisplayCommands::UpdateValue,String("c," + String(hardsenseSettings.serverName) + ":" + String(hardsenseSettings.serverPort)));
+
 	Serial.print("\n Connecting to socket on ");
 	Serial.print(hardsenseSettings.serverName);
 	Serial.print(":");

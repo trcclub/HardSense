@@ -13,7 +13,6 @@ HS_BluetoothConfiguratorScreen::HS_BluetoothConfiguratorScreen(TFT_eSPI* newTFT)
 	rtc.begin();
 	
 	TFT->loadFont(AA_FONT_18PT);
-	
 	textPrinter_Sprite->setTextColor(TEXT_COLOR, PANEL_BGCOLOR);
 	
 	textPrinter_Sprite->unloadFont();

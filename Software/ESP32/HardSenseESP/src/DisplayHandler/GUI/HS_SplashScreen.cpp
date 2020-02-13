@@ -27,18 +27,19 @@ HS_SplashScreen::HS_SplashScreen(TFT_eSPI* newTFT) : HS_ScreenBase(newTFT)
 
 	TFT->fillScreen(splashScreenTheme.panelBGColor);
 	Draw_NetworkConnectionPanel();
+	Draw_ServerConnectionPanel();
 
 }
 
 HS_SplashScreen::~HS_SplashScreen()
 {
+
 }
 
 
 // a = Connecting to network flag and network name
-// b = Network conneciton success
-// c = Conecting to HardSense63 Server and full name:port
-// d = 
+// b = Network connection success
+// c = Conecting to HardSense64 Server and full name:port
 void HS_SplashScreen::UpdateScreen(String value)
 {
 	String strValue(value);
@@ -52,6 +53,9 @@ void HS_SplashScreen::UpdateScreen(String value)
 		break;
 	case 'b':
 		Update_ConnectedToNetwork(subValue);
+		break;
+	case 'c':
+		Update_ConnectingToServer(subValue);
 		break;
 	default:
 		break;
@@ -127,3 +131,35 @@ void HS_SplashScreen::Update_NetworkConnectionInfo(String netID, uint16_t circle
 	TFT->fillCircle(NET_PANEL_X + 14, NET_PANEL_Y + 31, 7,circleColor);
 
 }
+
+void HS_SplashScreen::Draw_ServerConnectionPanel()
+{
+	HS_Coords localCoords(SERVER_PANEL_X, SERVER_PANEL_Y, 150, 45);
+
+	DrawBoxWithBorderAndDropShadow(localCoords, splashScreenTheme);
+	TFT->fillRect(localCoords.x + 3, localCoords.y + 4, localCoords.w - 8, localCoords.h - 7, splashScreenTheme.panelBGColor);
+	TFT->fillRect(localCoords.x + 3, localCoords.y + 4, localCoords.w - 8, 16, splashScreenTheme.panelHeaderColor);
+
+	TFT->setTextColor(splashScreenTheme.textColor, splashScreenTheme.panelHeaderColor);
+	TFT->drawString("Server",localCoords.x + 40, localCoords.y + 4);	
+
+	TFT->drawFastHLine(localCoords.x + 3, localCoords.y + 20, localCoords.w - 6, splashScreenTheme.panelBorderColor);
+	TFT->drawFastHLine(localCoords.x + 3, localCoords.y + 21, localCoords.w - 6, splashScreenTheme.panelBorderColor);
+}
+
+
+void HS_SplashScreen::Update_ConnectingToServer(String serverID)
+{
+	textPrinter_Sprite->setTextDatum(TL_DATUM);
+	textPrinter_Sprite->setTextColor(splashScreenTheme.textColor, splashScreenTheme.panelBGColor);
+	textPrinter_Sprite->createSprite(80, 15);
+	textPrinter_Sprite->fillSprite(splashScreenTheme.panelBGColor);
+
+	textPrinter_Sprite->drawString(serverID, 0, 0);
+	textPrinter_Sprite->pushSprite(SERVER_PANEL_X + 26, SERVER_PANEL_Y + 25);
+
+	textPrinter_Sprite->deleteSprite();
+
+	TFT->fillCircle(SERVER_PANEL_X + 14, SERVER_PANEL_Y + 31, 7,TFT_RED);
+}
+
