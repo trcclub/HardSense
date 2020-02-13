@@ -11,10 +11,14 @@ struct S_SETTNGS {
 	char password[FIELD_MAX_LENGTH];
 	char serverName[FIELD_MAX_LENGTH];
 	int serverPort;
+	char wifiDID[FIELD_MAX_LENGTH];
+	char btDID[FIELD_MAX_LENGTH];
 	S_SETTNGS() {
 		strcpy(ssid, "");
 		strcpy(password, "");
 		strcpy(serverName, "");
+		strcpy(wifiDID, "");
+		strcpy(btDID, "");
 		serverPort = 0;
 	}
 };

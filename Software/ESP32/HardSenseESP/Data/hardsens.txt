@@ -2,3 +2,5 @@ ssid=
 password=
 servername=
 serverport=
+wifiDID=HardSenseESP
+btDID=HardSenseESP1

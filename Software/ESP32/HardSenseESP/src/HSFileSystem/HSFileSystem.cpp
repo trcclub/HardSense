@@ -47,6 +47,12 @@ bool HSFileSystem::getSettings(S_SETTNGS& newSettings)
 				else if (key.equals("serverport")) {
 					newSettings.serverPort = value.toInt();
 				}
+				else if (key.equals("wifiDID")) {
+					value.toCharArray(newSettings.wifiDID, FIELD_MAX_LENGTH);
+				}
+				else if (key.equals("btDID")) {
+					value.toCharArray(newSettings.btDID, FIELD_MAX_LENGTH);
+				}
 			}
 		}
 	}
@@ -57,7 +63,7 @@ bool HSFileSystem::getSettings(S_SETTNGS& newSettings)
 bool HSFileSystem::writeSettings(S_SETTNGS& newSettings)
 {
 	char buf[1024];
-	sprintf(buf, "ssid=%s\npassword=%s\nservername=%s\nserverport=%i\n", newSettings.ssid, newSettings.password, newSettings.serverName, newSettings.serverPort);
+	sprintf(buf, "ssid=%s\npassword=%s\nservername=%s\nserverport=%i\nwifiDID=%s\nbtDID=%s\n", newSettings.ssid, newSettings.password, newSettings.serverName, newSettings.serverPort, newSettings.wifiDID, newSettings.btDID);
 	File file = SPIFFS.open(SETTINGS_FILE_NAME, FILE_WRITE);
 	if (!file) {
 		return false;

@@ -123,7 +123,13 @@ void HSSerial::HandleBluetoothConnection()
 	PrintMessageToOutput = &HSSerial::BT_PrintChar;
 
 	btSerial->setTimeout(50);
-	btSerial->begin("HardSenseESP1");
+
+	Serial.print("BluetoothConneciton: '");
+	Serial.print(hardsenseSettings.btDID);
+	Serial.println("'");
+	
+	//btSerial->begin("HardSenseESP1");
+	btSerial->begin(String(hardsenseSettings.btDID));
 
 	while (true)
 	{
@@ -169,7 +175,7 @@ void HSSerial::HandleWiFiConnection()
 	Serial.println("");
 
 	WiFi.begin();
-	WiFi.setHostname("HardSenseESP");
+	WiFi.setHostname(hardsenseSettings.wifiDID);
 	WiFi.begin(hardsenseSettings.ssid, hardsenseSettings.password);
 	
 
@@ -184,9 +190,9 @@ void HSSerial::HandleWiFiConnection()
 	ConnectedToWifi = true;
 	//Serial.printf("\nHostname 1: %s\n", WiFi.getHostname());
 	//Serial.println("");
-	Serial.println("WiFi connected");
-	Serial.println("IP address: ");
-	Serial.println(WiFi.localIP());
+	//Serial.println("WiFi connected");
+	//Serial.println("IP address: ");
+	//Serial.println(WiFi.localIP());
 }
 
 void HSSerial::ConnectToHardsenseServer()
@@ -200,10 +206,10 @@ void HSSerial::ConnectToHardsenseServer()
 
 	AddItemToDisplayQueue(DisplayCommands::UpdateValue,String("c," + String(hardsenseSettings.serverName) + ":" + String(hardsenseSettings.serverPort)));
 
-	Serial.print("\n Connecting to socket on ");
-	Serial.print(hardsenseSettings.serverName);
-	Serial.print(":");
-	Serial.println(hardsenseSettings.serverPort);
+	//Serial.print("\n Connecting to socket on ");
+	//Serial.print(hardsenseSettings.serverName);
+	//Serial.print(":");
+	//Serial.println(hardsenseSettings.serverPort);
 
 	connectedToSomething = false;
 	wifiSerial->connect(hardsenseSettings.serverName, hardsenseSettings.serverPort);
@@ -221,8 +227,8 @@ void HSSerial::ConnectToHardsenseServer()
 void HSSerial::NewSocketRequestAccepted()
 {
 	connectedToSomething = true;
-	Serial.print("Connected to: ");
-	Serial.println(hardsenseSettings.serverName);
+	//Serial.print("Connected to: ");
+	//Serial.println(hardsenseSettings.serverName);
 
 	AddKeyToOutputMessage(TRANS__KEY::START_SENSOR_DATA_STREAM);
 	HandleOutput();

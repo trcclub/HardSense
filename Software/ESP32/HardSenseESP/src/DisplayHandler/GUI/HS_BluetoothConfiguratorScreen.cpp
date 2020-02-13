@@ -2,8 +2,6 @@
 
 HS_BluetoothConfiguratorScreen::HS_BluetoothConfiguratorScreen(TFT_eSPI* newTFT) : HS_ScreenBase(newTFT)
 {
-	Serial.println("HS_BluetoothConfiguratorScreen() !!!");
-
 	bluetoothConfiguratorScreenTheme.panelBGColor = PANEL_BGCOLOR;
 	bluetoothConfiguratorScreenTheme.panelBorderColor = BOX_BORDER_COLOR;
 	bluetoothConfiguratorScreenTheme.panelDropShadowColor = BOX_DROP_SHADOW;
@@ -147,12 +145,30 @@ void HS_BluetoothConfiguratorScreen::Draw_Network_Panel()
 	TFT->fillRect(localCoords.x + 3, localCoords.y + 4, localCoords.w - 8, 16, bluetoothConfiguratorScreenTheme.panelHeaderColor);
 
 
-	TFT->setTextColor(bluetoothConfiguratorScreenTheme.textColor, bluetoothConfiguratorScreenTheme.panelHeaderColor);
-	TFT->drawString("Network", localCoords.x + 80, localCoords.y + 4);
-	TFT->setTextColor(bluetoothConfiguratorScreenTheme.textColor, bluetoothConfiguratorScreenTheme.panelBGColor);
-	TFT->drawString("SSID", localCoords.x + 6, localCoords.y + 24);
-	TFT->drawString("Pass", localCoords.x + 6, localCoords.y + 44);
+	textPrinter_Sprite->unloadFont();
+	textPrinter_Sprite->loadFont(AA_FONT_18PT);
 
+	textPrinter_Sprite->setTextDatum(TL_DATUM);
+	textPrinter_Sprite->createSprite(80, 15);
+
+	textPrinter_Sprite->setTextColor(bluetoothConfiguratorScreenTheme.textColor, bluetoothConfiguratorScreenTheme.panelHeaderColor);
+	textPrinter_Sprite->fillSprite(bluetoothConfiguratorScreenTheme.panelHeaderColor);
+	textPrinter_Sprite->drawString("Network", 0,0);
+	textPrinter_Sprite->pushSprite(localCoords.x + 80, localCoords.y + 4);
+
+
+	textPrinter_Sprite->setTextColor(bluetoothConfiguratorScreenTheme.textColor, bluetoothConfiguratorScreenTheme.panelBGColor);
+	textPrinter_Sprite->fillSprite(bluetoothConfiguratorScreenTheme.panelBGColor);
+	textPrinter_Sprite->drawString("SSID", 0,0);
+	textPrinter_Sprite->pushSprite(localCoords.x + 6, localCoords.y + 24);
+
+	textPrinter_Sprite->fillSprite(bluetoothConfiguratorScreenTheme.panelBGColor);
+	textPrinter_Sprite->drawString("Pass", 0,0);
+	textPrinter_Sprite->pushSprite(localCoords.x + 6, localCoords.y + 44);
+
+	textPrinter_Sprite->deleteSprite();
+
+	
 	TFT->drawFastHLine(localCoords.x + 3, localCoords.y + 20, localCoords.w - 6, bluetoothConfiguratorScreenTheme.panelBorderColor);
 	TFT->drawFastHLine(localCoords.x + 3, localCoords.y + 21, localCoords.w - 6, bluetoothConfiguratorScreenTheme.panelBorderColor);
 
@@ -164,10 +180,6 @@ void HS_BluetoothConfiguratorScreen::UpdateSSID(String ssid)
 {
 	textPrinter_Sprite->unloadFont();
 	textPrinter_Sprite->loadFont(AA_FONT_18PT);
-	Serial.print("SSID: '");
-	Serial.print(ssid);
-	Serial.println("'");
-
 
 	textPrinter_Sprite->setTextDatum(TL_DATUM);
 	textPrinter_Sprite->setTextColor(bluetoothConfiguratorScreenTheme.textColor, bluetoothConfiguratorScreenTheme.panelBGColor);
@@ -203,11 +215,35 @@ void HS_BluetoothConfiguratorScreen::Draw_Server_Panel()
 	TFT->fillRect(localCoords.x + 3, localCoords.y + 4, localCoords.w - 8, localCoords.h - 7, bluetoothConfiguratorScreenTheme.panelBGColor);
 	TFT->fillRect(localCoords.x + 3, localCoords.y + 4, localCoords.w - 8, 16, bluetoothConfiguratorScreenTheme.panelHeaderColor);
 
-	TFT->setTextColor(bluetoothConfiguratorScreenTheme.textColor, bluetoothConfiguratorScreenTheme.panelHeaderColor);
-	TFT->drawString("Server", localCoords.x + 80, localCoords.y + 4);
-	TFT->setTextColor(bluetoothConfiguratorScreenTheme.textColor, bluetoothConfiguratorScreenTheme.panelBGColor);
-	TFT->drawString("Name", localCoords.x + 6, localCoords.y + 24);
-	TFT->drawString("Port", localCoords.x + 6, localCoords.y + 44);
+
+	textPrinter_Sprite->unloadFont();
+	textPrinter_Sprite->loadFont(AA_FONT_18PT);
+
+	textPrinter_Sprite->setTextDatum(TL_DATUM);
+	textPrinter_Sprite->createSprite(80, 15);
+
+	textPrinter_Sprite->setTextColor(bluetoothConfiguratorScreenTheme.textColor, bluetoothConfiguratorScreenTheme.panelHeaderColor);
+	textPrinter_Sprite->fillSprite(bluetoothConfiguratorScreenTheme.panelHeaderColor);
+	textPrinter_Sprite->drawString("Server", 0,0);
+	textPrinter_Sprite->pushSprite(localCoords.x + 80, localCoords.y + 4);
+
+	textPrinter_Sprite->setTextColor(bluetoothConfiguratorScreenTheme.textColor, bluetoothConfiguratorScreenTheme.panelBGColor);
+	textPrinter_Sprite->fillSprite(bluetoothConfiguratorScreenTheme.panelBGColor);
+	textPrinter_Sprite->drawString("Name", 0,0);
+	textPrinter_Sprite->pushSprite(localCoords.x + 6, localCoords.y + 24);
+
+	textPrinter_Sprite->fillSprite(bluetoothConfiguratorScreenTheme.panelBGColor);
+	textPrinter_Sprite->drawString("Port", 0,0);
+	textPrinter_Sprite->pushSprite(localCoords.x + 6, localCoords.y + 44);
+
+	textPrinter_Sprite->deleteSprite();
+
+
+//	TFT->setTextColor(bluetoothConfiguratorScreenTheme.textColor, bluetoothConfiguratorScreenTheme.panelHeaderColor);
+//	TFT->drawString("Server", localCoords.x + 80, localCoords.y + 4);
+//	TFT->setTextColor(bluetoothConfiguratorScreenTheme.textColor, bluetoothConfiguratorScreenTheme.panelBGColor);
+//	TFT->drawString("Name", localCoords.x + 6, localCoords.y + 24);
+//	TFT->drawString("Port", localCoords.x + 6, localCoords.y + 44);
 
 	TFT->drawFastHLine(localCoords.x + 3, localCoords.y + 20, localCoords.w - 6, bluetoothConfiguratorScreenTheme.panelBorderColor);
 	TFT->drawFastHLine(localCoords.x + 3, localCoords.y + 21, localCoords.w - 6, bluetoothConfiguratorScreenTheme.panelBorderColor);
