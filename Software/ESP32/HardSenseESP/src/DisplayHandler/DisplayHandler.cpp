@@ -57,8 +57,19 @@ void DisplayHandler::Run()
 			UpdateCurentScreenOnInterval();
 		}
 
-		yield();
-		//delay(20);
+
+		/*
+		if (millis() - last > 1000)
+		{
+			counter++;
+			Serial.print(counter);
+			Serial.print(": ");
+			Serial.println(ESP.getFreeHeap());
+			last = millis();
+		}
+		*/
+		//yield();
+		delay(10);
 
 	}
 }
