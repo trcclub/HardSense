@@ -74,6 +74,7 @@ void setup() {
 	
 	AddItemToDisplayQueue(DisplayCommands::ChangeScreen, String(ScreenTypes::SplashScreen));
 	delay(50);
+	
 }
 
 
