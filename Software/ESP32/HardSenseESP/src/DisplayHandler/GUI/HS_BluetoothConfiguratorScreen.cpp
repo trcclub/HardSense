@@ -13,15 +13,17 @@ HS_BluetoothConfiguratorScreen::HS_BluetoothConfiguratorScreen(TFT_eSPI* newTFT)
 	rtc.begin();
 	
 	TFT->loadFont(AA_FONT_18PT);
+	
 	textPrinter_Sprite->setTextColor(TEXT_COLOR, PANEL_BGCOLOR);
+	
+	textPrinter_Sprite->unloadFont();
+	textPrinter_Sprite->loadFont(AA_FONT_18PT);
 	
 	TFT->fillScreen(TFT_BLACK);
 	
 	Draw_Network_Panel();
 	Draw_Server_Panel();
 
-	Update_Server_Name("Barf");
-	Update_Server_Port(9876);
 
 	Draw_Time_Panel();
 	Update_Time();
@@ -78,7 +80,6 @@ char* HS_BluetoothConfiguratorScreen::GetSensorList()
 
 void HS_BluetoothConfiguratorScreen::Draw_Time_Panel()
 {
-	TFT->loadFont(AA_FONT_18PT);
 	DrawBoxWithBorderAndDropShadow(HS_Coords(TIME_PANEL_X, TIME_PANEL_Y, 113, 52), bluetoothConfiguratorScreenTheme);
 	Update_Time();
 }
@@ -174,6 +175,11 @@ void HS_BluetoothConfiguratorScreen::Draw_Network_Panel()
 
 void HS_BluetoothConfiguratorScreen::UpdateSSID(String ssid)
 {
+	Serial.print("SSID: '");
+	Serial.print(ssid);
+	Serial.println("'");
+
+
 	textPrinter_Sprite->setTextDatum(TL_DATUM);
 	textPrinter_Sprite->setTextColor(bluetoothConfiguratorScreenTheme.textColor, bluetoothConfiguratorScreenTheme.panelBGColor);
 	textPrinter_Sprite->createSprite(130, 15);

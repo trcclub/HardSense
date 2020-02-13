@@ -16,3 +16,5 @@ HardSenseESP Tools configuration settings:
 In Arduino IDE, these are under the 'Tools' menu item.
 In vMicro (Visual Micro for Visual Studio), they are under 'vMicro' menu item.
 
+Essential bits: 
+Bodmers TFT_ESPI:  https://github.com/Bodmer/TFT_eSPI

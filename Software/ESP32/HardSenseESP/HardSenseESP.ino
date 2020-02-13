@@ -58,11 +58,7 @@ void setup() {
 		&Display_Core_Task_Handle,                 /* pxCreatedTask */
 		0);
 
-//	QUEUE_ITEM qi;
-//	qi.key = DisplayCommands::ChangeScreen;
-//	qi.value = String(ScreenTypes::SplashScreen);
-//	displayQueue.enqueue(qi);
-	
+
 
 	//if (!hsSerial.Init(&outputQueue, outputQueueMux, AddItemToDisplayQueue, HeartbeatTimerEnabled))
 	if (!hsSerial.Init(AddItemToDisplayQueue, HeartbeatTimerEnabled))
@@ -75,7 +71,9 @@ void setup() {
 
 	volumeEncoder.attachHalfQuad(encoderA_pin, encoderB_pin);
 	volumeEncoder.clearCount();
-
+	
+	AddItemToDisplayQueue(DisplayCommands::ChangeScreen, String(ScreenTypes::SplashScreen));
+	delay(50);
 }
 
 
@@ -87,8 +85,6 @@ void loop()
 			Serial.println("Starting bluetooth...");
 			hsSerial.HandleBluetoothConnection();
 		}
-		
-		hsSerial.HandleWiFiConnection();
 		hsSerial.ConnectToHardsenseServer();
 	}
 	

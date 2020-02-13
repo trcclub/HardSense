@@ -164,9 +164,7 @@ bool HSSerial::WaitForBTConnection()
 
 void HSSerial::HandleWiFiConnection()
 {
-//	char buf[2];
-//	sprintf(buf, "%c", ScreenTypes::ConnectToNetwork);
-//	AddItemToDisplayQueue(DisplayCommands::ChangeScreen, buf);
+	AddItemToDisplayQueue(DisplayCommands::UpdateValue,String("a," + String(hardsenseSettings.ssid)));
 
 	wifiSerial = new WiFiClient();
 	InputAvailable = &HSSerial::WiFi_Available;
@@ -176,8 +174,6 @@ void HSSerial::HandleWiFiConnection()
 
 	Serial.print("\n Connecting to Wifi: ");
 	Serial.print(hardsenseSettings.ssid);
-	//Serial.print(":");
-	//Serial.print(hardsenseSettings.password);
 	Serial.println("");
 
 	WiFi.begin();
@@ -194,12 +190,11 @@ void HSSerial::HandleWiFiConnection()
 		return;
 	}
 	ConnectedToWifi = true;
-	Serial.printf("\nHostname 1: %s\n", WiFi.getHostname());
-	Serial.println("");
+	//Serial.printf("\nHostname 1: %s\n", WiFi.getHostname());
+	//Serial.println("");
 	Serial.println("WiFi connected");
 	Serial.println("IP address: ");
 	Serial.println(WiFi.localIP());
-
 }
 
 void HSSerial::ConnectToHardsenseServer()
@@ -209,15 +204,13 @@ void HSSerial::ConnectToHardsenseServer()
 		HandleWiFiConnection();
 		return;
 	}
-
-//	char buf[2];
-//	sprintf(buf, "%c", ScreenTypes::ConnectToNetwork);
-//	AddItemToDisplayQueue(DisplayCommands::ChangeScreen, buf);
+	AddItemToDisplayQueue(DisplayCommands::UpdateValue,String("b," + String(hardsenseSettings.ssid)));
 
 	Serial.print("\n Connecting to socket on ");
 	Serial.print(hardsenseSettings.serverName);
 	Serial.print(":");
 	Serial.println(hardsenseSettings.serverPort);
+
 	connectedToSomething = false;
 	wifiSerial->connect(hardsenseSettings.serverName, hardsenseSettings.serverPort);
 	AddKeyToOutputMessage(TRANS__KEY::REQUEST_NEW_CONNECTION);
@@ -478,6 +471,8 @@ bool HSSerial::IncrementHeartbeatCounter()
 		connectedToSomething = false;
 		heartbeatCounter = 0;
 		HeartbeatTimerEnabled(false);
+		AddItemToDisplayQueue(DisplayCommands::ChangeScreen, String(ScreenTypes::SplashScreen));
+		delay(50);
 		return false;
 	}
 	heartbeatCounter++;

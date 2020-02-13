@@ -8,12 +8,11 @@ HS_SplashScreen::HS_SplashScreen(TFT_eSPI* newTFT) : HS_ScreenBase(newTFT)
 	splashScreenTheme.panelHeaderColor = PANEL_HCOLOR;
 	splashScreenTheme.textColor = TEXT_COLOR;
 
-	Serial.println("Top of Splash Screen");
+	textPrinter_Sprite->unloadFont();
+	textPrinter_Sprite->loadFont(AA_FONT_18PT);
+	TFT->unloadFont();
+	TFT->loadFont(AA_FONT_18PT);
 
-	TFT->fillScreen(splashScreenTheme.panelBGColor);
-
-
-	uint32_t col[8];
 	col[0] = 0xED7F;
 	col[1] = 0xD4DB;
 	col[2] = 0xBC38;
@@ -23,34 +22,23 @@ HS_SplashScreen::HS_SplashScreen(TFT_eSPI* newTFT) : HS_ScreenBase(newTFT)
 	col[6] = 0x72AF;
 	col[7] = 0x624D;
 
-	for (int i = 8; i > 0; i--) {
-		TFT->fillCircle(240 + 40 * (cos(-i * PI / 4)), 120 + 40 * (sin(-i * PI / 4)), 10, col[0]); delay(15);
-		TFT->fillCircle(240 + 40 * (cos(-(i + 1) * PI / 4)), 120 + 40 * (sin(-(i + 1) * PI / 4)), 10, col[1]); delay(15);
-		TFT->fillCircle(240 + 40 * (cos(-(i + 2) * PI / 4)), 120 + 40 * (sin(-(i + 2) * PI / 4)), 10, col[2]); delay(15);
-		TFT->fillCircle(240 + 40 * (cos(-(i + 3) * PI / 4)), 120 + 40 * (sin(-(i + 3) * PI / 4)), 10, col[3]); delay(15);
-		TFT->fillCircle(240 + 40 * (cos(-(i + 4) * PI / 4)), 120 + 40 * (sin(-(i + 4) * PI / 4)), 10, col[4]); delay(15);
-		TFT->fillCircle(240 + 40 * (cos(-(i + 5) * PI / 4)), 120 + 40 * (sin(-(i + 5) * PI / 4)), 10, col[5]); delay(15);
-		TFT->fillCircle(240 + 40 * (cos(-(i + 6) * PI / 4)), 120 + 40 * (sin(-(i + 6) * PI / 4)), 10, col[6]); delay(15);
-		TFT->fillCircle(240 + 40 * (cos(-(i + 7) * PI / 4)), 120 + 40 * (sin(-(i + 7) * PI / 4)), 10, col[7]); delay(15);
-	}
+	circleLoopCounter = 8;
+	secondaryLoopCounter = 0;
 
+	TFT->fillScreen(splashScreenTheme.panelBGColor);
+	Draw_NetworkConnectionPanel();
 
-	Serial.println("Ending of Splash Screen");
-
-	/*
-	Serial.println("HS_SplashScreen() !!!");
-
-	TFT->fillScreen(TFT_YELLOW);
-	TFT->setCursor(40, 40);
-	TFT->setTextSize(2);
-	TFT->print("Splash Screen");
-	*/
 }
 
 HS_SplashScreen::~HS_SplashScreen()
 {
 }
 
+
+// a = Connecting to network flag and network name
+// b = Network conneciton success
+// c = Conecting to HardSense63 Server and full name:port
+// d = 
 void HS_SplashScreen::UpdateScreen(String value)
 {
 	String strValue(value);
@@ -58,14 +46,12 @@ void HS_SplashScreen::UpdateScreen(String value)
 	char key = strValue.charAt(0);
 	String subValue = strValue.substring(strValue.indexOf(",") + 1);
 
-	double dValue = subValue.toDouble();
-
 	switch (key) {
 	case 'a':
-		//Update_Screen_Home_Ethernet_Recv(TFT, dValue);
+		Update_ConnectingToNetwork(subValue);
 		break;
 	case 'b':
-		//Update_CPU_Total_Load(dValue);
+		Update_ConnectedToNetwork(subValue);
 		break;
 	default:
 		break;
@@ -78,5 +64,66 @@ void HS_SplashScreen::UpdateScreenOnInterval()
 	if (millis() - lastUpdate > updateScreenInterval)
 	{
 		lastUpdate = millis();
+		UpdateCircle();
 	}
+}
+
+void HS_SplashScreen::UpdateCircle()
+{
+	TFT->fillCircle(240 + 40 * (cos(-(circleLoopCounter + secondaryLoopCounter) * PI / 4)), 120 + 40 * (sin(-(circleLoopCounter + secondaryLoopCounter) * PI / 4)), 10, col[secondaryLoopCounter]); 
+	
+	secondaryLoopCounter++;
+	if(secondaryLoopCounter > 7)
+	{
+		secondaryLoopCounter = 0;
+		circleLoopCounter--;
+	}
+	
+	if(circleLoopCounter <= 0)
+	{
+		circleLoopCounter == 8;
+	}
+}
+
+
+void HS_SplashScreen::Update_ConnectingToNetwork(String netID)
+{
+	Update_NetworkConnectionInfo(netID,TFT_RED);
+}
+
+void HS_SplashScreen::Update_ConnectedToNetwork(String netID)
+{	
+	Update_NetworkConnectionInfo(netID,TFT_GREEN);
+}
+
+void HS_SplashScreen::Draw_NetworkConnectionPanel()
+{
+	HS_Coords localCoords(NET_PANEL_X, NET_PANEL_Y, 150, 45);
+
+	DrawBoxWithBorderAndDropShadow(localCoords, splashScreenTheme);
+	TFT->fillRect(localCoords.x + 3, localCoords.y + 4, localCoords.w - 8, localCoords.h - 7, splashScreenTheme.panelBGColor);
+	TFT->fillRect(localCoords.x + 3, localCoords.y + 4, localCoords.w - 8, 16, splashScreenTheme.panelHeaderColor);
+
+	TFT->setTextColor(splashScreenTheme.textColor, splashScreenTheme.panelHeaderColor);
+	TFT->drawString("Network",localCoords.x + 40, localCoords.y + 4);	
+
+	TFT->drawFastHLine(localCoords.x + 3, localCoords.y + 20, localCoords.w - 6, splashScreenTheme.panelBorderColor);
+	TFT->drawFastHLine(localCoords.x + 3, localCoords.y + 21, localCoords.w - 6, splashScreenTheme.panelBorderColor);
+
+}
+
+void HS_SplashScreen::Update_NetworkConnectionInfo(String netID, uint16_t circleColor)
+{
+	textPrinter_Sprite->setTextDatum(TL_DATUM);
+	textPrinter_Sprite->setTextColor(splashScreenTheme.textColor, splashScreenTheme.panelBGColor);
+	textPrinter_Sprite->createSprite(80, 15);
+	textPrinter_Sprite->fillSprite(splashScreenTheme.panelBGColor);
+
+	textPrinter_Sprite->drawString(netID, 0, 0);
+	textPrinter_Sprite->pushSprite(NET_PANEL_X + 26, NET_PANEL_Y + 25);
+
+	textPrinter_Sprite->deleteSprite();
+
+	TFT->fillCircle(NET_PANEL_X + 14, NET_PANEL_Y + 31, 7,circleColor);
+
 }

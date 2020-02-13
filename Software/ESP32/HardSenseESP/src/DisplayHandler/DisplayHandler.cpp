@@ -57,8 +57,8 @@ void DisplayHandler::Run()
 			UpdateCurentScreenOnInterval();
 		}
 
-		//yield();
-		delay(20);
+		yield();
+		//delay(20);
 
 	}
 }
@@ -87,7 +87,6 @@ void DisplayHandler::LoadNewScreen(ScreenTypes screenID)
 
 	switch (screenID) {
 	case ScreenTypes::SplashScreen:
-		Serial.println("SplashScreen");
 		DestroyCurrentScreen = Destroy_SplashScreen;
 		UpdateCurentScreen = Update_SplashScreen;
 		UpdateCurentScreenOnInterval = Update_SplashScreen_OnInterval;
@@ -153,7 +152,7 @@ void DisplayHandler::DispatchCommand()
 			}			
 			break;
 		case DisplayCommands::UpdateValue:
-			if (UpdateCurentScreen != NULL && currItem.value.length() >= 3) 
+			if (UpdateCurentScreen != NULL && currItem.value.length() >= 1) 
 			{
 				UpdateCurentScreen(String(currItem.value));
 			}
