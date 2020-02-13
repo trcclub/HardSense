@@ -57,7 +57,7 @@ private:
 
 	void Update_RTC_Time(String rawTime);
 
-	void UpdateDisplay();
+	void UpdateBluetoothDisplay();
 public:
 	HSSerial();
 	~HSSerial();

@@ -48,7 +48,7 @@ bool HSSerial::Init(void(*AddItemToDisplayQueue_Func)(char key, String value), v
 
 bool HSSerial::IsPasswordSet()
 {
-	if (strlen(hardsenseSettings.password) == 0)
+	if (strcmp(hardsenseSettings.password,"") == 0)
 	{
 		return false;
 	}
@@ -90,38 +90,30 @@ bool HSSerial::SaveSettingsToFS()
 		return false;
 	}
 
-	UpdateDisplay();
+	UpdateBluetoothDisplay();
 	return true;
 }
 
-void HSSerial::UpdateDisplay()
+void HSSerial::UpdateBluetoothDisplay()
 {
-	String value = "a,";
-	value += hardsenseSettings.ssid;	
-	AddItemToDisplayQueue(DisplayCommands::UpdateValue, value);
+	AddItemToDisplayQueue(DisplayCommands::UpdateValue, String("a," + String(hardsenseSettings.ssid)));
 
-	value = "b,";
+	String value = "b,";
 	if(IsPasswordSet())
 	{
 		value += "******";
+	} else {
+		value += " ";
 	}
+
 	AddItemToDisplayQueue(DisplayCommands::UpdateValue, value);
-	
-	value = "c,";
-	value += hardsenseSettings.serverName;
-	AddItemToDisplayQueue(DisplayCommands::UpdateValue, value);
-	
-	value = "d,";
-	value += String(hardsenseSettings.serverPort);
-	AddItemToDisplayQueue(DisplayCommands::UpdateValue, value);
+	AddItemToDisplayQueue(DisplayCommands::UpdateValue, String("c," + String(hardsenseSettings.serverName)));
+	AddItemToDisplayQueue(DisplayCommands::UpdateValue, String("d," + String(hardsenseSettings.serverPort)));
 }
 
 void HSSerial::HandleBluetoothConnection()
 {
-	AddItemToDisplayQueue(DisplayCommands::ChangeScreen, String(ScreenTypes::BluetoothConfigurator));
-	delay(50);
-
-	UpdateDisplay();
+	UpdateBluetoothDisplay();
 
 	connectedToSomething = false;
 	btSerial = new BluetoothSerial();

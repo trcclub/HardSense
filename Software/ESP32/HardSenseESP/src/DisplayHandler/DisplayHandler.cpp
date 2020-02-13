@@ -68,8 +68,8 @@ void DisplayHandler::Run()
 			last = millis();
 		}
 		*/
-		//yield();
-		delay(10);
+		yield();
+		//delay(10);
 
 	}
 }
@@ -83,7 +83,7 @@ void DisplayHandler::LoadNewScreen(ScreenTypes screenID)
 	// Otherwise, the next few statement seem to run faster then the output queue.
 	// This causes invalid data to get injected into the new screen because the sensor keys get re-used, but for a different sensor.
 	//  All though that still seems to happen (sigh) just not as frequently.  So weird.
-	delay(20); 
+	//delay(20); 
 	
 	
 	if (DestroyCurrentScreen != NULL) {

@@ -72,20 +72,22 @@ void setup() {
 	volumeEncoder.attachHalfQuad(encoderA_pin, encoderB_pin);
 	volumeEncoder.clearCount();
 	
+	if(IsBTButtonPressed())
+	{
+		Serial.println("Starting bluetooth...");
+		AddItemToDisplayQueue(DisplayCommands::ChangeScreen, String(ScreenTypes::BluetoothConfigurator));
+		delay(50);
+		hsSerial.HandleBluetoothConnection();		
+	}
+
 	AddItemToDisplayQueue(DisplayCommands::ChangeScreen, String(ScreenTypes::SplashScreen));
 	delay(50);
-	
 }
 
 
 void loop() 
 {
 	if (!hsSerial.connectedToSomething) {
-		if(IsBTButtonPressed())
-		{
-			Serial.println("Starting bluetooth...");
-			hsSerial.HandleBluetoothConnection();
-		}
 		hsSerial.ConnectToHardsenseServer();
 	}
 	
@@ -101,8 +103,8 @@ void loop()
 		hsSerial.AddStringToOutputMessage(TRANS__KEY(currItem.key), currItem.value);
 	}
 	hsSerial.HandleOutput();
-	delay(20);
-	//yield();
+	//delay(20);
+	yield();
 }
 
 void TFT_Core_Proc(void* parameter)
