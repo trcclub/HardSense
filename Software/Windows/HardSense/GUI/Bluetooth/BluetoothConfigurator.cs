@@ -31,6 +31,7 @@ namespace HardSense.GUI.Bluetooth
             writeThread = new Thread(writeThreadProc);
             groupBox_UpdateSettings.Enabled = false;
             groupBox_HardSenseESPCurrentInfo.Enabled = false;
+            groupBox_DeviceIDs.Enabled = false;
             button_DeleteTouchCalibrationFile.Enabled = false;
             button_UpdateTime.Enabled = false;
 
@@ -170,6 +171,7 @@ namespace HardSense.GUI.Bluetooth
                 groupBox_Bluetooth.Enabled = false;
                 groupBox_UpdateSettings.Enabled = true;
                 groupBox_HardSenseESPCurrentInfo.Enabled = true;
+                groupBox_DeviceIDs.Enabled = true;
                 button_DeleteTouchCalibrationFile.Enabled = true;
                 button_UpdateTime.Enabled = true;
 
@@ -266,6 +268,12 @@ namespace HardSense.GUI.Bluetooth
                 case (char)TRANS__KEY.CONFIG_CURRENT_SERVER_PORT:
                     Trans_Receive_ServerPort(value);
                     break;
+                case (char)TRANS__KEY.CONFIG_CURRENT_WIFI_DEVICE_ID:
+                    Trans_Receive_WifiDeviceId(value);
+                    break;
+                case (char)TRANS__KEY.CONFIG_CURRENT_BT_DEVICE_ID:
+                    Trans_Receive_BtDeviceId(value);
+                    break;
                 case (char)TRANS__KEY.CONFIG_SSID_UPDATE_SUCCESS:
                     Trans_Receive_SSID_Update_Success(Boolean.Parse(value));
                     break;
@@ -277,6 +285,12 @@ namespace HardSense.GUI.Bluetooth
                     break;
                 case (char)TRANS__KEY.CONFIG_SERVER_PORT_UPDATE_SUCCESS:
                     Trans_Receive_Server_Port_Update_Success(Boolean.Parse(value));
+                    break;
+                case (char)TRANS__KEY.CONFIG_WIFI_DEVICE_ID_UPDATE_SUCCESS:
+                    CONFIG_WIFI_DEVICE_ID_UPDATE_SUCCESS(Boolean.Parse(value));
+                    break;
+                case (char)TRANS__KEY.CONFIG_BT_DEVICE_ID_UPDATE_SUCCESS:
+                    CONFIG_BT_DEVICE_ID_UPDATE_SUCCESS(Boolean.Parse(value));
                     break;
                 default:
                     break;
@@ -291,6 +305,8 @@ namespace HardSense.GUI.Bluetooth
             AddKeyToMessage(ProtocolKeys.TRANSMISSION_KEYS["CONFIG_REQUEST_IS_PASSWORD_SET"]);
             AddKeyToMessage(ProtocolKeys.TRANSMISSION_KEYS["CONFIG_REQUEST_SERVER_HOSTNAME"]);
             AddKeyToMessage(ProtocolKeys.TRANSMISSION_KEYS["CONFIG_REQUEST_SERVER_PORT"]);
+            AddKeyToMessage(ProtocolKeys.TRANSMISSION_KEYS["CONFIG_REQUEST_WIFI_DEVICE_ID"]);
+            AddKeyToMessage(ProtocolKeys.TRANSMISSION_KEYS["CONFIG_REQUEST_BT_DEVICE_ID"]);
         }
         private void Trans_Receive_SSID(string newSSID)
         {
@@ -344,6 +360,30 @@ namespace HardSense.GUI.Bluetooth
             });
 
         }
+        private void Trans_Receive_WifiDeviceId(string newWifiDeviceID)
+        {
+            if (newWifiDeviceID == "")
+            {
+                newWifiDeviceID = "N/A";
+            }
+
+            textBox_CurrentWiFIDeviceID.Invoke((Action)delegate
+            {
+                textBox_CurrentWiFIDeviceID.Text = newWifiDeviceID;
+            });
+        }
+        private void Trans_Receive_BtDeviceId(string newBtDeviceID)
+        {
+            if (newBtDeviceID == "")
+            {
+                newBtDeviceID = "N/A";
+            }
+
+            textBox_CurrentBluetoothDeviceID.Invoke((Action)delegate
+            {
+                textBox_CurrentBluetoothDeviceID.Text = newBtDeviceID;
+            });
+        }
         private void Trans_Receive_SSID_Update_Success(bool result)
         {
             if (result)
@@ -385,6 +425,28 @@ namespace HardSense.GUI.Bluetooth
             else
             {
                 MessageBoxPopUp("HardSenseESP failed to update the Server Port", "HardSenseESP Failure");
+            }
+        }
+        private void CONFIG_WIFI_DEVICE_ID_UPDATE_SUCCESS(bool result)
+        {
+            if (result)
+            {
+                AddKeyToMessage(ProtocolKeys.TRANSMISSION_KEYS["CONFIG_REQUEST_WIFI_DEVICE_ID"]);
+            }
+            else
+            {
+                MessageBoxPopUp("HardSenseESP failed to update the WiFi Device ID", "HardSenseESP Failure");
+            }
+        }
+        private void CONFIG_BT_DEVICE_ID_UPDATE_SUCCESS(bool result)
+        {
+            if (result)
+            {
+                AddKeyToMessage(ProtocolKeys.TRANSMISSION_KEYS["CONFIG_REQUEST_BT_DEVICE_ID"]);
+            }
+            else
+            {
+                MessageBoxPopUp("HardSenseESP failed to update the BT Device ID", "HardSenseESP Failure");
             }
         }
 
@@ -482,6 +544,14 @@ namespace HardSense.GUI.Bluetooth
             DateTime localDate = DateTime.Now;
             String dt = localDate.ToString("MMM dd yyyy,HH:mm:ss");
             AddStringToMessage(ProtocolKeys.TRANSMISSION_KEYS["CONFIG_UPDATE_TIME"], dt);
+        }
+
+        private void button_UpdateDeviceIDInfoToESP_Click(object sender, EventArgs e)
+        {
+            AddStringToMessage(ProtocolKeys.TRANSMISSION_KEYS["CONFIG_SET_WIFI_DEVICED_ID"], textBox_NewWifiDeviceID.Text);
+            AddStringToMessage(ProtocolKeys.TRANSMISSION_KEYS["CONFIG_SET_BT_DEVICE_ID"], textBox_NewBluetoothDeviceID.Text);
+            textBox_NewWifiDeviceID.Clear();
+            textBox_NewBluetoothDeviceID.Clear();
         }
     }
 }

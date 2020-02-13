@@ -62,10 +62,19 @@
             this.button_DeleteTouchCalibrationFile = new System.Windows.Forms.Button();
             this.button_UpdateTime = new System.Windows.Forms.Button();
             this.backgroundWorker2 = new System.ComponentModel.BackgroundWorker();
+            this.groupBox_DeviceIDs = new System.Windows.Forms.GroupBox();
+            this.button_UpdateDeviceIDInfoToESP = new System.Windows.Forms.Button();
+            this.textBox_NewBluetoothDeviceID = new System.Windows.Forms.TextBox();
+            this.textBox_NewWifiDeviceID = new System.Windows.Forms.TextBox();
+            this.textBox_CurrentBluetoothDeviceID = new System.Windows.Forms.TextBox();
+            this.textBox_CurrentWiFIDeviceID = new System.Windows.Forms.TextBox();
+            this.label11 = new System.Windows.Forms.Label();
+            this.label10 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.bindingSource1)).BeginInit();
             this.groupBox_Bluetooth.SuspendLayout();
             this.groupBox_HardSenseESPCurrentInfo.SuspendLayout();
             this.groupBox_UpdateSettings.SuspendLayout();
+            this.groupBox_DeviceIDs.SuspendLayout();
             this.SuspendLayout();
             // 
             // label_CommPort
@@ -328,7 +337,7 @@
             // 
             // button_Exit
             // 
-            this.button_Exit.Location = new System.Drawing.Point(297, 238);
+            this.button_Exit.Location = new System.Drawing.Point(297, 347);
             this.button_Exit.Name = "button_Exit";
             this.button_Exit.Size = new System.Drawing.Size(75, 23);
             this.button_Exit.TabIndex = 5;
@@ -338,7 +347,7 @@
             // 
             // button_DeleteTouchCalibrationFile
             // 
-            this.button_DeleteTouchCalibrationFile.Location = new System.Drawing.Point(12, 237);
+            this.button_DeleteTouchCalibrationFile.Location = new System.Drawing.Point(12, 346);
             this.button_DeleteTouchCalibrationFile.Name = "button_DeleteTouchCalibrationFile";
             this.button_DeleteTouchCalibrationFile.Size = new System.Drawing.Size(103, 23);
             this.button_DeleteTouchCalibrationFile.TabIndex = 6;
@@ -348,7 +357,7 @@
             // 
             // button_UpdateTime
             // 
-            this.button_UpdateTime.Location = new System.Drawing.Point(122, 237);
+            this.button_UpdateTime.Location = new System.Drawing.Point(122, 346);
             this.button_UpdateTime.Name = "button_UpdateTime";
             this.button_UpdateTime.Size = new System.Drawing.Size(83, 23);
             this.button_UpdateTime.TabIndex = 7;
@@ -356,11 +365,86 @@
             this.button_UpdateTime.UseVisualStyleBackColor = true;
             this.button_UpdateTime.Click += new System.EventHandler(this.button_UpdateTime_Click);
             // 
+            // groupBox_DeviceIDs
+            // 
+            this.groupBox_DeviceIDs.Controls.Add(this.button_UpdateDeviceIDInfoToESP);
+            this.groupBox_DeviceIDs.Controls.Add(this.textBox_NewBluetoothDeviceID);
+            this.groupBox_DeviceIDs.Controls.Add(this.textBox_NewWifiDeviceID);
+            this.groupBox_DeviceIDs.Controls.Add(this.textBox_CurrentBluetoothDeviceID);
+            this.groupBox_DeviceIDs.Controls.Add(this.textBox_CurrentWiFIDeviceID);
+            this.groupBox_DeviceIDs.Controls.Add(this.label11);
+            this.groupBox_DeviceIDs.Controls.Add(this.label10);
+            this.groupBox_DeviceIDs.Location = new System.Drawing.Point(12, 239);
+            this.groupBox_DeviceIDs.Name = "groupBox_DeviceIDs";
+            this.groupBox_DeviceIDs.Size = new System.Drawing.Size(359, 101);
+            this.groupBox_DeviceIDs.TabIndex = 8;
+            this.groupBox_DeviceIDs.TabStop = false;
+            this.groupBox_DeviceIDs.Text = "Device IDs";
+            // 
+            // button_UpdateDeviceIDInfoToESP
+            // 
+            this.button_UpdateDeviceIDInfoToESP.Location = new System.Drawing.Point(215, 72);
+            this.button_UpdateDeviceIDInfoToESP.Name = "button_UpdateDeviceIDInfoToESP";
+            this.button_UpdateDeviceIDInfoToESP.Size = new System.Drawing.Size(128, 23);
+            this.button_UpdateDeviceIDInfoToESP.TabIndex = 6;
+            this.button_UpdateDeviceIDInfoToESP.Text = "Update Device IDs";
+            this.button_UpdateDeviceIDInfoToESP.UseVisualStyleBackColor = true;
+            this.button_UpdateDeviceIDInfoToESP.Click += new System.EventHandler(this.button_UpdateDeviceIDInfoToESP_Click);
+            // 
+            // textBox_NewBluetoothDeviceID
+            // 
+            this.textBox_NewBluetoothDeviceID.Location = new System.Drawing.Point(215, 45);
+            this.textBox_NewBluetoothDeviceID.Name = "textBox_NewBluetoothDeviceID";
+            this.textBox_NewBluetoothDeviceID.Size = new System.Drawing.Size(128, 20);
+            this.textBox_NewBluetoothDeviceID.TabIndex = 5;
+            // 
+            // textBox_NewWifiDeviceID
+            // 
+            this.textBox_NewWifiDeviceID.Location = new System.Drawing.Point(215, 19);
+            this.textBox_NewWifiDeviceID.Name = "textBox_NewWifiDeviceID";
+            this.textBox_NewWifiDeviceID.Size = new System.Drawing.Size(128, 20);
+            this.textBox_NewWifiDeviceID.TabIndex = 4;
+            // 
+            // textBox_CurrentBluetoothDeviceID
+            // 
+            this.textBox_CurrentBluetoothDeviceID.Location = new System.Drawing.Point(66, 46);
+            this.textBox_CurrentBluetoothDeviceID.Name = "textBox_CurrentBluetoothDeviceID";
+            this.textBox_CurrentBluetoothDeviceID.ReadOnly = true;
+            this.textBox_CurrentBluetoothDeviceID.Size = new System.Drawing.Size(143, 20);
+            this.textBox_CurrentBluetoothDeviceID.TabIndex = 3;
+            // 
+            // textBox_CurrentWiFIDeviceID
+            // 
+            this.textBox_CurrentWiFIDeviceID.Location = new System.Drawing.Point(66, 20);
+            this.textBox_CurrentWiFIDeviceID.Name = "textBox_CurrentWiFIDeviceID";
+            this.textBox_CurrentWiFIDeviceID.ReadOnly = true;
+            this.textBox_CurrentWiFIDeviceID.Size = new System.Drawing.Size(143, 20);
+            this.textBox_CurrentWiFIDeviceID.TabIndex = 2;
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(9, 53);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(52, 13);
+            this.label11.TabIndex = 1;
+            this.label11.Text = "Bluetooth";
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(9, 20);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(25, 13);
+            this.label10.TabIndex = 0;
+            this.label10.Text = "Wifi";
+            // 
             // BluetoothConfigurator
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(383, 274);
+            this.ClientSize = new System.Drawing.Size(383, 380);
+            this.Controls.Add(this.groupBox_DeviceIDs);
             this.Controls.Add(this.button_UpdateTime);
             this.Controls.Add(this.button_DeleteTouchCalibrationFile);
             this.Controls.Add(this.button_Exit);
@@ -379,6 +463,8 @@
             this.groupBox_HardSenseESPCurrentInfo.PerformLayout();
             this.groupBox_UpdateSettings.ResumeLayout(false);
             this.groupBox_UpdateSettings.PerformLayout();
+            this.groupBox_DeviceIDs.ResumeLayout(false);
+            this.groupBox_DeviceIDs.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -418,5 +504,13 @@
         private System.Windows.Forms.Button button_DeleteTouchCalibrationFile;
         private System.Windows.Forms.Button button_UpdateTime;
         private System.ComponentModel.BackgroundWorker backgroundWorker2;
+        private System.Windows.Forms.GroupBox groupBox_DeviceIDs;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Button button_UpdateDeviceIDInfoToESP;
+        private System.Windows.Forms.TextBox textBox_NewBluetoothDeviceID;
+        private System.Windows.Forms.TextBox textBox_NewWifiDeviceID;
+        private System.Windows.Forms.TextBox textBox_CurrentBluetoothDeviceID;
+        private System.Windows.Forms.TextBox textBox_CurrentWiFIDeviceID;
     }
 }

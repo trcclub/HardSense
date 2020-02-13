@@ -70,6 +70,12 @@ bool HSSerial::UpdateSetting(char key, String value)
 	case TRANS__KEY::CONFIG_SET_SERVER_PORT:
 		hardsenseSettings.serverPort = value.toInt();
 		break;
+	case TRANS__KEY::CONFIG_SET_WIFI_DEVICED_ID:
+		value.toCharArray(hardsenseSettings.wifiDID, FIELD_MAX_LENGTH);
+		break;
+	case TRANS__KEY::CONFIG_SET_BT_DEVICE_ID:
+		value.toCharArray(hardsenseSettings.btDID, FIELD_MAX_LENGTH);
+		break;
 	default:
 		return false;
 	}
@@ -426,6 +432,12 @@ void HSSerial::DispatchCommand(char key, String val) {
 	case TRANS__KEY::CONFIG_REQUEST_SERVER_PORT:
 		AddIntToOutputMessage(TRANS__KEY::CONFIG_CURRENT_SERVER_PORT, hardsenseSettings.serverPort);
 		break;
+	case TRANS__KEY::CONFIG_REQUEST_WIFI_DEVICE_ID:
+		AddStringToOutputMessage(TRANS__KEY::CONFIG_CURRENT_WIFI_DEVICE_ID, hardsenseSettings.wifiDID);
+		break;
+	case TRANS__KEY::CONFIG_REQUEST_BT_DEVICE_ID:
+		AddStringToOutputMessage(TRANS__KEY::CONFIG_CURRENT_BT_DEVICE_ID, hardsenseSettings.btDID);
+		break;
 	case TRANS__KEY::CONFIG_SET_SSID:
 		AddBoolToOutputMessage(TRANS__KEY::CONFIG_SSID_UPDATE_SUCCESS, UpdateSetting(key,val));
 		break;
@@ -437,6 +449,12 @@ void HSSerial::DispatchCommand(char key, String val) {
 		break;
 	case TRANS__KEY::CONFIG_SET_SERVER_PORT:
 		AddBoolToOutputMessage(TRANS__KEY::CONFIG_SERVER_PORT_UPDATE_SUCCESS, UpdateSetting(key, val));
+		break;
+	case TRANS__KEY::CONFIG_SET_WIFI_DEVICED_ID:
+		AddBoolToOutputMessage(TRANS__KEY::CONFIG_WIFI_DEVICE_ID_UPDATE_SUCCESS, UpdateSetting(key, val));
+		break;
+	case TRANS__KEY::CONFIG_SET_BT_DEVICE_ID:
+		AddBoolToOutputMessage(TRANS__KEY::CONFIG_BT_DEVICE_ID_UPDATE_SUCCESS, UpdateSetting(key, val));
 		break;
 	case TRANS__KEY::UPDATE_SENSOR_VALUE:
 		AddItemToDisplayQueue(DisplayCommands::UpdateValue, val);
