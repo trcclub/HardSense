@@ -82,8 +82,8 @@ void HS_ScreenBase::HS_Load_Fonts()
 
 	// ESP32 will crash if any of the fonts are missing
 	bool font_missing = false;
-	if (SPIFFS.exists("/SegoeUI-10.vlw") == false) font_missing = true;
-	if (SPIFFS.exists("/SegoeUI-12.vlw") == false) font_missing = true;
+	//if (SPIFFS.exists("/SegoeUI-10.vlw") == false) font_missing = true;
+	//if (SPIFFS.exists("/SegoeUI-12.vlw") == false) font_missing = true;
 	if (SPIFFS.exists("/SegoeUI-14.vlw") == false) font_missing = true;
 	if (SPIFFS.exists("/SegoeUI-18.vlw") == false) font_missing = true;
 

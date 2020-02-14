@@ -3,4 +3,4 @@ password=
 servername=
 serverport=
 wifiDID=HardSenseESP
-btDID=HardSenseESP1
+btDID=HardSenseESP
