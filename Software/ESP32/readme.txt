@@ -23,7 +23,7 @@ The file 'boards.txt' is also important:
 C:\Users\<USERID>\AppData\Local\Arduino15\packages\esp32\hardware\esp32\1.0.4\boads.txt
 
 
-esp32.menu.PartitionScheme.hardsenseESP=HardSense ESP Partition (1.xMB APP with OTA/xxxKB SPIFFS)
+esp32.menu.PartitionScheme.hardsenseESP=HardSense ESP Partition (1.9MB APP with OTA/190KB SPIFFS)
 esp32.menu.PartitionScheme.hardsenseESP.build.partitions=hardsense_esp_partition
 esp32.menu.PartitionScheme.hardsenseESP.upload.maximum_size=1966080
 
@@ -32,3 +32,5 @@ esp32.menu.PartitionScheme.hardsenseESP.upload.maximum_size=1966080
 Reference links:
 https://robotzero.one/arduino-ide-partitions/
 https://lastminuteengineers.com/esp32-ota-updates-arduino-ide/
+
+

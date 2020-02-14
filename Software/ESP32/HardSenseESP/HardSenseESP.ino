@@ -93,7 +93,8 @@ void loop()
 	
 	hsSerial.HandleInput();
 	HandleVolumeEncoder();
-
+	yield();
+	
 	while (!outputQueue.isEmpty())
 	{
 		portENTER_CRITICAL(&outputQueueMux);
