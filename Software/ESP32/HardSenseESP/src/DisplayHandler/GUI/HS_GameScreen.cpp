@@ -17,15 +17,39 @@ HS_GameScreen::HS_GameScreen(TFT_eSPI* newTFT) : HS_ScreenBase(newTFT)
 	textPrinter_Sprite->unloadFont();
 	textPrinter_Sprite->loadFont(AA_FONT_14PT);
 
+//	Serial.print("HS_GameScreen: 1: ");
+//	Serial.println(ESP.getFreeHeap());
+
 	DrawTempPanel();
+//	Serial.print("HS_GameScreen: 2: ");
+//	Serial.println(ESP.getFreeHeap());
+
 	DrawMemPanel();
+//	Serial.print("HS_GameScreen: 3: ");
+//	Serial.println(ESP.getFreeHeap());
+
 	DrawClockSpeedPanel();
+//	Serial.print("HS_GameScreen: 4: ");
+//	Serial.println(ESP.getFreeHeap());
+
 	DrawGPUCoreLoadPanel();
+//	Serial.print("HS_GameScreen: 5: ");
+//	Serial.println(ESP.getFreeHeap());
 
 	DrawFPSPanel();
+//	Serial.print("HS_GameScreen: 6: ");
+//	Serial.println(ESP.getFreeHeap());
+
 	DrawCPULoadPanel();
+//	Serial.print("HS_GameScreen: 7: ");
+//	Serial.println(ESP.getFreeHeap());
+
 	Draw_Net_Panel();
+//	Serial.print("HS_GameScreen: 8: ");
+//	Serial.println(ESP.getFreeHeap());
 }
+
+
 
 HS_GameScreen::~HS_GameScreen()
 {
