@@ -11,7 +11,7 @@ To buld HardSenseESP, you need to change the partition scheme.
 
 HardSenseESP Tools configuration settings:
 	Board:  "ESP32 Dev Module"
-	Partition Scheme: "Huge APP (3MB No OTA/1MB SPIFFS)"
+	Partition Scheme: "HardSense ESP Partition"
 
 In Arduino IDE, these are under the 'Tools' menu item.
 In vMicro (Visual Micro for Visual Studio), they are under 'vMicro' menu item.

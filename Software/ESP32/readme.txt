@@ -29,6 +29,12 @@ esp32.menu.PartitionScheme.hardsenseESP.upload.maximum_size=1966080
 
 
 
+Copy the file 'hardsense_esp_partition.csv' to your partitions directory.
+Add the 3 'esp32.menu.' lines above to your boards.txt file.
+Restart arduino.
+Select 'HardSense ESP Partition' from the tools or board config  menus.
+
+
 Reference links:
 https://robotzero.one/arduino-ide-partitions/
 https://lastminuteengineers.com/esp32-ota-updates-arduino-ide/
