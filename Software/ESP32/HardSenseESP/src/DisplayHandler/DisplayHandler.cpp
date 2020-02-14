@@ -44,6 +44,7 @@ void DisplayHandler::Run()
 	{
 		if (tftDisplay.getTouch(&x, &y))
 		{
+			//Serial.println("Touched");
 			if ((millis() - lastTouch > TOUCH_DEBOUNCE_TIME) && (HandleTouchPoint != NULL))
 			{
 				HandleTouchPoint(x, y);

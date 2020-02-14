@@ -11,7 +11,7 @@ HS_BluetoothConfiguratorScreen::HS_BluetoothConfiguratorScreen(TFT_eSPI* newTFT)
 	rtc.begin();
 	
 	//TFT->loadFont(AA_FONT_18PT);	
-	//textPrinter_Sprite->unloadFont();
+	textPrinter_Sprite->unloadFont();
 	//textPrinter_Sprite->loadFont(AA_FONT_18PT);
 	
 	TFT->fillScreen(TFT_BLACK);
