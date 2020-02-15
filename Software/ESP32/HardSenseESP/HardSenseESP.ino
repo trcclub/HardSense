@@ -4,27 +4,25 @@
  Author:	Kitecraft
 */
 #include <ESP32Encoder.h>
+#include "freertos/task.h"
 #include "src/DisplayHandler/DisplayHandler.h"
 #include "src/HSSerial/HSSerial.h"
 #include "src/QueueItem.h"
 #include "src/GlobalDefinitions.h"
 
 TaskHandle_t Display_Core_Task_Handle;
-
-
 DisplayHandler displayHandler;
 HSSerial hsSerial;
 Queues allQueues;
 
 const byte btButton = 27;
 
-hw_timer_t* heartbeatTimer = NULL;
-
 ESP32Encoder volumeEncoder;
 const byte encoderA_pin = 34;
 const byte encoderB_pin = 35;
 volatile int32_t volumeLevel = 0;
 
+hw_timer_t* heartbeatTimer = NULL;
 void IRAM_ATTR onTimer()
 {
   hsSerial.FireHeartbeat();
@@ -33,7 +31,6 @@ void IRAM_ATTR onTimer()
 void setup() {
 	Serial.begin(115200);
 
-	//displayHandler.Init(&displayQueue, displayQueueMux, AddItemToOutputQueue, AddItemToDisplayQueue);
 	displayHandler.Init(&allQueues);
 
 	// Init the bluetooth button
@@ -53,7 +50,6 @@ void setup() {
 		&Display_Core_Task_Handle,                 /* pxCreatedTask */
 		0);
 
-	//if (!hsSerial.Init(AddItemToDisplayQueue, HeartbeatTimerEnabled))
 	if (!hsSerial.Init(&allQueues, HeartbeatTimerEnabled))
 	{
 		Serial.println("Failed to init SPIFFS");
@@ -69,11 +65,11 @@ void setup() {
 	{
 		//Serial.println("Starting bluetooth...");
 		allQueues.AddItemToDisplayQueue(DisplayCommands::ChangeScreen, String(ScreenTypes::BluetoothConfigurator));
-		delay(50);
+		delay(20);
 		hsSerial.HandleBluetoothConnection();		
 	}
 	allQueues.AddItemToDisplayQueue(DisplayCommands::ChangeScreen, String(ScreenTypes::SplashScreen));
-	delay(50);
+	delay(20);
 }
 
 
@@ -104,8 +100,6 @@ void loop()
 void TFT_Core_Proc(void* parameter)
 {
 	displayHandler.Run();
-	
-	//delay(20);
 }
 
 bool IsBTButtonPressed()
@@ -133,7 +127,6 @@ void HandleVolumeEncoder()
 		}
 		volumeLevel = currValue;
 	}
-	
 }
 
 void HeartbeatTimerEnabled(bool enabled)
