@@ -56,8 +56,13 @@ private:
 	volatile bool AddHeartbeatToOutput = false;
 
 	void Update_RTC_Time(String rawTime);
-
 	void UpdateBluetoothDisplay();
+
+	void Enable_OTA();
+
+
+
+
 public:
 	HSSerial();
 	~HSSerial();

@@ -40,3 +40,4 @@ https://robotzero.one/arduino-ide-partitions/
 https://lastminuteengineers.com/esp32-ota-updates-arduino-ide/
 
 
+Sketch uses 1387078 bytes (70%) of program storage space. Maximum is 1966080 bytes.

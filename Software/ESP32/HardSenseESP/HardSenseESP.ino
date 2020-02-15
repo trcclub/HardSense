@@ -15,6 +15,7 @@ TaskHandle_t Display_Core_Task_Handle;
 
 DataQueue<QUEUE_ITEM> displayQueue(20);
 DataQueue<QUEUE_ITEM> outputQueue(10);
+DataQueue<QUEUE_ITEM> commandQueue(2);
 
 DisplayHandler displayHandler;
 HSSerial hsSerial;
@@ -174,4 +175,15 @@ void AddItemToOutputQueue(char key, String value)
 	portENTER_CRITICAL(&outputQueueMux);
 	outputQueue.enqueue(qi);
 	portEXIT_CRITICAL(&outputQueueMux);
+}
+
+
+void AddItemToCommandQueue(char key, String value)
+{
+	QUEUE_ITEM qi;
+	qi.key = key;
+	qi.value = value;
+//	portENTER_CRITICAL(&outputQueueMux);
+	outputQueue.enqueue(qi);
+//	portEXIT_CRITICAL(&outputQueueMux);
 }

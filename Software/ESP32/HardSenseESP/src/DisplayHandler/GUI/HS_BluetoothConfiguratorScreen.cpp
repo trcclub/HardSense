@@ -10,15 +10,19 @@ HS_BluetoothConfiguratorScreen::HS_BluetoothConfiguratorScreen(TFT_eSPI* newTFT)
 
 	rtc.begin();
 	
-	//TFT->loadFont(AA_FONT_18PT);	
+	TFT->unloadFont();
+	TFT->setTextSize(1);
+
 	textPrinter_Sprite->unloadFont();
-	//textPrinter_Sprite->loadFont(AA_FONT_18PT);
-	
+	textPrinter_Sprite->setTextSize(1);
+
 	TFT->fillScreen(TFT_BLACK);
 	
 	Draw_Network_Panel();
 	Draw_Server_Panel();
 	Draw_DeviceID_Panel();
+
+	Draw_OTA_Panel();
 
 	Draw_Time_Panel();
 	Update_Time();
@@ -77,6 +81,14 @@ void HS_BluetoothConfiguratorScreen::UpdateScreenOnInterval()
 char* HS_BluetoothConfiguratorScreen::GetSensorList()
 {
 	return "";
+}
+
+void HS_BluetoothConfiguratorScreen::HandleTouch(int x, int y)
+{
+	if (OTA_Panel_Touched(x, y))
+	{
+		//AddItemToCommandQueue("d","asdf");
+	}
 }
 
 
@@ -186,7 +198,7 @@ void HS_BluetoothConfiguratorScreen::Draw_Network_Panel()
 
 void HS_BluetoothConfiguratorScreen::UpdateSSID(String ssid)
 {
-	//textPrinter_Sprite->unloadFont();
+	textPrinter_Sprite->unloadFont();
 	//textPrinter_Sprite->loadFont(AA_FONT_18PT);
 
 	textPrinter_Sprite->setTextDatum(TL_DATUM);
@@ -203,7 +215,8 @@ void HS_BluetoothConfiguratorScreen::UpdateSSID(String ssid)
 void HS_BluetoothConfiguratorScreen::UpdatePassword(String password)
 {
 	textPrinter_Sprite->unloadFont();
-	textPrinter_Sprite->loadFont(AA_FONT_18PT);
+	//textPrinter_Sprite->loadFont(AA_FONT_18PT);
+
 	textPrinter_Sprite->setTextDatum(TL_DATUM);
 	textPrinter_Sprite->setTextColor(bluetoothConfiguratorScreenTheme.textColor, bluetoothConfiguratorScreenTheme.panelBGColor);
 	textPrinter_Sprite->createSprite(130, 15);
@@ -256,7 +269,7 @@ void HS_BluetoothConfiguratorScreen::Draw_Server_Panel()
 
 void HS_BluetoothConfiguratorScreen::Update_Server_Name(String serverName)
 {
-	//textPrinter_Sprite->unloadFont();
+	textPrinter_Sprite->unloadFont();
 	//textPrinter_Sprite->loadFont(AA_FONT_18PT);
 	textPrinter_Sprite->setTextDatum(TL_DATUM);
 	textPrinter_Sprite->setTextColor(bluetoothConfiguratorScreenTheme.textColor, bluetoothConfiguratorScreenTheme.panelBGColor);
@@ -272,7 +285,7 @@ void HS_BluetoothConfiguratorScreen::Update_Server_Name(String serverName)
 
 void HS_BluetoothConfiguratorScreen::Update_Server_Port(int port)
 {
-	//textPrinter_Sprite->unloadFont();
+	textPrinter_Sprite->unloadFont();
 	//textPrinter_Sprite->loadFont(AA_FONT_18PT);
 	textPrinter_Sprite->setTextDatum(TL_DATUM);
 	textPrinter_Sprite->setTextColor(bluetoothConfiguratorScreenTheme.textColor, bluetoothConfiguratorScreenTheme.panelBGColor);
@@ -327,7 +340,7 @@ void HS_BluetoothConfiguratorScreen::Draw_DeviceID_Panel()
 
 void HS_BluetoothConfiguratorScreen::Update_WiFi_DeviceID(String wifiDID)
 {
-	//textPrinter_Sprite->unloadFont();
+	textPrinter_Sprite->unloadFont();
 	//textPrinter_Sprite->loadFont(AA_FONT_18PT);
 	textPrinter_Sprite->setTextDatum(TL_DATUM);
 	textPrinter_Sprite->setTextColor(bluetoothConfiguratorScreenTheme.textColor, bluetoothConfiguratorScreenTheme.panelBGColor);
@@ -343,7 +356,7 @@ void HS_BluetoothConfiguratorScreen::Update_WiFi_DeviceID(String wifiDID)
 
 void HS_BluetoothConfiguratorScreen::Update_BT_DeviceID(String btDID)
 {
-	//textPrinter_Sprite->unloadFont();
+	textPrinter_Sprite->unloadFont();
 	//textPrinter_Sprite->loadFont(AA_FONT_18PT);
 	textPrinter_Sprite->setTextDatum(TL_DATUM);
 	textPrinter_Sprite->setTextColor(bluetoothConfiguratorScreenTheme.textColor, bluetoothConfiguratorScreenTheme.panelBGColor);
@@ -354,5 +367,35 @@ void HS_BluetoothConfiguratorScreen::Update_BT_DeviceID(String btDID)
 	textPrinter_Sprite->pushSprite(DEVICEID_PANEL_X + 55, DEVICEID_PANEL_Y + 44);
 
 	textPrinter_Sprite->deleteSprite();
+}
 
+void HS_BluetoothConfiguratorScreen::Draw_OTA_Panel()
+{
+	HS_Coords localCoords(OTA_PANEL_X, OTA_PANEL_Y, 113, 127);
+
+	DrawBoxWithBorderAndDropShadow(localCoords, bluetoothConfiguratorScreenTheme);
+	TFT->fillRect(localCoords.x + 3, localCoords.y + 4, localCoords.w - 8, localCoords.h - 7, bluetoothConfiguratorScreenTheme.panelBGColor);
+	TFT->fillRect(localCoords.x + 3, localCoords.y + 4, localCoords.w - 8, 16, bluetoothConfiguratorScreenTheme.panelHeaderColor);
+
+	textPrinter_Sprite->setTextDatum(TL_DATUM);
+	textPrinter_Sprite->createSprite(95, 15);
+
+	textPrinter_Sprite->setTextColor(bluetoothConfiguratorScreenTheme.textColor, bluetoothConfiguratorScreenTheme.panelHeaderColor);
+	textPrinter_Sprite->fillSprite(bluetoothConfiguratorScreenTheme.panelHeaderColor);
+	textPrinter_Sprite->drawString("OTA", 0,0);
+	textPrinter_Sprite->pushSprite(localCoords.x + 45, localCoords.y + 4);
+
+	
+	textPrinter_Sprite->deleteSprite();
+	TFT->drawFastHLine(localCoords.x + 3, localCoords.y + 20, localCoords.w - 6, bluetoothConfiguratorScreenTheme.panelBorderColor);
+	TFT->drawFastHLine(localCoords.x + 3, localCoords.y + 21, localCoords.w - 6, bluetoothConfiguratorScreenTheme.panelBorderColor);
+}
+
+bool HS_BluetoothConfiguratorScreen::OTA_Panel_Touched(int x, int y)
+{
+	if ((x >= OTA_PANEL_LOW_X + 5 && x <= OTA_PANEL_HIGH_X - 5) && (y >= OTA_PANEL_LOW_Y + 5 && y <= OTA_PANEL_HIGH_Y - 5))
+	{
+		return true;
+	}
+	return false;
 }

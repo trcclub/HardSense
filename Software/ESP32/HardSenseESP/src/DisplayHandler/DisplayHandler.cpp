@@ -113,6 +113,7 @@ void DisplayHandler::LoadNewScreen(ScreenTypes screenID)
 		DestroyCurrentScreen = Destroy_BluetoothConfiguratorScreen;
 		UpdateCurentScreen = Update_BluetoothConfiguratorScreen;
 		UpdateCurentScreenOnInterval = Update_BluetoothConfigurator_OnInterval;
+		HandleTouchPoint = Handle_BluetoothConfigurator_Touch;
 		Create_BluetoothConfiguratorScreen(&tftDisplay);
 		break;
 	case ScreenTypes::Home:

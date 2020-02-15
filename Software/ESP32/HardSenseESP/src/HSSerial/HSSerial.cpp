@@ -139,6 +139,7 @@ void HSSerial::HandleBluetoothConnection()
 	//btSerial->begin("HardSenseESP1");
 	btSerial->begin(String(hardsenseSettings.btDID));
 
+
 	while (true)
 	{
 		WaitForBTConnection();
@@ -514,4 +515,9 @@ void HSSerial::Update_RTC_Time(String rawTime)
 	rtc.adjust(DateTime(date,time));
 	
 	DateTime now = rtc.now();
+}
+
+void HSSerial::Enable_OTA()
+{
+
 }

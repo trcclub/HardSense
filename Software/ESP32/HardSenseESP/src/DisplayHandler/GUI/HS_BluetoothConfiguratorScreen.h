@@ -21,6 +21,13 @@
 #define DEVICEID_PANEL_X 0
 #define DEVICEID_PANEL_Y 128
 
+#define OTA_PANEL_X 207
+#define OTA_PANEL_Y 52
+
+#define OTA_PANEL_LOW_X 207
+#define OTA_PANEL_HIGH_X 320
+#define OTA_PANEL_LOW_Y 52
+#define OTA_PANEL_HIGH_Y 179
 
 class HS_BluetoothConfiguratorScreen :
 	public HS_ScreenBase
@@ -46,11 +53,14 @@ private:
 	void Update_WiFi_DeviceID(String wifiDID);
 	void Update_BT_DeviceID(String btDID);
 
+	void Draw_OTA_Panel();
+	bool OTA_Panel_Touched(int x, int y);
 public:
 	HS_BluetoothConfiguratorScreen(TFT_eSPI* newTFT);
 	~HS_BluetoothConfiguratorScreen();
 	void UpdateScreen(String value);
 	void UpdateScreenOnInterval();
+	void HandleTouch(int x, int y);
 	char* GetSensorList();
 };
 
