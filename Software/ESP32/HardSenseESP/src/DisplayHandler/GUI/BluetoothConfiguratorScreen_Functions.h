@@ -32,3 +32,8 @@ bool Handle_BluetoothConfigurator_Touch(int x, int y)
 {
 	HS_Current_BluetoothConfiguratorScreen->HandleTouch(x, y);
 }
+
+void Set_BluetoothConfiguratorScreen_DisplayQueue(void(*AddItemToDisplayQueue_func)(char key, String value))
+{
+	HS_Current_BluetoothConfiguratorScreen->SetDisplayQueue(AddItemToDisplayQueue_func);
+}

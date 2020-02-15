@@ -9,6 +9,7 @@
 #include "GUI/BluetoothConfiguratorScreen_Functions.h"
 #include "GUI/GameScreen_Functions.h"
 #include "GUI/CpuDetailsScreen_Functions.h"
+#include "GUI/OTAScreen_Functions.h"
 
 DisplayHandler::DisplayHandler()
 {
@@ -115,6 +116,7 @@ void DisplayHandler::LoadNewScreen(ScreenTypes screenID)
 		UpdateCurentScreenOnInterval = Update_BluetoothConfigurator_OnInterval;
 		HandleTouchPoint = Handle_BluetoothConfigurator_Touch;
 		Create_BluetoothConfiguratorScreen(&tftDisplay);
+		Set_BluetoothConfiguratorScreen_DisplayQueue(AddItemToDisplayQueue);
 		break;
 	case ScreenTypes::Home:
 		DestroyCurrentScreen = Destroy_HomeScreen;
@@ -142,6 +144,14 @@ void DisplayHandler::LoadNewScreen(ScreenTypes screenID)
 		Create_CpuScreen(&tftDisplay);
 		Set_CpuScreen_DisplayQueue(AddItemToDisplayQueue);
 		Set_CpuScreen_SensorList(AddItemToOutputQueue);
+		break;
+	case ScreenTypes::OTA:
+		DestroyCurrentScreen = Destroy_OTAScreen;
+		UpdateCurentScreen = Update_OTAScreen;
+		//UpdateCurentScreenOnInterval = Update_BluetoothConfigurator_OnInterval;
+		HandleTouchPoint = Handle_OTAScreen_Touch;
+		Create_OTAScreen(&tftDisplay);
+		Set_OTAScreen_DisplayQueue(AddItemToDisplayQueue);
 		break;
 		
 	default:

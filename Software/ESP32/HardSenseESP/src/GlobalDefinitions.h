@@ -21,6 +21,7 @@ enum ScreenTypes {
 	Home,
 	Game,
 	CpuDetails,
+	OTA,
 };
 
 

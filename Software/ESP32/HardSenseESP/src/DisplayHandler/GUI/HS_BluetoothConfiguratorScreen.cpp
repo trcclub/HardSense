@@ -87,7 +87,7 @@ void HS_BluetoothConfiguratorScreen::HandleTouch(int x, int y)
 {
 	if (OTA_Panel_Touched(x, y))
 	{
-		//AddItemToCommandQueue("d","asdf");
+		AddItemToDisplayQueue(DisplayCommands::ChangeScreen, String(ScreenTypes::OTA));
 	}
 }
 
@@ -385,8 +385,8 @@ void HS_BluetoothConfiguratorScreen::Draw_OTA_Panel()
 	textPrinter_Sprite->drawString("OTA", 0,0);
 	textPrinter_Sprite->pushSprite(localCoords.x + 45, localCoords.y + 4);
 
-	
 	textPrinter_Sprite->deleteSprite();
+
 	TFT->drawFastHLine(localCoords.x + 3, localCoords.y + 20, localCoords.w - 6, bluetoothConfiguratorScreenTheme.panelBorderColor);
 	TFT->drawFastHLine(localCoords.x + 3, localCoords.y + 21, localCoords.w - 6, bluetoothConfiguratorScreenTheme.panelBorderColor);
 }
