@@ -16,8 +16,7 @@ class DisplayHandler
 {
 private:
 	TFT_eSPI tftDisplay;
-	DataQueue<QUEUE_ITEM>* displayDataQueue;
-	portMUX_TYPE displayQueueMux;
+	Queues *allQueues;
 
 	void DispatchCommand();
 
@@ -26,11 +25,8 @@ private:
 	void(*DestroyCurrentScreen)() = NULL;
 	bool(*HandleTouchPoint)(int x, int y) = NULL;
 
-	//void LoadNewScreen(char screenID);
 	void LoadNewScreen(ScreenTypes screenID);
-	void(*AddItemToOutputQueue)(char key, String value);
-	void(*AddItemToDisplayQueue)(char key, String value);
-
+	
 	unsigned long lastTouch = 0;
 	void CalibrateTouch();
 
@@ -39,7 +35,7 @@ private:
 public:
 	DisplayHandler();
 	~DisplayHandler();
-	void Init(DataQueue<QUEUE_ITEM>* newDisplayQueue, portMUX_TYPE& newDisplayQueueMux, void(*AddItemToOutputQueue_Func)(char key, String value), void(*AddItemToDisplayQueue_Func)(char key, String value));
+	void Init(Queues *newQueues);
 	void Run();
 
 };

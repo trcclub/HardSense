@@ -1,8 +1,10 @@
 #include "HS_ScreenBase.h"
 
-HS_ScreenBase::HS_ScreenBase(TFT_eSPI *newTFT)
+//HS_ScreenBase::HS_ScreenBase(TFT_eSPI *newTFT)
+HS_ScreenBase::HS_ScreenBase(Queues *newQueues, TFT_eSPI *newTFT)
 {
 	TFT = newTFT;
+	allQueues = newQueues;
 	SPIFFS.begin();
 
 
@@ -22,7 +24,7 @@ HS_ScreenBase::~HS_ScreenBase()
 	textPrinter_Sprite->unloadFont();
 	textPrinter_Sprite->deleteSprite();
 	delete(textPrinter_Sprite);
-	AddItemToDisplayQueue = NULL;
+	//AddItemToDisplayQueue = NULL;
 	TFT = NULL;
 }
 
@@ -30,12 +32,6 @@ void HS_ScreenBase::UpdateScreen(String value)
 {
 
 }
-
-void HS_ScreenBase::SetSensorList(void(*AddItemToOutputQueue_func)(char key, char* value))
-{
-
-}
-
 
 void HS_ScreenBase::DrawBoxWithBorderAndDropShadow(HS_Coords hs_coords, HS_Theme hs_theme)
 {
@@ -47,18 +43,7 @@ void HS_ScreenBase::DrawBoxWithBorderAndDropShadow(HS_Coords hs_coords, HS_Theme
 	TFT->drawFastHLine(hs_coords.x, hs_coords.y + hs_coords.h - 1, hs_coords.w, hs_theme.panelDropShadowColor);
 	TFT->drawFastVLine(hs_coords.x + hs_coords.w - 1, hs_coords.y, hs_coords.h, hs_theme.panelDropShadowColor);
 }
-/*
-void HS_ScreenBase::DrawBoxWithBorderAndDropShadow(int32_t x, int32_t y, int32_t w, int32_t h, int32_t borderColor, int32_t boxColor, int32_t dropShadowColor)
-{			   	//0, 0, 200, 94
-	TFT->fillRect(x, y, w-1, h-1, borderColor);
-	TFT->fillRect(x+2, y+2, w-5, h-5, boxColor);
 
-	TFT->drawFastHLine(x+3, y+3, w-6, dropShadowColor);
-	TFT->drawFastVLine(x+2, y+3, h-6, dropShadowColor);
-	TFT->drawFastHLine(x, y+h-1, w, dropShadowColor);
-	TFT->drawFastVLine(x+w-1, y, h, dropShadowColor);
-}
-*/
 void HS_ScreenBase::HandleTouch(int x, int y)
 {
 
@@ -92,11 +77,6 @@ void HS_ScreenBase::HS_Load_Fonts()
 		Serial.println("\r\HS_ScreenBase::HS_Load_Fonts():: Font missing in SPIFFS, did you upload it?");
 		while (1) yield();
 	}
-}
-
-void HS_ScreenBase::SetDisplayQueue(void(*AddItemToDisplayQueue_func)(char key, String value))
-{
-	AddItemToDisplayQueue = AddItemToDisplayQueue_func;
 }
 
 void HS_ScreenBase::DisplayFreeHeap()

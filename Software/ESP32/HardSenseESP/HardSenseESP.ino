@@ -4,25 +4,19 @@
  Author:	Kitecraft
 */
 #include <ESP32Encoder.h>
-#include "freertos/portmacro.h"
 #include "src/DisplayHandler/DisplayHandler.h"
 #include "src/HSSerial/HSSerial.h"
-#include <Queue.h>
 #include "src/QueueItem.h"
 #include "src/GlobalDefinitions.h"
 
 TaskHandle_t Display_Core_Task_Handle;
 
-DataQueue<QUEUE_ITEM> displayQueue(20);
-DataQueue<QUEUE_ITEM> outputQueue(10);
 
 DisplayHandler displayHandler;
 HSSerial hsSerial;
+Queues allQueues;
 
 const byte btButton = 27;
-
-portMUX_TYPE displayQueueMux = portMUX_INITIALIZER_UNLOCKED;
-portMUX_TYPE outputQueueMux = portMUX_INITIALIZER_UNLOCKED;
 
 hw_timer_t* heartbeatTimer = NULL;
 
@@ -39,7 +33,8 @@ void IRAM_ATTR onTimer()
 void setup() {
 	Serial.begin(115200);
 
-	displayHandler.Init(&displayQueue, displayQueueMux, AddItemToOutputQueue, AddItemToDisplayQueue);
+	//displayHandler.Init(&displayQueue, displayQueueMux, AddItemToOutputQueue, AddItemToDisplayQueue);
+	displayHandler.Init(&allQueues);
 
 	// Init the bluetooth button
 	pinMode(btButton, INPUT_PULLUP);
@@ -58,10 +53,8 @@ void setup() {
 		&Display_Core_Task_Handle,                 /* pxCreatedTask */
 		0);
 
-
-
-	//if (!hsSerial.Init(&outputQueue, outputQueueMux, AddItemToDisplayQueue, HeartbeatTimerEnabled))
-	if (!hsSerial.Init(AddItemToDisplayQueue, HeartbeatTimerEnabled))
+	//if (!hsSerial.Init(AddItemToDisplayQueue, HeartbeatTimerEnabled))
+	if (!hsSerial.Init(&allQueues, HeartbeatTimerEnabled))
 	{
 		Serial.println("Failed to init SPIFFS");
 		while (true) {
@@ -74,13 +67,12 @@ void setup() {
 	
 	if(IsBTButtonPressed())
 	{
-		Serial.println("Starting bluetooth...");
-		AddItemToDisplayQueue(DisplayCommands::ChangeScreen, String(ScreenTypes::BluetoothConfigurator));
+		//Serial.println("Starting bluetooth...");
+		allQueues.AddItemToDisplayQueue(DisplayCommands::ChangeScreen, String(ScreenTypes::BluetoothConfigurator));
 		delay(50);
 		hsSerial.HandleBluetoothConnection();		
 	}
-
-	AddItemToDisplayQueue(DisplayCommands::ChangeScreen, String(ScreenTypes::SplashScreen));
+	allQueues.AddItemToDisplayQueue(DisplayCommands::ChangeScreen, String(ScreenTypes::SplashScreen));
 	delay(50);
 }
 
@@ -95,15 +87,16 @@ void loop()
 	HandleVolumeEncoder();
 	yield();
 	
-	while (!outputQueue.isEmpty())
+	while (!allQueues.outputQueue.isEmpty())
 	{
-		portENTER_CRITICAL(&outputQueueMux);
-		QUEUE_ITEM currItem = outputQueue.dequeue();
-		portEXIT_CRITICAL(&outputQueueMux);
+		portENTER_CRITICAL(&allQueues.outputQueueMux);
+		QUEUE_ITEM currItem = allQueues.outputQueue.dequeue();
+		portEXIT_CRITICAL(&allQueues.outputQueueMux);
 
 		hsSerial.AddStringToOutputMessage(TRANS__KEY(currItem.key), currItem.value);
 	}
 	hsSerial.HandleOutput();
+
 	//delay(20);
 	yield();
 }
@@ -112,7 +105,7 @@ void TFT_Core_Proc(void* parameter)
 {
 	displayHandler.Run();
 	
-	delay(20);
+	//delay(20);
 }
 
 bool IsBTButtonPressed()
@@ -132,11 +125,11 @@ void HandleVolumeEncoder()
 	{
 		if (currValue > volumeLevel)
 		{
-			AddItemToOutputQueue(TRANS__KEY::INCREASE_VOLUME, "");
+			allQueues.AddItemToOutputQueue(TRANS__KEY::INCREASE_VOLUME, "");
 		}
 		else 
 		{
-			AddItemToOutputQueue(TRANS__KEY::DECREASE_VOLUME, "");
+			allQueues.AddItemToOutputQueue(TRANS__KEY::DECREASE_VOLUME, "");
 		}
 		volumeLevel = currValue;
 	}
@@ -154,24 +147,4 @@ void HeartbeatTimerEnabled(bool enabled)
 	{
 		timerAlarmDisable(heartbeatTimer);
 	}
-}
-
-void AddItemToDisplayQueue(char key, String value)
-{
-	QUEUE_ITEM qi;
-	qi.key = key;
-	qi.value = value;
-	portENTER_CRITICAL(&displayQueueMux);
-	displayQueue.enqueue(qi);
-	portEXIT_CRITICAL(&displayQueueMux);
-}
-
-void AddItemToOutputQueue(char key, String value)
-{
-	QUEUE_ITEM qi;
-	qi.key = key;
-	qi.value = value;
-	portENTER_CRITICAL(&outputQueueMux);
-	outputQueue.enqueue(qi);
-	portEXIT_CRITICAL(&outputQueueMux);
 }

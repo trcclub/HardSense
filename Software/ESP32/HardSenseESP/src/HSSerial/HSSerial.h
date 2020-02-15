@@ -17,8 +17,8 @@ private:
 	BluetoothSerial *btSerial;
 	S_SETTNGS hardsenseSettings;
 	
-	portMUX_TYPE outputDataMux;
-
+	Queues *allQueues;
+	
 	char* OutputData;
 	int OutputDataLength = 0;
 
@@ -47,7 +47,7 @@ private:
 	bool UpdateSetting(char key, String value);
 	bool SaveSettingsToFS();
 
-	void(*AddItemToDisplayQueue)(char key, String value);
+	
 
 	portMUX_TYPE heartbeatMux;
 	int heartbeatCounter;
@@ -66,7 +66,7 @@ private:
 public:
 	HSSerial();
 	~HSSerial();
-	bool Init(void(*AddItemToDisplayQueue_Func)(char key, String value), void(*HeartbeatTimerEnabled_Func)(bool));
+	bool Init(Queues *newQueues, void(*HeartbeatTimerEnabled_Func)(bool));
 
 	void AddKeyToOutputMessage(TRANS__KEY key);
 	void AddIntToOutputMessage(TRANS__KEY key, int val);

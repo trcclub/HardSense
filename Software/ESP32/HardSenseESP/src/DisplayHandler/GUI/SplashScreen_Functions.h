@@ -4,8 +4,8 @@
 
 HS_SplashScreen* HS_Current_SplashScreen = NULL;
 
-void Create_SplashScreen(TFT_eSPI* TFT) {
-	HS_Current_SplashScreen = new HS_SplashScreen(TFT);
+void Create_SplashScreen(Queues *newQueues, TFT_eSPI* TFT) {
+	HS_Current_SplashScreen = new HS_SplashScreen(newQueues, TFT);
 }
 
 void Destroy_SplashScreen()

@@ -36,7 +36,7 @@ private:
 	void Update_ConnectingToServer(String serverID);
 
 public:
-	HS_SplashScreen(TFT_eSPI* newTFT);
+	HS_SplashScreen(Queues *newQueues, TFT_eSPI* newTFT);
 	~HS_SplashScreen();
 	void UpdateScreen(String value);
 	void UpdateScreenOnInterval();

@@ -4,8 +4,8 @@
 
 HS_BluetoothConfiguratorScreen* HS_Current_BluetoothConfiguratorScreen = NULL;
 
-void Create_BluetoothConfiguratorScreen(TFT_eSPI* TFT) {
-	HS_Current_BluetoothConfiguratorScreen = new HS_BluetoothConfiguratorScreen(TFT);
+void Create_BluetoothConfiguratorScreen(Queues *newQueues, TFT_eSPI* TFT) {
+	HS_Current_BluetoothConfiguratorScreen = new HS_BluetoothConfiguratorScreen(newQueues, TFT);
 }
 
 void Destroy_BluetoothConfiguratorScreen()
@@ -31,9 +31,4 @@ void Update_BluetoothConfigurator_OnInterval()
 bool Handle_BluetoothConfigurator_Touch(int x, int y)
 {
 	HS_Current_BluetoothConfiguratorScreen->HandleTouch(x, y);
-}
-
-void Set_BluetoothConfiguratorScreen_DisplayQueue(void(*AddItemToDisplayQueue_func)(char key, String value))
-{
-	HS_Current_BluetoothConfiguratorScreen->SetDisplayQueue(AddItemToDisplayQueue_func);
 }

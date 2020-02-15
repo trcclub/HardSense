@@ -1,7 +1,7 @@
 #include "HS_GameScreen.h"
 
 
-HS_GameScreen::HS_GameScreen(TFT_eSPI* newTFT) : HS_ScreenBase(newTFT)
+HS_GameScreen::HS_GameScreen(Queues *newQueues, TFT_eSPI* newTFT) : HS_ScreenBase(newQueues, newTFT)
 {
 	gameScreenTheme.panelBGColor = PANEL_BGCOLOR;
 	gameScreenTheme.panelBorderColor = BOX_BORDER_COLOR;
@@ -47,6 +47,8 @@ HS_GameScreen::HS_GameScreen(TFT_eSPI* newTFT) : HS_ScreenBase(newTFT)
 	Draw_Net_Panel();
 //	Serial.print("HS_GameScreen: 8: ");
 //	Serial.println(ESP.getFreeHeap());
+
+	SendSensorList();
 }
 
 
@@ -60,34 +62,34 @@ HS_GameScreen::~HS_GameScreen()
 }
 
 
-void HS_GameScreen::SetSensorList(void(*AddItemToOutputQueue_func)(char key, String value))
+void HS_GameScreen::SendSensorList()
 {
 	// a = GPU Core Temperature
 	// b = GPU Fan Load
 	// c = GPU Core Load
-	AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/nvidiagpu/0/temperature/0,a|/nvidiagpu/0/control/0,b|/nvidiagpu/0/load/0,c");
+	allQueues->AddItemToOutputQueue(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/nvidiagpu/0/temperature/0,a|/nvidiagpu/0/control/0,b|/nvidiagpu/0/load/0,c");
 
 	// d = GPU Memory Load
 	// e = GPU Memory Used
 	// f = GPU Memory Free
-	AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/nvidiagpu/0/load/3,d|/nvidiagpu/0/smalldata/2,e|/nvidiagpu/0/smalldata/1,f");
+	allQueues->AddItemToOutputQueue(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/nvidiagpu/0/load/3,d|/nvidiagpu/0/smalldata/2,e|/nvidiagpu/0/smalldata/1,f");
 
 	// g = GPU Core Clock
 	// h = GPU Memory Clock
 	// i = GPU Shader Clock
-	AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/nvidiagpu/0/clock/0,g|/nvidiagpu/0/clock/1,h|/nvidiagpu/0/clock/2,i");
+	allQueues->AddItemToOutputQueue(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/nvidiagpu/0/clock/0,g|/nvidiagpu/0/clock/1,h|/nvidiagpu/0/clock/2,i");
 
 	// j = FPS Counter
 	// k = GPU Mem Load
 	//AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/fps/0/counter,j|/nvidiagpu/0/load/1,k");
-	AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/fps/0/counter,j");
+	allQueues->AddItemToOutputQueue(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/fps/0/counter,j");
 
 	// k = Net download speed
 	// l = net upload speed
-	AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/Ethernet/0/recv,k|/Ethernet/0/send,l");
+	allQueues->AddItemToOutputQueue(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/Ethernet/0/recv,k|/Ethernet/0/send,l");
 
 	// m = CPU Load
-	AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/intelcpu/0/load/0,m");
+	allQueues->AddItemToOutputQueue(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/intelcpu/0/load/0,m");
 }
 
 void HS_GameScreen::UpdateScreen(String value)
@@ -155,7 +157,7 @@ void HS_GameScreen::HandleTouch(int x, int y)
 {
 	if (HiddenHomeScreen_Touched(x,y))
 	{
-		AddItemToDisplayQueue(DisplayCommands::ChangeScreen, String(ScreenTypes::Home));
+		allQueues->AddItemToDisplayQueue(DisplayCommands::ChangeScreen, String(ScreenTypes::Home));
 	}
 }
 

@@ -1,7 +1,7 @@
 
 #include "HS_OTA_Screen.h"
 
-HS_OTAScreen::HS_OTAScreen(TFT_eSPI* newTFT) : HS_ScreenBase(newTFT)
+HS_OTAScreen::HS_OTAScreen(Queues *newQueues, TFT_eSPI* newTFT) : HS_ScreenBase(newQueues, newTFT)
 {
 	otaScreenTheme.panelBGColor = PANEL_BGCOLOR;
 	otaScreenTheme.panelBorderColor = BOX_BORDER_COLOR;
@@ -68,6 +68,6 @@ void HS_OTAScreen::HandleTouch(int x, int y)
 {
 	if (HiddenHomeScreen_Touched(x,y))
 	{
-		AddItemToDisplayQueue(DisplayCommands::ChangeScreen, String(ScreenTypes::BluetoothConfigurator));
+		allQueues->AddItemToDisplayQueue(DisplayCommands::ChangeScreen, String(ScreenTypes::BluetoothConfigurator));
 	}
 }

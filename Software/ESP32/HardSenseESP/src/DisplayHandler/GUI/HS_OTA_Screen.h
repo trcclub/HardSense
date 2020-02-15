@@ -14,7 +14,7 @@ private:
 	HS_Theme otaScreenTheme;
 
 public:
-	HS_OTAScreen(TFT_eSPI* newTFT);
+	HS_OTAScreen(Queues *newQueues, TFT_eSPI* newTFT);
 	~HS_OTAScreen();
 	void UpdateScreen(String value);
 	void HandleTouch(int x, int y);

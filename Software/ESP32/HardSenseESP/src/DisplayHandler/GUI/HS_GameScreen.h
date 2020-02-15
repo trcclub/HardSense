@@ -1,6 +1,5 @@
 #pragma once
 #include "HS_ScreenBase.h"
-//#include "Panels/HS_NetPanel.h"
 #include "Panels/HS_MemPanel.h"
 #include "Panels/HS_GPU_TempAndFanChart_Panel.h"
 #include "Widgets/HS_Dial_Widget.h"
@@ -85,11 +84,11 @@ private:
 	HS_NetPanel* netPanel;
 	void Draw_Net_Panel();
 public:
-	HS_GameScreen(TFT_eSPI* newTFT);
+	HS_GameScreen(Queues *newQueues, TFT_eSPI* newTFT);
 	~HS_GameScreen();
 	void UpdateScreen(String value);
 	void UpdateScreenOnInterval();
-	void SetSensorList(void(*AddItemToOutputQueue_func)(char key, String value));
+	void SendSensorList();
 	void HandleTouch(int x, int y);
 };
 

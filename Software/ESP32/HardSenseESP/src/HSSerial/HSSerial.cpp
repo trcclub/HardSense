@@ -8,7 +8,6 @@ HSSerial::HSSerial()
 	ConnectedToWifi = false;
 	wifiSerial = NULL;
 	btSerial = NULL;
-	outputDataMux = portMUX_INITIALIZER_UNLOCKED;
 	heartbeatCounter = 0;
 	heartbeatMux = portMUX_INITIALIZER_UNLOCKED;
 }
@@ -25,11 +24,11 @@ HSSerial::~HSSerial()
 	}
 }
 
-//bool HSSerial::Init(DataQueue<QUEUE_ITEM>* newOutputQueue, portMUX_TYPE& newOutputQueueMux, void(*AddItemToDisplayQueue_Func)(char key, String value), void(*HeartbeatTimerEnabled_Func)(bool))
-bool HSSerial::Init(void(*AddItemToDisplayQueue_Func)(char key, String value), void(*HeartbeatTimerEnabled_Func)(bool))
+bool HSSerial::Init(Queues *newQueues, void(*HeartbeatTimerEnabled_Func)(bool))
 {
-	AddItemToDisplayQueue = AddItemToDisplayQueue_Func;
 	HeartbeatTimerEnabled = HeartbeatTimerEnabled_Func;
+	allQueues = newQueues;
+	allQueues->outputQueueMux = portMUX_INITIALIZER_UNLOCKED;
 
 	HSFileSystem hsFS;
 	if (!hsFS.init()) {
@@ -102,7 +101,7 @@ bool HSSerial::SaveSettingsToFS()
 
 void HSSerial::UpdateBluetoothDisplay()
 {
-	AddItemToDisplayQueue(DisplayCommands::UpdateValue, String("a," + String(hardsenseSettings.ssid)));
+	allQueues->AddItemToDisplayQueue(DisplayCommands::UpdateValue, String("a," + String(hardsenseSettings.ssid)));
 
 	String value = "b,";
 	if(IsPasswordSet())
@@ -112,11 +111,11 @@ void HSSerial::UpdateBluetoothDisplay()
 		value += " ";
 	}
 
-	AddItemToDisplayQueue(DisplayCommands::UpdateValue, value);
-	AddItemToDisplayQueue(DisplayCommands::UpdateValue, String("c," + String(hardsenseSettings.serverName)));
-	AddItemToDisplayQueue(DisplayCommands::UpdateValue, String("d," + String(hardsenseSettings.serverPort)));
-	AddItemToDisplayQueue(DisplayCommands::UpdateValue, String("e," + String(hardsenseSettings.wifiDID)));
-	AddItemToDisplayQueue(DisplayCommands::UpdateValue, String("f," + String(hardsenseSettings.btDID)));
+	allQueues->AddItemToDisplayQueue(DisplayCommands::UpdateValue, value);
+	allQueues->AddItemToDisplayQueue(DisplayCommands::UpdateValue, String("c," + String(hardsenseSettings.serverName)));
+	allQueues->AddItemToDisplayQueue(DisplayCommands::UpdateValue, String("d," + String(hardsenseSettings.serverPort)));
+	allQueues->AddItemToDisplayQueue(DisplayCommands::UpdateValue, String("e," + String(hardsenseSettings.wifiDID)));
+	allQueues->AddItemToDisplayQueue(DisplayCommands::UpdateValue, String("f," + String(hardsenseSettings.btDID)));
 }
 
 void HSSerial::HandleBluetoothConnection()
@@ -132,11 +131,10 @@ void HSSerial::HandleBluetoothConnection()
 
 	btSerial->setTimeout(50);
 
-	Serial.print("BluetoothConneciton: '");
-	Serial.print(hardsenseSettings.btDID);
-	Serial.println("'");
+//	Serial.print("BluetoothConnection: '");
+//	Serial.print(hardsenseSettings.btDID);
+//	Serial.println("'");
 	
-	//btSerial->begin("HardSenseESP1");
 	btSerial->begin(String(hardsenseSettings.btDID));
 
 
@@ -171,7 +169,7 @@ bool HSSerial::WaitForBTConnection()
 
 void HSSerial::HandleWiFiConnection()
 {
-	AddItemToDisplayQueue(DisplayCommands::UpdateValue,String("a," + String(hardsenseSettings.ssid)));
+	allQueues->AddItemToDisplayQueue(DisplayCommands::UpdateValue,String("a," + String(hardsenseSettings.ssid)));
 
 	wifiSerial = new WiFiClient();
 	InputAvailable = &HSSerial::WiFi_Available;
@@ -211,9 +209,9 @@ void HSSerial::ConnectToHardsenseServer()
 		HandleWiFiConnection();
 		return;
 	}
-	AddItemToDisplayQueue(DisplayCommands::UpdateValue,String("b," + String(hardsenseSettings.ssid)));
+	allQueues->AddItemToDisplayQueue(DisplayCommands::UpdateValue,String("b," + String(hardsenseSettings.ssid)));
 
-	AddItemToDisplayQueue(DisplayCommands::UpdateValue,String("c," + String(hardsenseSettings.serverName) + ":" + String(hardsenseSettings.serverPort)));
+	allQueues->AddItemToDisplayQueue(DisplayCommands::UpdateValue,String("c," + String(hardsenseSettings.serverName) + ":" + String(hardsenseSettings.serverPort)));
 
 	//Serial.print("\n Connecting to socket on ");
 	//Serial.print(hardsenseSettings.serverName);
@@ -242,7 +240,7 @@ void HSSerial::NewSocketRequestAccepted()
 	AddKeyToOutputMessage(TRANS__KEY::START_SENSOR_DATA_STREAM);
 	HandleOutput();
 
-	AddItemToDisplayQueue(DisplayCommands::ChangeScreen, String(ScreenTypes::Home));
+	allQueues->AddItemToDisplayQueue(DisplayCommands::ChangeScreen, String(ScreenTypes::Home));
 
 	HeartbeatTimerEnabled(true);
 }
@@ -320,7 +318,7 @@ void HSSerial::AddStringToOutputMessage(TRANS__KEY key, char *value)
 		valueLength = strlen(value);
 		newLength = OutputDataLength + valueLength + 3;
 	}
-	portENTER_CRITICAL(&outputDataMux);
+	portENTER_CRITICAL(&allQueues->outputQueueMux);
 
 	char tmp[newLength];
 	
@@ -343,7 +341,7 @@ void HSSerial::AddStringToOutputMessage(TRANS__KEY key, char *value)
 	strcpy(OutputData, tmp);
 	OutputDataLength = newLength - 1;
 
-	portEXIT_CRITICAL(&outputDataMux);
+	portEXIT_CRITICAL(&allQueues->outputQueueMux);
 }
 
 void HSSerial::HandleOutput() 
@@ -363,7 +361,7 @@ void HSSerial::HandleOutput()
 		return;
 	}
 
-	portENTER_CRITICAL(&outputDataMux);
+	portENTER_CRITICAL(&allQueues->outputQueueMux);
 	
 	int tmpOutputDataLength = OutputDataLength;
 	char tmpOutputData[tmpOutputDataLength];
@@ -371,7 +369,7 @@ void HSSerial::HandleOutput()
 	delete[] OutputData;
 	OutputDataLength = 0;
 
-	portEXIT_CRITICAL(&outputDataMux);
+	portEXIT_CRITICAL(&allQueues->outputQueueMux);
 
 	(this->*PrintMessageToOutput)((char)TRANS__KEY::STX);
 	for (int x = 0; x < tmpOutputDataLength; x++) {
@@ -458,7 +456,7 @@ void HSSerial::DispatchCommand(char key, String val) {
 		AddBoolToOutputMessage(TRANS__KEY::CONFIG_BT_DEVICE_ID_UPDATE_SUCCESS, UpdateSetting(key, val));
 		break;
 	case TRANS__KEY::UPDATE_SENSOR_VALUE:
-		AddItemToDisplayQueue(DisplayCommands::UpdateValue, val);
+		allQueues->AddItemToDisplayQueue(DisplayCommands::UpdateValue, val);
 		break;
 	case TRANS__KEY::HEARTBEAT:
 		AddKeyToOutputMessage(TRANS__KEY::HEARTBEAT_ACK);
@@ -492,7 +490,7 @@ bool HSSerial::IncrementHeartbeatCounter()
 		connectedToSomething = false;
 		heartbeatCounter = 0;
 		HeartbeatTimerEnabled(false);
-		AddItemToDisplayQueue(DisplayCommands::ChangeScreen, String(ScreenTypes::SplashScreen));
+		allQueues->AddItemToDisplayQueue(DisplayCommands::ChangeScreen, String(ScreenTypes::SplashScreen));
 		delay(50);
 		return false;
 	}

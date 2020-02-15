@@ -1,6 +1,6 @@
 #include "HS_BluetoothConfiguratorScreen.h"
 
-HS_BluetoothConfiguratorScreen::HS_BluetoothConfiguratorScreen(TFT_eSPI* newTFT) : HS_ScreenBase(newTFT)
+HS_BluetoothConfiguratorScreen::HS_BluetoothConfiguratorScreen(Queues *newQueues, TFT_eSPI* newTFT) : HS_ScreenBase(newQueues, newTFT)
 {
 	bluetoothConfiguratorScreenTheme.panelBGColor = PANEL_BGCOLOR;
 	bluetoothConfiguratorScreenTheme.panelBorderColor = BOX_BORDER_COLOR;
@@ -78,20 +78,13 @@ void HS_BluetoothConfiguratorScreen::UpdateScreenOnInterval()
 	}
 }
 
-char* HS_BluetoothConfiguratorScreen::GetSensorList()
-{
-	return "";
-}
-
 void HS_BluetoothConfiguratorScreen::HandleTouch(int x, int y)
 {
 	if (OTA_Panel_Touched(x, y))
 	{
-		AddItemToDisplayQueue(DisplayCommands::ChangeScreen, String(ScreenTypes::OTA));
+		allQueues->AddItemToDisplayQueue(DisplayCommands::ChangeScreen, String(ScreenTypes::OTA));
 	}
 }
-
-
 
 void HS_BluetoothConfiguratorScreen::Draw_Time_Panel()
 {

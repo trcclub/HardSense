@@ -56,11 +56,10 @@ private:
 	void Draw_OTA_Panel();
 	bool OTA_Panel_Touched(int x, int y);
 public:
-	HS_BluetoothConfiguratorScreen(TFT_eSPI* newTFT);
+	HS_BluetoothConfiguratorScreen(Queues *newQueues, TFT_eSPI* newTFT);
 	~HS_BluetoothConfiguratorScreen();
 	void UpdateScreen(String value);
 	void UpdateScreenOnInterval();
 	void HandleTouch(int x, int y);
-	char* GetSensorList();
 };
 

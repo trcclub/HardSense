@@ -5,7 +5,6 @@
 
 #include "GUI/HomeScreen_Functions.h"
 #include "GUI//SplashScreen_Functions.h"
-#include "GUI//ConnectToNetworkScreen_Functions.h"
 #include "GUI/BluetoothConfiguratorScreen_Functions.h"
 #include "GUI/GameScreen_Functions.h"
 #include "GUI/CpuDetailsScreen_Functions.h"
@@ -20,20 +19,14 @@ DisplayHandler::~DisplayHandler()
 
 }
 
-void DisplayHandler::Init(DataQueue<QUEUE_ITEM>* newDisplayQueue, portMUX_TYPE& newDisplayQueueMux, void(*AddItemToOutputQueue_Func)(char key, String value), void(*AddItemToDisplayQueue_Func)(char key, String value))
+void DisplayHandler::Init(Queues *newQueues)
 {
-	displayDataQueue = newDisplayQueue;
-	AddItemToOutputQueue = AddItemToOutputQueue_Func;
-	displayQueueMux = newDisplayQueueMux;
-	AddItemToDisplayQueue = AddItemToDisplayQueue_Func;
-
+	allQueues = newQueues;
 	tftDisplay.init();
 
 	tftDisplay.setRotation(1);
 	tftDisplay.fillScreen(TFT_BLACK);
 	CalibrateTouch();
-
-
 }
 
 void DisplayHandler::Run()
@@ -45,7 +38,6 @@ void DisplayHandler::Run()
 	{
 		if (tftDisplay.getTouch(&x, &y))
 		{
-			//Serial.println("Touched");
 			if ((millis() - lastTouch > TOUCH_DEBOUNCE_TIME) && (HandleTouchPoint != NULL))
 			{
 				HandleTouchPoint(x, y);
@@ -59,27 +51,13 @@ void DisplayHandler::Run()
 			UpdateCurentScreenOnInterval();
 		}
 
-
-		/*
-		if (millis() - last > 1000)
-		{
-			counter++;
-			Serial.print(counter);
-			Serial.print(": ");
-			Serial.println(ESP.getFreeHeap());
-			last = millis();
-		}
-		*/
 		yield();
-		//delay(10);
-
 	}
 }
 
-//void DisplayHandler::LoadNewScreen(char screenID)
 void DisplayHandler::LoadNewScreen(ScreenTypes screenID)
 {
-	AddItemToOutputQueue(TRANS__KEY::CLEAR_SENSOR_LIST, "");
+	allQueues->AddItemToOutputQueue(TRANS__KEY::CLEAR_SENSOR_LIST, "");
 	
 	// Give the output handler enough time to send the clear sensor command.  
 	// Otherwise, the next few statement seem to run faster then the output queue.
@@ -103,57 +81,42 @@ void DisplayHandler::LoadNewScreen(ScreenTypes screenID)
 		DestroyCurrentScreen = Destroy_SplashScreen;
 		UpdateCurentScreen = Update_SplashScreen;
 		UpdateCurentScreenOnInterval = Update_SplashScreen_OnInterval;
-		Create_SplashScreen(&tftDisplay);
-		break;
-	case ScreenTypes::ConnectToNetwork:
-		DestroyCurrentScreen = Destroy_ConnectToNetworkScreen;
-		UpdateCurentScreen = Update_ConnectToNetworkScreen;
-		Create_ConnectToNetworkScreen(&tftDisplay);
+		Create_SplashScreen(allQueues, &tftDisplay);
 		break;
 	case ScreenTypes::BluetoothConfigurator:
 		DestroyCurrentScreen = Destroy_BluetoothConfiguratorScreen;
 		UpdateCurentScreen = Update_BluetoothConfiguratorScreen;
 		UpdateCurentScreenOnInterval = Update_BluetoothConfigurator_OnInterval;
 		HandleTouchPoint = Handle_BluetoothConfigurator_Touch;
-		Create_BluetoothConfiguratorScreen(&tftDisplay);
-		Set_BluetoothConfiguratorScreen_DisplayQueue(AddItemToDisplayQueue);
+		Create_BluetoothConfiguratorScreen(allQueues, &tftDisplay);
 		break;
 	case ScreenTypes::Home:
 		DestroyCurrentScreen = Destroy_HomeScreen;
 		UpdateCurentScreen = Update_HomeScreen;
 		HandleTouchPoint = Handle_HomeScreen_Touch;
 		UpdateCurentScreenOnInterval = Update_HomeScreen_OnInterval;
-		Create_HomeScreen(&tftDisplay);
-		Set_HomeScreen_DisplayQueue(AddItemToDisplayQueue);
-		Set_HomeScreen_SensorList(AddItemToOutputQueue);
+		Create_HomeScreen(allQueues, &tftDisplay);
 		break;
 	case ScreenTypes::Game:
 		DestroyCurrentScreen = Destroy_GameScreen;
 		UpdateCurentScreen = Update_GameScreen;
 		HandleTouchPoint = Handle_GameScreen_Touch;
 		UpdateCurentScreenOnInterval = Update_GameScreen_OnInterval;
-		Create_GameScreen(&tftDisplay);
-		Set_GameScreen_DisplayQueue(AddItemToDisplayQueue);
-		Set_GameScreen_SensorList(AddItemToOutputQueue);
+		Create_GameScreen(allQueues, &tftDisplay);
 		break;
 	case ScreenTypes::CpuDetails:
 		DestroyCurrentScreen = Destroy_CpuScreen;
 		UpdateCurentScreen = Update_CpuScreen;
 		HandleTouchPoint = Handle_CpuScreen_Touch;
 		UpdateCurentScreenOnInterval = Update_CpuScreen_OnInterval;
-		Create_CpuScreen(&tftDisplay);
-		Set_CpuScreen_DisplayQueue(AddItemToDisplayQueue);
-		Set_CpuScreen_SensorList(AddItemToOutputQueue);
+		Create_CpuScreen(allQueues, &tftDisplay);
 		break;
 	case ScreenTypes::OTA:
 		DestroyCurrentScreen = Destroy_OTAScreen;
 		UpdateCurentScreen = Update_OTAScreen;
-		//UpdateCurentScreenOnInterval = Update_BluetoothConfigurator_OnInterval;
 		HandleTouchPoint = Handle_OTAScreen_Touch;
-		Create_OTAScreen(&tftDisplay);
-		Set_OTAScreen_DisplayQueue(AddItemToDisplayQueue);
+		Create_OTAScreen(allQueues, &tftDisplay);
 		break;
-		
 	default:
 		break;
 	}
@@ -161,11 +124,11 @@ void DisplayHandler::LoadNewScreen(ScreenTypes screenID)
 
 void DisplayHandler::DispatchCommand()
 {
-	while (!displayDataQueue->isEmpty())
+	while (!allQueues->displayQueue.isEmpty())
 	{
-		portENTER_CRITICAL(&displayQueueMux);
-		QUEUE_ITEM currItem = displayDataQueue->dequeue();
-		portEXIT_CRITICAL(&displayQueueMux);
+		portENTER_CRITICAL(&allQueues->displayQueueMux);
+		QUEUE_ITEM currItem = allQueues->displayQueue.dequeue();
+		portEXIT_CRITICAL(&allQueues->displayQueueMux);
 
 		switch (currItem.key) {
 		case DisplayCommands::ChangeScreen:
@@ -189,11 +152,11 @@ void DisplayHandler::DispatchCommand()
 
 void DisplayHandler::UnloadOldDataFromDisplayQueue()
 {
-	while (!displayDataQueue->isEmpty())
+	while (!allQueues->displayQueue.isEmpty())
 	{
-		portENTER_CRITICAL(&displayQueueMux);
-		displayDataQueue->dequeue();
-		portEXIT_CRITICAL(&displayQueueMux);
+		portENTER_CRITICAL(&allQueues->displayQueueMux);
+		allQueues->displayQueue.dequeue();
+		portEXIT_CRITICAL(&allQueues->displayQueueMux);
 	}
 }
 

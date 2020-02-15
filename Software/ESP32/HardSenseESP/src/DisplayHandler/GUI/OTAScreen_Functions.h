@@ -4,8 +4,8 @@
 
 HS_OTAScreen* HS_Current_OTAScreen = NULL;
 
-void Create_OTAScreen(TFT_eSPI* TFT) {
-	HS_Current_OTAScreen = new HS_OTAScreen(TFT);
+void Create_OTAScreen(Queues *newQueues, TFT_eSPI* TFT) {
+	HS_Current_OTAScreen = new HS_OTAScreen(newQueues, TFT);
 }
 
 void Destroy_OTAScreen()
@@ -26,15 +26,3 @@ bool Handle_OTAScreen_Touch(int x, int y)
 {
 	HS_Current_OTAScreen->HandleTouch(x, y);
 }
-
-void Set_OTAScreen_DisplayQueue(void(*AddItemToDisplayQueue_func)(char key, String value))
-{
-	HS_Current_OTAScreen->SetDisplayQueue(AddItemToDisplayQueue_func);
-}
-
-/*
-void Update_SplashScreen_OnInterval()
-{
-	HS_Current_SplashScreen->UpdateScreenOnInterval();
-}
-*/

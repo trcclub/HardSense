@@ -1,6 +1,6 @@
 #include "HS_HomeScreen.h"
 
-HS_HomeScreen::HS_HomeScreen(TFT_eSPI *newTFT) : HS_ScreenBase(newTFT)
+HS_HomeScreen::HS_HomeScreen(Queues *newQueues, TFT_eSPI *newTFT) : HS_ScreenBase(newQueues, newTFT)
 {
 	homeScreenTheme.panelBGColor = PANEL_BGCOLOR;
 	homeScreenTheme.panelBorderColor = BOX_BORDER_COLOR;
@@ -24,6 +24,8 @@ HS_HomeScreen::HS_HomeScreen(TFT_eSPI *newTFT) : HS_ScreenBase(newTFT)
 	Draw_Net_Panel();
 	Draw_Mem_Panel();
 	Draw_HDD_Panel();
+
+	SendSensorList();
 }
 
 HS_HomeScreen::~HS_HomeScreen()
@@ -101,13 +103,14 @@ void HS_HomeScreen::UpdateScreenOnInterval()
 	}
 }
 
-void HS_HomeScreen::SetSensorList(void(*AddItemToOutputQueue_func)(char key, String value))
+
+void HS_HomeScreen::SendSensorList()
 {
-	AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/intelcpu/0/load/0,a|/intelcpu/0/temperature/6,b|/intelcpu/0/clock/1,c|/intelcpu/0/power/0,d");
-	AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/nvidiagpu/0/load/0,e|/nvidiagpu/0/temperature/0,f|/nvidiagpu/0/clock/0,g|/nvidiagpu/0/control/0,h");
-	AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/Ethernet/0/recv,i|/Ethernet/0/send,j");
-	AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/ram/load/0,k|/ram/data/0,l|/ram/data/1,m");
-	AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/hdd/2/load/0,n|/hdd/3/load/0,o|/hdd/1/load/0,p|/hdd/0/load/0,q");
+	allQueues->AddItemToOutputQueue(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/intelcpu/0/load/0,a|/intelcpu/0/temperature/6,b|/intelcpu/0/clock/1,c|/intelcpu/0/power/0,d");
+	allQueues->AddItemToOutputQueue(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/nvidiagpu/0/load/0,e|/nvidiagpu/0/temperature/0,f|/nvidiagpu/0/clock/0,g|/nvidiagpu/0/control/0,h");
+	allQueues->AddItemToOutputQueue(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/Ethernet/0/recv,i|/Ethernet/0/send,j");
+	allQueues->AddItemToOutputQueue(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/ram/load/0,k|/ram/data/0,l|/ram/data/1,m");
+	allQueues->AddItemToOutputQueue(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/hdd/2/load/0,n|/hdd/3/load/0,o|/hdd/1/load/0,p|/hdd/0/load/0,q");
 }
 
 
@@ -115,12 +118,12 @@ void HS_HomeScreen::HandleTouch(int x, int y)
 {
 	if (GPU_Panel_Touched(x, y))
 	{
-		AddItemToDisplayQueue(DisplayCommands::ChangeScreen, String(ScreenTypes::Game));
+		allQueues->AddItemToDisplayQueue(DisplayCommands::ChangeScreen, String(ScreenTypes::Game));
 
 	}
 	if (CPU_Panel_Touched(x, y))
 	{
-		AddItemToDisplayQueue(DisplayCommands::ChangeScreen, String(ScreenTypes::CpuDetails));
+		allQueues->AddItemToDisplayQueue(DisplayCommands::ChangeScreen, String(ScreenTypes::CpuDetails));
 	}
 }
 

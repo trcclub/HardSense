@@ -98,9 +98,6 @@ private:
 
 	HS_MemPanel* memPanel;
 	void Draw_Mem_Panel();
-	//void Update_Mem_Useage(double dPercent);
-	//void Update_Mem_Used(double used);
-	//void Update_Mem_Free(double free);
 
 	void Draw_HDD_Panel();
 	void Update_HDD_Useage(char key, double percent);
@@ -112,10 +109,10 @@ private:
 	void Update_Time();
 
 public:
-	HS_HomeScreen(TFT_eSPI *newTFT);
+	HS_HomeScreen(Queues *newQueues, TFT_eSPI *newTFT);
 	~HS_HomeScreen();
 	void UpdateScreen(String value);
 	void UpdateScreenOnInterval();
-	void SetSensorList(void(*AddItemToOutputQueue_func)(char key, String value));
+	void SendSensorList();
 	void HandleTouch(int x, int y);
 };

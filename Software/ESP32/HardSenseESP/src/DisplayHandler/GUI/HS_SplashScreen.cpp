@@ -1,6 +1,6 @@
 #include "HS_SplashScreen.h"
 
-HS_SplashScreen::HS_SplashScreen(TFT_eSPI* newTFT) : HS_ScreenBase(newTFT)
+HS_SplashScreen::HS_SplashScreen(Queues *newQueues, TFT_eSPI* newTFT) : HS_ScreenBase(newQueues, newTFT)
 {
 	splashScreenTheme.panelBGColor = PANEL_BGCOLOR;
 	splashScreenTheme.panelBorderColor = BOX_BORDER_COLOR;

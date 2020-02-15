@@ -16,7 +16,6 @@ enum DisplayCommands {
 
 enum ScreenTypes {
 	SplashScreen = 0,
-	ConnectToNetwork,
 	BluetoothConfigurator,
 	Home,
 	Game,

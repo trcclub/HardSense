@@ -80,12 +80,12 @@ private:
 	void UpdateCPUCorePanel(int core);
 	
 public:
-	HS_CPUScreen(TFT_eSPI* newTFT);
+	HS_CPUScreen(Queues *newQueues, TFT_eSPI* newTFT);
 	~HS_CPUScreen();
 
 	void UpdateScreen(String value);
 	void UpdateScreenOnInterval();
-	void SetSensorList(void(*AddItemToOutputQueue_func)(char key, String value));
+	void SendSensorList();
 	void HandleTouch(int x, int y);
 };
 

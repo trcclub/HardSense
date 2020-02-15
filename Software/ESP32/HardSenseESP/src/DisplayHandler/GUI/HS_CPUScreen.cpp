@@ -1,7 +1,7 @@
 #include "HS_CPUScreen.h"
 
 
-HS_CPUScreen::HS_CPUScreen(TFT_eSPI* newTFT) : HS_ScreenBase(newTFT)
+HS_CPUScreen::HS_CPUScreen(Queues *newQueues, TFT_eSPI* newTFT) : HS_ScreenBase(newQueues, newTFT)
 {
 	cpuScreenTheme.panelBGColor = PANEL_BGCOLOR;
 	cpuScreenTheme.panelBorderColor = BOX_BORDER_COLOR;
@@ -20,6 +20,8 @@ HS_CPUScreen::HS_CPUScreen(TFT_eSPI* newTFT) : HS_ScreenBase(newTFT)
 	DrawPackagePanel();
 	DrawPackageLoadGrid();
 	InitCPUCorePanels();
+
+	SendSensorList();
 }
 
 HS_CPUScreen::~HS_CPUScreen()
@@ -48,43 +50,43 @@ HS_CPUScreen::~HS_CPUScreen()
 }
 
 
-void HS_CPUScreen::SetSensorList(void(*AddItemToOutputQueue_func)(char key, String value))
+void HS_CPUScreen::SendSensorList()
 {
 	// a = CPU package power
 	// b = CPU cores power
 	// c = CPU package temperature
 	// d = CPU package total load
-	AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/intelcpu/0/power/0,a|/intelcpu/0/power/1,b|/intelcpu/0/temperature/6,c|/intelcpu/0/load/0,d");
+	allQueues->AddItemToOutputQueue(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/intelcpu/0/power/0,a|/intelcpu/0/power/1,b|/intelcpu/0/temperature/6,c|/intelcpu/0/load/0,d");
 
 	// e = CPU 1 temperature
 	// f = CPU 1 clock
 	// g = CPU 1 load
-	AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/intelcpu/0/temperature/0,e|/intelcpu/0/clock/1,f|/intelcpu/0/load/1,g");
+	allQueues->AddItemToOutputQueue(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/intelcpu/0/temperature/0,e|/intelcpu/0/clock/1,f|/intelcpu/0/load/1,g");
 
 	// h = CPU 2 temperature
 	// i = CPU 2 clock
 	// j = CPU 2 load
-	AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/intelcpu/0/temperature/1,h|/intelcpu/0/clock/2,i|/intelcpu/0/load/2,j");
+	allQueues->AddItemToOutputQueue(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/intelcpu/0/temperature/1,h|/intelcpu/0/clock/2,i|/intelcpu/0/load/2,j");
 
 	// k = CPU 3 temperature
 	// l = CPU 3 clock
 	// m = CPU 3 load
-	AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/intelcpu/0/temperature/2,k|/intelcpu/0/clock/3,l|/intelcpu/0/load/3,m");
+	allQueues->AddItemToOutputQueue(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/intelcpu/0/temperature/2,k|/intelcpu/0/clock/3,l|/intelcpu/0/load/3,m");
 
 	// n = CPU 4 temperature
 	// o = CPU 4 clock
 	// p = CPU 4 load
-	AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/intelcpu/0/temperature/3,n|/intelcpu/0/clock/4,o|/intelcpu/0/load/4,p");
+	allQueues->AddItemToOutputQueue(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/intelcpu/0/temperature/3,n|/intelcpu/0/clock/4,o|/intelcpu/0/load/4,p");
 
 	// q = CPU 5 temperature
 	// r = CPU 5 clock
 	// s = CPU 5 load
-	AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/intelcpu/0/temperature/4,q|/intelcpu/0/clock/5,r|/intelcpu/0/load/5,s");
+	allQueues->AddItemToOutputQueue(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/intelcpu/0/temperature/4,q|/intelcpu/0/clock/5,r|/intelcpu/0/load/5,s");
 
 	// t = CPU 6 temperature
 	// u = CPU 6 clock
 	// v = CPU 6 load
-	AddItemToOutputQueue_func(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/intelcpu/0/temperature/5,t|/intelcpu/0/clock/6,u|/intelcpu/0/load/6,v");
+	allQueues->AddItemToOutputQueue(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/intelcpu/0/temperature/5,t|/intelcpu/0/clock/6,u|/intelcpu/0/load/6,v");
 }
 
 
@@ -220,7 +222,7 @@ void HS_CPUScreen::HandleTouch(int x, int y)
 {
 	if (HiddenHomeScreen_Touched(x, y))
 	{
-		AddItemToDisplayQueue(DisplayCommands::ChangeScreen, String(ScreenTypes::Home));
+		allQueues->AddItemToDisplayQueue(DisplayCommands::ChangeScreen, String(ScreenTypes::Home));
 	}
 }
 
