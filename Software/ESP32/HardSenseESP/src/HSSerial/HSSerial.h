@@ -39,6 +39,7 @@ namespace HSSerial_NS
 		bool OTA_Enabled;
 		bool OTA_Initialized;
 		void Enable_OTA();
+		int OTA_Completion_Percentage;
 
 		void HandleBluetooth();
 		

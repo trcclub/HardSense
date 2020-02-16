@@ -86,7 +86,7 @@ void HS_SplashScreen::UpdateCircle()
 	
 	if(circleLoopCounter <= 0)
 	{
-		circleLoopCounter == 8;
+		circleLoopCounter = 8;
 	}
 }
 

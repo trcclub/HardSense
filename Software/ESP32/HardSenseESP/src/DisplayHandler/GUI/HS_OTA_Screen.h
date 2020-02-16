@@ -8,8 +8,10 @@
 #define BOX_DROP_SHADOW 0x4208
 
 
-#define NET_PANEL_X 0
-#define NET_PANEL_Y 40
+#define OTA_PANEL_X 20
+#define OTA_PANEL_Y 40
+#define OTA_PANEL_WIDTH 280
+#define OAT_PANEL_HEIGHT 110
 
 class HS_OTAScreen :
 	public HS_ScreenBase
@@ -17,6 +19,11 @@ class HS_OTAScreen :
 private:
 	HS_Theme otaScreenTheme;
 
+	unsigned long lastUpdate = 0;
+	int updateScreenInterval = 100;
+	int circleLoopCounter;	
+
+/*
 	//Busy icon
 	unsigned long lastUpdate = 0;
 	int updateScreenInterval = 15;
@@ -24,15 +31,19 @@ private:
 	int circleLoopCounter;	
 	int secondaryLoopCounter;
 	uint32_t col[8];
+*/
 
-
-	void Draw_NetworkConnectionPanel();
+	bool Connected_To_Network;
+	void Draw_OTA_Information_Panel();
 	void Update_ConnectingToNetwork(String netID);
 	void Update_ConnectedToNetwork(String netID);
 	void Update_NetworkConnectionInfo(String netID, uint16_t circleColor);
 
+	bool OTA_Update_In_Progress;
 	void Starting_OTA_Update();
-	//void Update_OTA_Status(String status);
+	void Draw_Waiting_Animation();
+	void Update_In_Progress(int percentage);
+	void Ending_OTA_Update();
 
 public:
 	HS_OTAScreen(Queues *newQueues, TFT_eSPI* newTFT);

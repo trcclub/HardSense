@@ -12,6 +12,7 @@ HSSerial::HSSerial()
 	connectedToSomething = false;
 	OTA_Enabled = false;
 	OTA_Initialized = false;
+	OTA_Completion_Percentage = 0;
 	ConnectedToWifi = false;
 	wifiSerial = NULL;
 	btSerial = NULL;
@@ -160,16 +161,24 @@ void HSSerial::Enable_OTA()
 		}
 		
 		// NOTE: if updating SPIFFS this would be the place to unmount SPIFFS using SPIFFS.end()
-		Serial.println("Start updating " + type);
+		//Serial.println("Start updating " + type);
 		allQueues->AddItemToDisplayQueue(DisplayCommands::UpdateValue,String("c, "));
 	})
 	
-	.onEnd([]() {
-		Serial.println("\nEnd");
+	.onEnd([this]() {
+		//Serial.println("\nEnd");
+		allQueues->AddItemToDisplayQueue(DisplayCommands::UpdateValue,String("e, "));
 	})
 
-	.onProgress([](unsigned int progress, unsigned int total) {
-		Serial.printf("Progress: %u%%\n", (progress / (total / 100)));
+	.onProgress([this](unsigned int progress, unsigned int total) {
+		//Serial.printf("Progress: %u%%\n", (progress / (total / 100)));
+		int percentage  = progress / (total / 100);
+		if(percentage != OTA_Completion_Percentage)
+		{
+			//Serial.printf("Progress: %u%% - %i - %i\n", percentage, progress, total );
+			allQueues->AddItemToDisplayQueue(DisplayCommands::UpdateValue,String("d," + String(percentage)));
+			OTA_Completion_Percentage = percentage;
+		}
 	})
 
 	.onError([](ota_error_t error) {
@@ -183,6 +192,11 @@ void HSSerial::Enable_OTA()
 
 	ArduinoOTA.begin();
 	OTA_Initialized = true;
+
+
+	//For teting purposes
+	//allQueues->AddItemToDisplayQueue(DisplayCommands::UpdateValue,String("c, "));
+
 }
 
 void HSSerial::HandleConfigurator()
