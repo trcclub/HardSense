@@ -115,6 +115,7 @@ void DisplayHandler::LoadNewScreen(ScreenTypes screenID)
 		DestroyCurrentScreen = Destroy_OTAScreen;
 		UpdateCurentScreen = Update_OTAScreen;
 		HandleTouchPoint = Handle_OTAScreen_Touch;
+		UpdateCurentScreenOnInterval = Update_OTAScreen_OnInterval;
 		Create_OTAScreen(allQueues, &tftDisplay);
 		break;
 	default:

@@ -4,7 +4,7 @@
 #include "SPIFFS.h"
 
 #define SETTINGS_FILE_NAME "/hardsens.txt"
-#define FIELD_MAX_LENGTH 64
+#define FIELD_MAX_LENGTH 32
 
 struct S_SETTNGS {
 	char ssid[FIELD_MAX_LENGTH];

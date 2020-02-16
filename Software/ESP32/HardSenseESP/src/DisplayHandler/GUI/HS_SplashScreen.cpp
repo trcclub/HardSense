@@ -26,6 +26,7 @@ HS_SplashScreen::HS_SplashScreen(Queues *newQueues, TFT_eSPI* newTFT) : HS_Scree
 	secondaryLoopCounter = 0;
 
 	TFT->fillScreen(splashScreenTheme.panelBGColor);
+	
 	Draw_NetworkConnectionPanel();
 	Draw_ServerConnectionPanel();
 

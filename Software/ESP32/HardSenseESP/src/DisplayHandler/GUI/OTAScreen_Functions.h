@@ -22,6 +22,11 @@ void Update_OTAScreen(String value)
 	HS_Current_OTAScreen->UpdateScreen(value);
 }
 
+void Update_OTAScreen_OnInterval()
+{
+	HS_Current_OTAScreen->UpdateScreenOnInterval();
+}
+
 bool Handle_OTAScreen_Touch(int x, int y)
 {
 	HS_Current_OTAScreen->HandleTouch(x, y);

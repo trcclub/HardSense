@@ -11,11 +11,25 @@ HS_OTAScreen::HS_OTAScreen(Queues *newQueues, TFT_eSPI* newTFT) : HS_ScreenBase(
 	otaScreenTheme.textColor = TEXT_COLOR;
 
 	textPrinter_Sprite->unloadFont();
-	textPrinter_Sprite->loadFont(AA_FONT_18PT);
+	textPrinter_Sprite->loadFont(AA_FONT_14PT);
 	TFT->unloadFont();
 	TFT->loadFont(AA_FONT_18PT);    
 
 	TFT->fillScreen(otaScreenTheme.panelBGColor);
+	
+	
+	col[0] = 0xED7F;
+	col[1] = 0xD4DB;
+	col[2] = 0xBC38;
+	col[3] = 0xABD6;
+	col[4] = 0x9374;
+	col[5] = 0x8332;
+	col[6] = 0x72AF;
+	col[7] = 0x624D;
+
+	circleLoopCounter = 8;
+	secondaryLoopCounter = 0;
+
 	Draw_NetworkConnectionPanel();
 	
 	allQueues->AddItemToCommandQueue(HardSense_Commands::BeginOTA, "");
@@ -30,6 +44,8 @@ HS_OTAScreen::~HS_OTAScreen()
 
 // a = Connecting to network flag and network name
 // b = Network connection success
+// c = OTA Update Starting
+// d = 
 void HS_OTAScreen::UpdateScreen(String value)
 {
 	String strValue(value);
@@ -44,10 +60,23 @@ void HS_OTAScreen::UpdateScreen(String value)
 	case 'b':
 		Update_ConnectedToNetwork(subValue);
 		break;
+	case 'c':
+		Starting_OTA_Update();
+		break;
+		
 	default:
 		break;
 	}
 
+}
+
+void HS_OTAScreen::UpdateScreenOnInterval()
+{
+	if (millis() - lastUpdate > updateScreenInterval)
+	{
+		lastUpdate = millis();
+		UpdateCircle();
+	}
 }
 
 void HS_OTAScreen::HandleTouch(int x, int y)
@@ -56,6 +85,24 @@ void HS_OTAScreen::HandleTouch(int x, int y)
 	{
 		allQueues->AddItemToDisplayQueue(DisplayCommands::ChangeScreen, String(ScreenTypes::BluetoothConfigurator));
 		//allQueues->AddItemToCommandQueue(HardSense_Commands::EnableBluetooth,"");
+	}
+}
+
+
+void HS_OTAScreen::UpdateCircle()
+{
+	TFT->fillCircle(250 + 40 * (cos(-(circleLoopCounter + secondaryLoopCounter) * PI / 4)), 90 + 40 * (sin(-(circleLoopCounter + secondaryLoopCounter) * PI / 4)), 10, col[secondaryLoopCounter]); 
+	
+	secondaryLoopCounter++;
+	if(secondaryLoopCounter > 7)
+	{
+		secondaryLoopCounter = 0;
+		circleLoopCounter--;
+	}
+	
+	if(circleLoopCounter <= 0)
+	{
+		circleLoopCounter == 8;
 	}
 }
 
@@ -98,4 +145,18 @@ void HS_OTAScreen::Update_ConnectingToNetwork(String netID)
 void HS_OTAScreen::Update_ConnectedToNetwork(String netID)
 {	
 	Update_NetworkConnectionInfo(netID,TFT_GREEN);
+}
+
+void HS_OTAScreen::Starting_OTA_Update()
+{
+	textPrinter_Sprite->setTextDatum(TL_DATUM);
+	textPrinter_Sprite->setTextColor(otaScreenTheme.textColor, otaScreenTheme.panelBGColor);
+	textPrinter_Sprite->createSprite(80, 15);
+	textPrinter_Sprite->fillSprite(otaScreenTheme.panelBGColor);
+
+	textPrinter_Sprite->drawString("OTA Starting,,", 0, 0);
+	textPrinter_Sprite->pushSprite(NET_PANEL_X + 26, NET_PANEL_Y + 90);
+
+	textPrinter_Sprite->deleteSprite();
+
 }

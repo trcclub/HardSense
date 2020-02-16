@@ -5,6 +5,8 @@
 #include <WiFiUdp.h>
 #include <ArduinoOTA.h>
 
+using namespace HSSerial_NS;
+
 HSSerial::HSSerial()
 {
 	connectedToSomething = false;
@@ -123,7 +125,6 @@ void HSSerial::UpdateBluetoothDisplay()
 	allQueues->AddItemToDisplayQueue(DisplayCommands::UpdateValue, String("f," + String(hardsenseSettings.btDID)));
 }
 
-
 void HSSerial::Enable_OTA()
 {
 	allQueues->AddItemToDisplayQueue(DisplayCommands::UpdateValue,String("a," + String(hardsenseSettings.ssid)));
@@ -141,13 +142,13 @@ void HSSerial::Enable_OTA()
 		return;
 	}
 
+	// Send notfication of successfull WiFi connection
 	allQueues->AddItemToDisplayQueue(DisplayCommands::UpdateValue,String("b," + String(hardsenseSettings.ssid)));
-	//Serial.printf("\nEnable_OTA():  Connected to Wifi with hostname 1: %s\n", WiFi.getHostname());
+	
 
-	ArduinoOTA.setHostname("HardSenseESP");
-
+	ArduinoOTA.setHostname(hardsenseSettings.wifiDID);
 	ArduinoOTA
-	.onStart([]() {
+	.onStart([this]() {		
 		String type;
 		if (ArduinoOTA.getCommand() == U_FLASH)
 		{
@@ -157,12 +158,12 @@ void HSSerial::Enable_OTA()
 		{
 			type = "filesystem";
 		}
-
+		
 		// NOTE: if updating SPIFFS this would be the place to unmount SPIFFS using SPIFFS.end()
 		Serial.println("Start updating " + type);
-		
+		allQueues->AddItemToDisplayQueue(DisplayCommands::UpdateValue,String("c, "));
 	})
-
+	
 	.onEnd([]() {
 		Serial.println("\nEnd");
 	})
@@ -181,13 +182,7 @@ void HSSerial::Enable_OTA()
 	});
 
 	ArduinoOTA.begin();
-
-//	Serial.println("Ready");
-//	Serial.print("IP address: ");
-//	Serial.println(WiFi.localIP());
 	OTA_Initialized = true;
-
-
 }
 
 void HSSerial::HandleConfigurator()
@@ -291,9 +286,6 @@ void HSSerial::HandleWiFiConnection()
 	ReadInputStringUntil = &HSSerial::WiFi_ReadStringUntil;
 	PrintMessageToOutput = &HSSerial::WiFi_PrintChar;
 
-//	Serial.print("\n Connecting to Wifi: ");
-//	Serial.print(hardsenseSettings.ssid);
-//	Serial.println("");
 
 	WiFi.mode(WIFI_STA);
 	WiFi.setHostname(hardsenseSettings.wifiDID);
@@ -303,12 +295,13 @@ void HSSerial::HandleWiFiConnection()
 		Serial.println("Connection Failed! ...");
 		delay(5000);
 	}
-	
+
 	if (!WiFi.isConnected()) {
 		return;
 	}
 
 	ConnectedToWifi = true;
+
 	//Serial.printf("\nHostname 1: %s\n", WiFi.getHostname());
 	//Serial.println("");
 	//Serial.println("WiFi connected");
@@ -326,11 +319,6 @@ void HSSerial::ConnectToHardsenseServer()
 	allQueues->AddItemToDisplayQueue(DisplayCommands::UpdateValue,String("b," + String(hardsenseSettings.ssid)));
 
 	allQueues->AddItemToDisplayQueue(DisplayCommands::UpdateValue,String("c," + String(hardsenseSettings.serverName) + ":" + String(hardsenseSettings.serverPort)));
-
-	//Serial.print("\n Connecting to socket on ");
-	//Serial.print(hardsenseSettings.serverName);
-	//Serial.print(":");
-	//Serial.println(hardsenseSettings.serverPort);
 
 	connectedToSomething = false;
 	wifiSerial->connect(hardsenseSettings.serverName, hardsenseSettings.serverPort);

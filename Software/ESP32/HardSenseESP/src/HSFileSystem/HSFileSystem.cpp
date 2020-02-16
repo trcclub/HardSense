@@ -32,6 +32,7 @@ bool HSFileSystem::getSettings(S_SETTNGS& newSettings)
 			{
 				String key = line.substring(0, currIndex);
 				String value = line.substring(currIndex + 1);
+				value.trim();
 				if (value.length() == 0) {
 					continue;
 				}

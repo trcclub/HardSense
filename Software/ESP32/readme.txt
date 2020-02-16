@@ -43,3 +43,6 @@ https://lastminuteengineers.com/esp32-ota-updates-arduino-ide/
 Sketch uses 1387078 bytes (70%) of program storage space. Maximum is 1966080 bytes.
 1388578
 1387426
+
+Added basic OTA (Merged branch 19 into master, this was this build size)
+    Sketch uses 1490546 bytes (75%) of program storage space. Maximum is 1966080 bytes.

@@ -10,9 +10,11 @@
 #include "src/QueueItem.h"
 #include "src/GlobalDefinitions.h"
 
+using namespace HSSerial_NS;
+
 TaskHandle_t Display_Core_Task_Handle;
 DisplayHandler displayHandler;
-HSSerial hsSerial;
+static HSSerial hsSerial;
 Queues allQueues;
 
 const byte btButton = 27;
