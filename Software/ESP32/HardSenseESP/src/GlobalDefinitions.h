@@ -23,6 +23,10 @@ enum ScreenTypes {
 	OTA,
 };
 
+enum HardSense_Commands {
+	RefreshBluetoothDisplay,
+	BeginOTA,
+};
 
 struct HS_Theme {
 	uint16_t panelHeaderColor;

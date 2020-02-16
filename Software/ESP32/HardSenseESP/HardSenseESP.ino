@@ -65,8 +65,7 @@ void setup() {
 	{
 		//Serial.println("Starting bluetooth...");
 		allQueues.AddItemToDisplayQueue(DisplayCommands::ChangeScreen, String(ScreenTypes::BluetoothConfigurator));
-		delay(20);
-		hsSerial.HandleBluetoothConnection();		
+		hsSerial.HandleConfigurator();
 	}
 	allQueues.AddItemToDisplayQueue(DisplayCommands::ChangeScreen, String(ScreenTypes::SplashScreen));
 	delay(20);

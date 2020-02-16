@@ -1,10 +1,15 @@
 #include "HSSerial.h"
 #include "../DisplayHandler/DisplayHandler.h"
 #include <RTClib.h>
+#include <ESPmDNS.h>
+#include <WiFiUdp.h>
+#include <ArduinoOTA.h>
 
 HSSerial::HSSerial()
 {
 	connectedToSomething = false;
+	OTA_Enabled = false;
+	OTA_Initialized = false;
 	ConnectedToWifi = false;
 	wifiSerial = NULL;
 	btSerial = NULL;
@@ -118,11 +123,98 @@ void HSSerial::UpdateBluetoothDisplay()
 	allQueues->AddItemToDisplayQueue(DisplayCommands::UpdateValue, String("f," + String(hardsenseSettings.btDID)));
 }
 
-void HSSerial::HandleBluetoothConnection()
-{
-	UpdateBluetoothDisplay();
 
+void HSSerial::Enable_OTA()
+{
+	allQueues->AddItemToDisplayQueue(DisplayCommands::UpdateValue,String("a," + String(hardsenseSettings.ssid)));
+
+	WiFi.mode(WIFI_STA);
+	WiFi.setHostname(hardsenseSettings.wifiDID);
+	WiFi.begin(hardsenseSettings.ssid, hardsenseSettings.password);
+
+	while (WiFi.waitForConnectResult() != WL_CONNECTED) {
+		Serial.println("Connection Failed! ...");
+		delay(5000);
+	}
+
+	if (!WiFi.isConnected()) {
+		return;
+	}
+
+	allQueues->AddItemToDisplayQueue(DisplayCommands::UpdateValue,String("b," + String(hardsenseSettings.ssid)));
+	//Serial.printf("\nEnable_OTA():  Connected to Wifi with hostname 1: %s\n", WiFi.getHostname());
+
+	ArduinoOTA.setHostname("HardSenseESP");
+
+	ArduinoOTA
+	.onStart([]() {
+		String type;
+		if (ArduinoOTA.getCommand() == U_FLASH)
+		{
+			type = "sketch";
+		}
+		else // U_SPIFFS
+		{
+			type = "filesystem";
+		}
+
+		// NOTE: if updating SPIFFS this would be the place to unmount SPIFFS using SPIFFS.end()
+		Serial.println("Start updating " + type);
+		
+	})
+
+	.onEnd([]() {
+		Serial.println("\nEnd");
+	})
+
+	.onProgress([](unsigned int progress, unsigned int total) {
+		Serial.printf("Progress: %u%%\n", (progress / (total / 100)));
+	})
+
+	.onError([](ota_error_t error) {
+		Serial.printf("Error[%u]: ", error);
+		if (error == OTA_AUTH_ERROR) Serial.println("Auth Failed");
+		else if (error == OTA_BEGIN_ERROR) Serial.println("Begin Failed");
+		else if (error == OTA_CONNECT_ERROR) Serial.println("Connect Failed");
+		else if (error == OTA_RECEIVE_ERROR) Serial.println("Receive Failed");
+		else if (error == OTA_END_ERROR) Serial.println("End Failed");
+	});
+
+	ArduinoOTA.begin();
+
+//	Serial.println("Ready");
+//	Serial.print("IP address: ");
+//	Serial.println(WiFi.localIP());
+	OTA_Initialized = true;
+
+
+}
+
+void HSSerial::HandleConfigurator()
+{
+	while(true)
+	{
+		if(OTA_Enabled)
+		{
+			if(!OTA_Initialized)
+			{
+				Enable_OTA();
+			}
+			ArduinoOTA.handle();
+			HandleCommandQueue();
+		}
+		else 
+		{
+			HandleBluetooth();
+		}
+		yield();
+	}
+}
+
+void HSSerial::HandleBluetooth()
+{	
 	connectedToSomething = false;
+
 	btSerial = new BluetoothSerial();
 	InputAvailable = &HSSerial::BT_Available;
 	ReadInputByte = &HSSerial::BT_Read;;
@@ -130,40 +222,62 @@ void HSSerial::HandleBluetoothConnection()
 	PrintMessageToOutput = &HSSerial::BT_PrintChar;
 
 	btSerial->setTimeout(50);
-
-//	Serial.print("BluetoothConnection: '");
-//	Serial.print(hardsenseSettings.btDID);
-//	Serial.println("'");
-	
 	btSerial->begin(String(hardsenseSettings.btDID));
 
-
-	while (true)
+	while (!OTA_Enabled)
 	{
 		WaitForBTConnection();
-		while (connectedToSomething)
+		while (connectedToSomething && !OTA_Enabled)
 		{
-			HandleInput();
-
-			HandleOutput();
-
-			delay(20);
+			WorkhorseFunction();
+			//delay(20);
+			yield();
 		}
 	}
+	btSerial->end();
+	btSerial->disconnect();
 }
 
 bool HSSerial::WaitForBTConnection()
 {
-	while (!connectedToSomething)
+	while (!connectedToSomething && !OTA_Enabled)
 	{
-		HandleInput();
-		HandleOutput();
+		WorkhorseFunction();
 		if (connectedToSomething)
 		{
 			break;
 		}
+		yield();
+		//delay(20);
+	}
+}
 
-		delay(20);
+void HSSerial::WorkhorseFunction()
+{
+	HandleInput();
+	HandleOutput();
+	HandleCommandQueue();
+}
+
+void HSSerial::HandleCommandQueue()
+{
+	while (!allQueues->commandQueue.isEmpty())
+	{
+		portENTER_CRITICAL(&allQueues->commandQueueMux);
+		QUEUE_ITEM currItem = allQueues->commandQueue.dequeue();
+		portEXIT_CRITICAL(&allQueues->commandQueueMux);
+
+		switch (currItem.key) {
+		case HardSense_Commands::BeginOTA:
+			OTA_Enabled = true;
+			break;
+		case HardSense_Commands::RefreshBluetoothDisplay:
+			UpdateBluetoothDisplay();
+			break;
+		default:
+			break;
+		}
+		yield();
 	}
 }
 
@@ -177,23 +291,23 @@ void HSSerial::HandleWiFiConnection()
 	ReadInputStringUntil = &HSSerial::WiFi_ReadStringUntil;
 	PrintMessageToOutput = &HSSerial::WiFi_PrintChar;
 
-	Serial.print("\n Connecting to Wifi: ");
-	Serial.print(hardsenseSettings.ssid);
-	Serial.println("");
+//	Serial.print("\n Connecting to Wifi: ");
+//	Serial.print(hardsenseSettings.ssid);
+//	Serial.println("");
 
-	WiFi.begin();
+	WiFi.mode(WIFI_STA);
 	WiFi.setHostname(hardsenseSettings.wifiDID);
 	WiFi.begin(hardsenseSettings.ssid, hardsenseSettings.password);
-	
 
-	while (WiFi.status() != WL_CONNECTED) {
-		delay(500);
-		Serial.print(".");
+	while (WiFi.waitForConnectResult() != WL_CONNECTED) {
+		Serial.println("Connection Failed! ...");
+		delay(5000);
 	}
 	
 	if (!WiFi.isConnected()) {
 		return;
 	}
+
 	ConnectedToWifi = true;
 	//Serial.printf("\nHostname 1: %s\n", WiFi.getHostname());
 	//Serial.println("");
@@ -513,9 +627,4 @@ void HSSerial::Update_RTC_Time(String rawTime)
 	rtc.adjust(DateTime(date,time));
 	
 	DateTime now = rtc.now();
-}
-
-void HSSerial::Enable_OTA()
-{
-
 }

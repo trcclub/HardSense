@@ -31,6 +31,15 @@ private:
 	void AcceptNewBTConnection();
 	void NewSocketRequestAccepted();
 
+	void WorkhorseFunction();
+
+	bool OTA_Enabled;
+	bool OTA_Initialized;
+	void Enable_OTA();
+
+	void HandleBluetooth();
+	
+
 	int BT_Available();
 	int BT_Read();
 	int BT_PrintChar(char c);
@@ -58,7 +67,6 @@ private:
 	void Update_RTC_Time(String rawTime);
 	void UpdateBluetoothDisplay();
 
-	void Enable_OTA();
 
 
 
@@ -76,9 +84,10 @@ public:
 
 	bool ConnectedToWifi;
 	bool connectedToSomething = false;
-	void HandleBluetoothConnection();
+	void HandleConfigurator();
 	void ConnectToHardsenseServer();
 	void HandleWiFiConnection();
+	void HandleCommandQueue();
 	void HandleInput();
 	void HandleOutput();
 

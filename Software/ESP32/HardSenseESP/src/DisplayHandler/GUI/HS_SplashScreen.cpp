@@ -113,7 +113,6 @@ void HS_SplashScreen::Draw_NetworkConnectionPanel()
 
 	TFT->drawFastHLine(localCoords.x + 3, localCoords.y + 20, localCoords.w - 6, splashScreenTheme.panelBorderColor);
 	TFT->drawFastHLine(localCoords.x + 3, localCoords.y + 21, localCoords.w - 6, splashScreenTheme.panelBorderColor);
-
 }
 
 void HS_SplashScreen::Update_NetworkConnectionInfo(String netID, uint16_t circleColor)
@@ -129,7 +128,6 @@ void HS_SplashScreen::Update_NetworkConnectionInfo(String netID, uint16_t circle
 	textPrinter_Sprite->deleteSprite();
 
 	TFT->fillCircle(NET_PANEL_X + 14, NET_PANEL_Y + 31, 7,circleColor);
-
 }
 
 void HS_SplashScreen::Draw_ServerConnectionPanel()

@@ -3,5 +3,5 @@
     "configuration": "PSRAM=disabled,PartitionScheme=hardsenseESP,CPUFreq=240,FlashMode=qio,FlashFreq=80,FlashSize=4M,UploadSpeed=921600,DebugLevel=none",
     "sketch": "HardSenseESP.ino",
     "output": ".vscode/build",
-    "port": "COM6"
+    "port": "192.168.50.251"
 }

@@ -26,6 +26,10 @@ HS_BluetoothConfiguratorScreen::HS_BluetoothConfiguratorScreen(Queues *newQueues
 
 	Draw_Time_Panel();
 	Update_Time();
+
+//	Serial.println("This is code added by OTA update.");
+
+	allQueues->AddItemToCommandQueue(HardSense_Commands::RefreshBluetoothDisplay,"");
 }
 
 HS_BluetoothConfiguratorScreen::~HS_BluetoothConfiguratorScreen()
