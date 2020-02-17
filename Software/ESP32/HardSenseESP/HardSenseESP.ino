@@ -10,8 +10,6 @@
 #include "src/QueueItem.h"
 #include "src/GlobalDefinitions.h"
 
-using namespace HSSerial_NS;
-
 TaskHandle_t Display_Core_Task_Handle;
 DisplayHandler displayHandler;
 static HSSerial hsSerial;
@@ -41,8 +39,7 @@ void setup() {
 	heartbeatTimer = timerBegin(0, 80, true);
 	timerAttachInterrupt(heartbeatTimer, &onTimer, true);
 	timerAlarmWrite(heartbeatTimer, HEARTBEAT_TIMER_POLL_TIME, true);
-	
-	
+		
 	xTaskCreatePinnedToCore(
 		TFT_Core_Proc,                  /* pvTaskCode */
 		"DisplayHandler",            /* pcName */
@@ -69,7 +66,6 @@ void setup() {
 		hsSerial.HandleConfigurator();
 	}
 	allQueues.AddItemToDisplayQueue(DisplayCommands::ChangeScreen, String(ScreenTypes::SplashScreen));
-	//delay(50);
 }
 
 
@@ -93,7 +89,6 @@ void loop()
 	}
 	hsSerial.HandleOutput();
 
-	//delay(20);
 	yield();
 }
 

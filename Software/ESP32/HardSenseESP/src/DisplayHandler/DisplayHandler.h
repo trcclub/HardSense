@@ -4,7 +4,6 @@
 #include <SPI.h>
 #include <TFT_eSPI.h>
 #include "../GlobalDefinitions.h"
-#include "../HSSerial/HSSerial.h"
 #include <Queue.h>
 #include "../QueueItem.h"
 

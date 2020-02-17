@@ -11,7 +11,6 @@
 #include "GUI/OTAScreen_Functions.h"
 
 
-
 DisplayHandler::DisplayHandler()
 {
 }
@@ -60,14 +59,7 @@ void DisplayHandler::Run()
 void DisplayHandler::LoadNewScreen(ScreenTypes screenID)
 {
 	allQueues->AddItemToOutputQueue(TRANS__KEY::CLEAR_SENSOR_LIST, "");
-	
-	// Give the output handler enough time to send the clear sensor command.  
-	// Otherwise, the next few statement seem to run faster then the output queue.
-	// This causes invalid data to get injected into the new screen because the sensor keys get re-used, but for a different sensor.
-	//  All though that still seems to happen (sigh) just not as frequently.  So weird.
-	delay(10); 
-	
-	
+		
 	if (DestroyCurrentScreen != NULL) {
 		DestroyCurrentScreen();
 		DestroyCurrentScreen = NULL;
@@ -75,8 +67,6 @@ void DisplayHandler::LoadNewScreen(ScreenTypes screenID)
 	UpdateCurentScreen = NULL;
 	UpdateCurentScreenOnInterval = NULL;
 	HandleTouchPoint = NULL;
-	//UnloadOldDataFromDisplayQueue();
-
 
 	switch (screenID) {
 	case ScreenTypes::SplashScreen:

@@ -2,6 +2,17 @@
 AddItemToDisplayQueue(DisplayCommands::UpdateValue, String <payload>);
 payload = "<key>,<value>"
 
+Value (when needed) must be at least 3 characters long.
+This means to have an empty value, you must use a space.
+examples:
+AddItemToDisplayQueue(DisplayCommands::UpdateValue, String ("a, "));
+AddItemToDisplayQueue(DisplayCommands::UpdateValue, String ("a,12.3"));
+AddItemToDisplayQueue(DisplayCommands::UpdateValue, String ("a, Hello"));
+
+These will fail:
+AddItemToDisplayQueue(DisplayCommands::UpdateValue, String ("a,"));
+AddItemToDisplayQueue(DisplayCommands::UpdateValue, String ("a"));
+
 
 
 Custom Partition for HardSenseESP
@@ -53,3 +64,7 @@ After adding all OTA and Display screen related code:
     Sketch uses 1491802 bytes (75%) of program storage space. Maximum is 1966080 bytes.
 
 That's only 1,256 bytes to add the working OTA display screen and realtime updates.  NICE!
+
+
+------------------
+Sketch uses 1491786 bytes (75%) of program storage space. Maximum is 1966080 bytes.

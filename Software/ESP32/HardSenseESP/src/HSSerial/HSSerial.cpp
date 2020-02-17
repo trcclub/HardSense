@@ -5,9 +5,6 @@
 #include <WiFiUdp.h>
 #include <ArduinoOTA.h>
 
-
-using namespace HSSerial_NS;
-
 HSSerial::HSSerial()
 {
 	connectedToSomething = false;
@@ -147,7 +144,6 @@ void HSSerial::Enable_OTA()
 	// Send notfication of successfull WiFi connection
 	allQueues->AddItemToDisplayQueue(DisplayCommands::UpdateValue,String("b," + String(hardsenseSettings.ssid)));
 	
-
 	ArduinoOTA.setHostname(hardsenseSettings.wifiDID);
 	ArduinoOTA
 	.onStart([this]() {		
@@ -162,21 +158,17 @@ void HSSerial::Enable_OTA()
 		}
 		
 		// NOTE: if updating SPIFFS this would be the place to unmount SPIFFS using SPIFFS.end()
-		//Serial.println("Start updating " + type);
 		allQueues->AddItemToDisplayQueue(DisplayCommands::UpdateValue,String("c, "));
 	})
 	
 	.onEnd([this]() {
-		//Serial.println("\nEnd");
 		allQueues->AddItemToDisplayQueue(DisplayCommands::UpdateValue,String("e, "));
 	})
 
 	.onProgress([this](unsigned int progress, unsigned int total) {
-		//Serial.printf("Progress: %u%%\n", (progress / (total / 100)));
 		int percentage  = progress / (total / 100);
 		if(percentage != OTA_Completion_Percentage)
 		{
-			//Serial.printf("Progress: %u%% - %i - %i\n", percentage, progress, total );
 			allQueues->AddItemToDisplayQueue(DisplayCommands::UpdateValue,String("d," + String(percentage)));
 			OTA_Completion_Percentage = percentage;
 		}
@@ -193,11 +185,6 @@ void HSSerial::Enable_OTA()
 
 	ArduinoOTA.begin();
 	OTA_Initialized = true;
-
-
-	//For teting purposes
-	//allQueues->AddItemToDisplayQueue(DisplayCommands::UpdateValue,String("c, "));
-
 }
 
 void HSSerial::HandleConfigurator()
@@ -240,7 +227,6 @@ void HSSerial::HandleBluetooth()
 		while (connectedToSomething && !OTA_Enabled)
 		{
 			WorkhorseFunction();
-			//delay(20);
 			yield();
 		}
 	}
@@ -258,7 +244,6 @@ bool HSSerial::WaitForBTConnection()
 			break;
 		}
 		yield();
-		//delay(20);
 	}
 }
 
@@ -339,7 +324,6 @@ void HSSerial::ConnectToHardsenseServer()
 	while(!connectedToSomething && (millis() - now) < 5000) 
 	{
 		HandleInput();
-		//delay(50);
 		yield();
 	}
 }
@@ -601,7 +585,6 @@ bool HSSerial::IncrementHeartbeatCounter()
 		heartbeatCounter = 0;
 		HeartbeatTimerEnabled(false);
 		allQueues->AddItemToDisplayQueue(DisplayCommands::ChangeScreen, String(ScreenTypes::SplashScreen));
-		delay(50);
 		return false;
 	}
 	heartbeatCounter++;
