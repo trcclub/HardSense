@@ -7,7 +7,7 @@ This means to have an empty value, you must use a space.
 examples:
 AddItemToDisplayQueue(DisplayCommands::UpdateValue, String ("a, "));
 AddItemToDisplayQueue(DisplayCommands::UpdateValue, String ("a,12.3"));
-AddItemToDisplayQueue(DisplayCommands::UpdateValue, String ("a, Hello"));
+AddItemToDisplayQueue(DisplayCommands::UpdateValue, String ("a,Hello"));
 
 These will fail:
 AddItemToDisplayQueue(DisplayCommands::UpdateValue, String ("a,"));
