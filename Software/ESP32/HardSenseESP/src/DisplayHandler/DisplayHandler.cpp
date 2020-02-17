@@ -98,6 +98,7 @@ void DisplayHandler::LoadNewScreen(ScreenTypes screenID)
 		HandleTouchPoint = Handle_HomeScreen_Touch;
 		UpdateCurentScreenOnInterval = Update_HomeScreen_OnInterval;
 		Create_HomeScreen(allQueues, &tftDisplay);
+		UnloadOldDataFromDisplayQueue();
 		break;
 	case ScreenTypes::Game:
 		DestroyCurrentScreen = Destroy_GameScreen;
@@ -105,6 +106,7 @@ void DisplayHandler::LoadNewScreen(ScreenTypes screenID)
 		HandleTouchPoint = Handle_GameScreen_Touch;
 		UpdateCurentScreenOnInterval = Update_GameScreen_OnInterval;
 		Create_GameScreen(allQueues, &tftDisplay);
+		UnloadOldDataFromDisplayQueue();
 		break;
 	case ScreenTypes::CpuDetails:
 		DestroyCurrentScreen = Destroy_CpuScreen;
@@ -112,6 +114,7 @@ void DisplayHandler::LoadNewScreen(ScreenTypes screenID)
 		HandleTouchPoint = Handle_CpuScreen_Touch;
 		UpdateCurentScreenOnInterval = Update_CpuScreen_OnInterval;
 		Create_CpuScreen(allQueues, &tftDisplay);
+		UnloadOldDataFromDisplayQueue();
 		break;
 	case ScreenTypes::OTA:
 		DestroyCurrentScreen = Destroy_OTAScreen;
