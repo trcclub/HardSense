@@ -10,6 +10,7 @@
 #define MAX_HEARTBEATS_MISSED 3
 #define MAX_BUF_SIZE 256
 
+
 namespace HSSerial_NS
 {
 

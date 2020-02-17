@@ -5,6 +5,7 @@
 #include <WiFiUdp.h>
 #include <ArduinoOTA.h>
 
+
 using namespace HSSerial_NS;
 
 HSSerial::HSSerial()
@@ -300,9 +301,9 @@ void HSSerial::HandleWiFiConnection()
 	ReadInputStringUntil = &HSSerial::WiFi_ReadStringUntil;
 	PrintMessageToOutput = &HSSerial::WiFi_PrintChar;
 
-
 	WiFi.mode(WIFI_STA);
 	WiFi.setHostname(hardsenseSettings.wifiDID);
+
 	WiFi.begin(hardsenseSettings.ssid, hardsenseSettings.password);
 
 	while (WiFi.waitForConnectResult() != WL_CONNECTED) {
@@ -315,12 +316,6 @@ void HSSerial::HandleWiFiConnection()
 	}
 
 	ConnectedToWifi = true;
-
-	//Serial.printf("\nHostname 1: %s\n", WiFi.getHostname());
-	//Serial.println("");
-	//Serial.println("WiFi connected");
-	//Serial.println("IP address: ");
-	//Serial.println(WiFi.localIP());
 }
 
 void HSSerial::ConnectToHardsenseServer()
@@ -330,6 +325,7 @@ void HSSerial::ConnectToHardsenseServer()
 		HandleWiFiConnection();
 		return;
 	}
+
 	allQueues->AddItemToDisplayQueue(DisplayCommands::UpdateValue,String("b," + String(hardsenseSettings.ssid)));
 
 	allQueues->AddItemToDisplayQueue(DisplayCommands::UpdateValue,String("c," + String(hardsenseSettings.serverName) + ":" + String(hardsenseSettings.serverPort)));
@@ -343,16 +339,14 @@ void HSSerial::ConnectToHardsenseServer()
 	while(!connectedToSomething && (millis() - now) < 5000) 
 	{
 		HandleInput();
-		delay(50);
+		//delay(50);
+		yield();
 	}
 }
 
 void HSSerial::NewSocketRequestAccepted()
 {
 	connectedToSomething = true;
-	//Serial.print("Connected to: ");
-	//Serial.println(hardsenseSettings.serverName);
-
 	AddKeyToOutputMessage(TRANS__KEY::START_SENSOR_DATA_STREAM);
 	HandleOutput();
 

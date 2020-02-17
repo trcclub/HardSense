@@ -10,6 +10,8 @@
 #include "GUI/CpuDetailsScreen_Functions.h"
 #include "GUI/OTAScreen_Functions.h"
 
+
+
 DisplayHandler::DisplayHandler()
 {
 }
@@ -73,7 +75,7 @@ void DisplayHandler::LoadNewScreen(ScreenTypes screenID)
 	UpdateCurentScreen = NULL;
 	UpdateCurentScreenOnInterval = NULL;
 	HandleTouchPoint = NULL;
-	UnloadOldDataFromDisplayQueue();
+	//UnloadOldDataFromDisplayQueue();
 
 
 	switch (screenID) {

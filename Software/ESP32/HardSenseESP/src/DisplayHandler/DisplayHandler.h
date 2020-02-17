@@ -11,7 +11,6 @@
 #define CALIBRATION_FILE "/calibrationData"
 #define TOUCH_DEBOUNCE_TIME 1000
 
-
 class DisplayHandler
 {
 private:

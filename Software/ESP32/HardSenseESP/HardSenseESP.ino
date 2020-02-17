@@ -15,7 +15,7 @@ using namespace HSSerial_NS;
 TaskHandle_t Display_Core_Task_Handle;
 DisplayHandler displayHandler;
 static HSSerial hsSerial;
-Queues allQueues;
+static Queues allQueues;
 
 const byte btButton = 27;
 
@@ -56,7 +56,7 @@ void setup() {
 	{
 		Serial.println("Failed to init SPIFFS");
 		while (true) {
-			delay(100);  // Spin because we can't go any further with SPIFFS
+			delay(100);  // Spin because we can't go any further without SPIFFS
 		}
 	}
 
@@ -65,12 +65,11 @@ void setup() {
 	
 	if(IsBTButtonPressed())
 	{
-		//Serial.println("Starting bluetooth...");
 		allQueues.AddItemToDisplayQueue(DisplayCommands::ChangeScreen, String(ScreenTypes::BluetoothConfigurator));
 		hsSerial.HandleConfigurator();
 	}
 	allQueues.AddItemToDisplayQueue(DisplayCommands::ChangeScreen, String(ScreenTypes::SplashScreen));
-	delay(20);
+	//delay(50);
 }
 
 
