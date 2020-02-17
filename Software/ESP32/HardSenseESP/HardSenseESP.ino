@@ -4,19 +4,18 @@
  Author:	Kitecraft
 */
 #include <ESP32Encoder.h>
-#include "freertos/task.h"
 #include "src/DisplayHandler/DisplayHandler.h"
 #include "src/HSSerial/HSSerial.h"
 #include "src/QueueItem.h"
 #include "src/GlobalDefinitions.h"
 
 TaskHandle_t Display_Core_Task_Handle;
+
 DisplayHandler displayHandler;
-static HSSerial hsSerial;
-static Queues allQueues;
+HSSerial hsSerial;
+Queues allQueues;
 
 const byte btButton = 27;
-
 ESP32Encoder volumeEncoder;
 const byte encoderA_pin = 34;
 const byte encoderB_pin = 35;
