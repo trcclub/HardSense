@@ -107,7 +107,6 @@ bool IsBTButtonPressed()
 
 void HandleVolumeEncoder()
 {
-	
 	uint32_t currValue = volumeEncoder.getCount();
 	if (currValue != volumeLevel)
 	{
