@@ -73,17 +73,6 @@ F 3 "~" H 5900 3350 50  0001 C CNN
 	1    5900 3350
 	-1   0    0    1   
 $EndComp
-$Comp
-L Connector_Generic:Conn_01x02 BT_BTN1
-U 1 1 5DE9602A
-P 6000 5350
-F 0 "BT_BTN1" H 6080 5342 50  0000 L CNN
-F 1 "Conn_01x02" H 6080 5251 50  0000 L CNN
-F 2 "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical" H 6000 5350 50  0001 C CNN
-F 3 "~" H 6000 5350 50  0001 C CNN
-	1    6000 5350
-	-1   0    0    1   
-$EndComp
 Wire Wire Line
 	4350 4500 4700 4500
 Text Label 4350 4500 0    50   ~ 0
@@ -466,4 +455,15 @@ F 3 "" H 1950 2750 50  0001 C CNN
 $EndComp
 Wire Wire Line
 	1950 1950 1950 2750
+$Comp
+L Connector_Generic:Conn_01x02 BT_BTN1
+U 1 1 5DE9602A
+P 6000 5250
+F 0 "BT_BTN1" H 6080 5242 50  0000 L CNN
+F 1 "Conn_01x02" H 6080 5151 50  0000 L CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical" H 6000 5250 50  0001 C CNN
+F 3 "~" H 6000 5250 50  0001 C CNN
+	1    6000 5250
+	-1   0    0    -1  
+$EndComp
 $EndSCHEMATC
