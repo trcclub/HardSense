@@ -454,7 +454,7 @@ F 3 "" H 1950 2750 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	1950 1950 1950 2750
+	1950 1950 1950 2550
 $Comp
 L Connector_Generic:Conn_01x02 BT_BTN1
 U 1 1 5DE9602A
@@ -465,5 +465,23 @@ F 2 "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical" H 6000 5250 50 
 F 3 "~" H 6000 5250 50  0001 C CNN
 	1    6000 5250
 	-1   0    0    -1  
+$EndComp
+Wire Wire Line
+	1950 2550 1600 2550
+Wire Wire Line
+	1600 2550 1600 2650
+Connection ~ 1950 2550
+Wire Wire Line
+	1950 2550 1950 2750
+$Comp
+L power:GND #PWR0109
+U 1 1 5E4C7D3D
+P 1600 2650
+F 0 "#PWR0109" H 1600 2400 50  0001 C CNN
+F 1 "GND" V 1600 2450 50  0000 C CNN
+F 2 "" H 1600 2650 50  0001 C CNN
+F 3 "" H 1600 2650 50  0001 C CNN
+	1    1600 2650
+	1    0    0    -1  
 $EndComp
 $EndSCHEMATC

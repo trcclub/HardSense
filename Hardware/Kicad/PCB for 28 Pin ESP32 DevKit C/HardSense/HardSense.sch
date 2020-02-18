@@ -1,0 +1,487 @@
+EESchema Schematic File Version 4
+LIBS:HardSense-cache
+EELAYER 30 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 1 1
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L Device:CP C1
+U 1 1 5DCB0C0C
+P 2250 2700
+F 0 "C1" H 2368 2746 50  0000 L CNN
+F 1 "100uF" H 2368 2655 50  0000 L CNN
+F 2 "Capacitor_THT:CP_Radial_D8.0mm_P2.50mm" H 2288 2550 50  0001 C CNN
+F 3 "~" H 2250 2700 50  0001 C CNN
+	1    2250 2700
+	1    0    0    -1  
+$EndComp
+$Comp
+L SparkFun-PowerSymbols:3.3V #SUPPLY0101
+U 1 1 5DCBE8E1
+P 2850 2550
+F 0 "#SUPPLY0101" H 2900 2550 45  0001 L BNN
+F 1 "3.3V" V 2850 2678 45  0000 L CNN
+F 2 "" V 2892 2678 60  0000 L CNN
+F 3 "" H 2850 2550 60  0001 C CNN
+	1    2850 2550
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	2750 3800 2100 3800
+$Comp
+L SparkFun-PowerSymbols:3.3V #SUPPLY0102
+U 1 1 5DCC1E9B
+P 2100 3800
+F 0 "#SUPPLY0102" H 2150 3800 45  0001 L BNN
+F 1 "3.3V" V 2100 3928 45  0000 L CNN
+F 2 "" V 2142 3928 60  0000 L CNN
+F 3 "" H 2100 3800 60  0001 C CNN
+	1    2100 3800
+	0    -1   -1   0   
+$EndComp
+NoConn ~ 2750 3900
+NoConn ~ 2750 4000
+NoConn ~ 2750 4100
+NoConn ~ 2750 4500
+NoConn ~ 2750 4600
+NoConn ~ 2750 4700
+NoConn ~ 2750 4900
+NoConn ~ 2750 5000
+NoConn ~ 2750 5200
+NoConn ~ 2750 5300
+NoConn ~ 2750 5400
+NoConn ~ 2750 5500
+NoConn ~ 2750 5600
+$Comp
+L Connector_Generic:Conn_01x04 Touch1
+U 1 1 5DE87756
+P 5900 3350
+F 0 "Touch1" H 5980 3342 50  0000 L CNN
+F 1 "Conn_01x04" H 5980 3251 50  0000 L CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical" H 5900 3350 50  0001 C CNN
+F 3 "~" H 5900 3350 50  0001 C CNN
+	1    5900 3350
+	-1   0    0    1   
+$EndComp
+Wire Wire Line
+	4350 4500 4700 4500
+Text Label 4350 4500 0    50   ~ 0
+SPI_MISO
+Wire Wire Line
+	4350 4600 4700 4600
+Text Label 4350 4600 0    50   ~ 0
+SPI_CLK
+Wire Wire Line
+	4350 3900 4700 3900
+Text Label 4350 3900 0    50   ~ 0
+SPI_MOSI
+Wire Wire Line
+	4350 5200 4700 5200
+Text Label 4350 5200 0    50   ~ 0
+TFT_DC
+Wire Wire Line
+	4350 5300 4700 5300
+Text Label 4350 5300 0    50   ~ 0
+TFT_CS
+Wire Wire Line
+	4350 5000 4700 5000
+Text Label 4350 5000 0    50   ~ 0
+TFT_RST
+Text Label 4600 5400 2    50   ~ 0
+T_CS
+Wire Wire Line
+	6100 3150 6450 3150
+Wire Wire Line
+	6100 3250 6450 3250
+Wire Wire Line
+	6100 3350 6450 3350
+Wire Wire Line
+	6100 3450 6450 3450
+Text Label 6100 3150 0    50   ~ 0
+SPI_MISO
+Text Label 6100 3250 0    50   ~ 0
+SPI_MOSI
+Text Label 6100 3350 0    50   ~ 0
+T_CS
+Text Label 6100 3450 0    50   ~ 0
+SPI_CLK
+Wire Wire Line
+	2750 5100 2100 5100
+$Comp
+L power:GND #PWR0102
+U 1 1 5DEE97F2
+P 4700 4400
+F 0 "#PWR0102" H 4700 4150 50  0001 C CNN
+F 1 "GND" V 4700 4200 50  0000 C CNN
+F 2 "" H 4700 4400 50  0001 C CNN
+F 3 "" H 4700 4400 50  0001 C CNN
+	1    4700 4400
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x04 Vol_Encoder1
+U 1 1 5DEEEB8E
+P 7000 3350
+F 0 "Vol_Encoder1" H 6918 2925 50  0000 C CNN
+F 1 "Conn_01x04" H 6918 3016 50  0000 C CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical" H 7000 3350 50  0001 C CNN
+F 3 "~" H 7000 3350 50  0001 C CNN
+	1    7000 3350
+	-1   0    0    1   
+$EndComp
+$Comp
+L power:GND #PWR0103
+U 1 1 5DEF24B9
+P 7500 4250
+F 0 "#PWR0103" H 7500 4000 50  0001 C CNN
+F 1 "GND" V 7500 4050 50  0000 C CNN
+F 2 "" H 7500 4250 50  0001 C CNN
+F 3 "" H 7500 4250 50  0001 C CNN
+	1    7500 4250
+	0    -1   -1   0   
+$EndComp
+$Comp
+L SparkFun-PowerSymbols:3.3V #SUPPLY0105
+U 1 1 5DEF24BF
+P 7500 3350
+F 0 "#SUPPLY0105" H 7550 3350 45  0001 L BNN
+F 1 "3.3V" V 7500 3478 45  0000 L CNN
+F 2 "" V 7542 3478 60  0000 L CNN
+F 3 "" H 7500 3350 60  0001 C CNN
+	1    7500 3350
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	7200 3350 7500 3350
+Wire Wire Line
+	7200 3450 7500 3450
+Wire Wire Line
+	7200 3250 7500 3250
+Wire Wire Line
+	7200 3150 7500 3150
+Text Label 7250 3150 0    50   ~ 0
+ENC_A
+Text Label 7250 3250 0    50   ~ 0
+ENC_B
+Wire Wire Line
+	2750 4200 2100 4200
+Wire Wire Line
+	2750 4300 2100 4300
+Text Label 2200 4200 0    50   ~ 0
+ENC_A
+Text Label 2200 4300 0    50   ~ 0
+ENC_B
+Wire Wire Line
+	2750 4800 2100 4800
+Wire Wire Line
+	6200 5250 6700 5250
+Text Label 6250 5250 0    50   ~ 0
+BT_BTN
+Text Label 2200 4800 0    50   ~ 0
+BT_BTN
+Wire Wire Line
+	2250 2550 2850 2550
+Connection ~ 2250 2550
+$Comp
+L Connector_Generic:Conn_01x04 RTC1
+U 1 1 5DF2C80B
+P 7000 4150
+F 0 "RTC1" H 6918 3725 50  0000 C CNN
+F 1 "Conn_01x04" H 6918 3816 50  0000 C CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical" H 7000 4150 50  0001 C CNN
+F 3 "~" H 7000 4150 50  0001 C CNN
+	1    7000 4150
+	-1   0    0    1   
+$EndComp
+$Comp
+L SparkFun-PowerSymbols:3.3V #SUPPLY0106
+U 1 1 5DF2F999
+P 7500 4150
+F 0 "#SUPPLY0106" H 7550 4150 45  0001 L BNN
+F 1 "3.3V" V 7500 4278 45  0000 L CNN
+F 2 "" V 7542 4278 60  0000 L CNN
+F 3 "" H 7500 4150 60  0001 C CNN
+	1    7500 4150
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	7200 4150 7500 4150
+Wire Wire Line
+	7200 4250 7500 4250
+Wire Wire Line
+	7200 4050 7500 4050
+Wire Wire Line
+	7200 3950 7500 3950
+Text Label 7250 4050 0    50   ~ 0
+SDA
+Text Label 7250 3950 0    50   ~ 0
+SCL
+Wire Wire Line
+	4350 4300 4700 4300
+Wire Wire Line
+	4350 4000 4700 4000
+Text Label 4400 4000 0    50   ~ 0
+SCL
+Text Label 4400 4300 0    50   ~ 0
+SDA
+$Comp
+L Mechanical:MountingHole H1
+U 1 1 5DF3ABD9
+P 3650 2350
+F 0 "H1" H 3750 2396 50  0000 L CNN
+F 1 "MountingHole" H 3750 2305 50  0000 L CNN
+F 2 "MountingHole:MountingHole_2.7mm_Pad" H 3650 2350 50  0001 C CNN
+F 3 "~" H 3650 2350 50  0001 C CNN
+	1    3650 2350
+	1    0    0    -1  
+$EndComp
+$Comp
+L Mechanical:MountingHole H2
+U 1 1 5DF3DFB1
+P 3650 2600
+F 0 "H2" H 3750 2646 50  0000 L CNN
+F 1 "MountingHole" H 3750 2555 50  0000 L CNN
+F 2 "MountingHole:MountingHole_2.7mm_Pad" H 3650 2600 50  0001 C CNN
+F 3 "~" H 3650 2600 50  0001 C CNN
+	1    3650 2600
+	1    0    0    -1  
+$EndComp
+$Comp
+L Mechanical:MountingHole H3
+U 1 1 5DF3EE76
+P 3650 2850
+F 0 "H3" H 3750 2896 50  0000 L CNN
+F 1 "MountingHole" H 3750 2805 50  0000 L CNN
+F 2 "MountingHole:MountingHole_2.7mm_Pad" H 3650 2850 50  0001 C CNN
+F 3 "~" H 3650 2850 50  0001 C CNN
+	1    3650 2850
+	1    0    0    -1  
+$EndComp
+$Comp
+L Mechanical:MountingHole H4
+U 1 1 5DF3FD46
+P 3650 3100
+F 0 "H4" H 3750 3146 50  0000 L CNN
+F 1 "MountingHole" H 3750 3055 50  0000 L CNN
+F 2 "MountingHole:MountingHole_2.7mm_Pad" H 3650 3100 50  0001 C CNN
+F 3 "~" H 3650 3100 50  0001 C CNN
+	1    3650 3100
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4350 4400 4700 4400
+$Comp
+L power:GNDA #PWR0106
+U 1 1 5DF4A16E
+P 2100 5100
+F 0 "#PWR0106" H 2100 4850 50  0001 C CNN
+F 1 "GNDA" V 2105 4973 50  0000 R CNN
+F 2 "" H 2100 5100 50  0001 C CNN
+F 3 "" H 2100 5100 50  0001 C CNN
+	1    2100 5100
+	0    1    1    0   
+$EndComp
+$Comp
+L power:GNDA #PWR0107
+U 1 1 5DF4C825
+P 6200 5350
+F 0 "#PWR0107" H 6200 5100 50  0001 C CNN
+F 1 "GNDA" V 6205 5222 50  0000 R CNN
+F 2 "" H 6200 5350 50  0001 C CNN
+F 3 "" H 6200 5350 50  0001 C CNN
+	1    6200 5350
+	0    -1   -1   0   
+$EndComp
+$Comp
+L power:GNDA #PWR0105
+U 1 1 5DF5F027
+P 7500 3450
+F 0 "#PWR0105" H 7500 3200 50  0001 C CNN
+F 1 "GNDA" V 7505 3322 50  0000 R CNN
+F 2 "" H 7500 3450 50  0001 C CNN
+F 3 "" H 7500 3450 50  0001 C CNN
+	1    7500 3450
+	0    -1   -1   0   
+$EndComp
+$Comp
+L power:GNDA #PWR0104
+U 1 1 5DF9ABB5
+P 2250 2850
+F 0 "#PWR0104" H 2250 2600 50  0001 C CNN
+F 1 "GNDA" V 2255 2722 50  0000 R CNN
+F 2 "" H 2250 2850 50  0001 C CNN
+F 3 "" H 2250 2850 50  0001 C CNN
+	1    2250 2850
+	1    0    0    -1  
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x09 TFT1
+U 1 1 5DCB921C
+P 5900 4200
+F 0 "TFT1" H 5818 3575 50  0000 C CNN
+F 1 "Conn_01x09" H 5818 3666 50  0000 C CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x09_P2.54mm_Vertical" H 5900 4200 50  0001 C CNN
+F 3 "~" H 5900 4200 50  0001 C CNN
+	1    5900 4200
+	-1   0    0    -1  
+$EndComp
+Wire Wire Line
+	6100 4400 6400 4400
+Text Label 6100 4600 0    50   ~ 0
+SPI_MISO
+Text Label 6100 4400 0    50   ~ 0
+SPI_CLK
+Text Label 6100 4300 0    50   ~ 0
+SPI_MOSI
+Text Label 6100 4200 0    50   ~ 0
+TFT_DC
+Text Label 6100 4100 0    50   ~ 0
+TFT_RST
+Text Label 6100 4000 0    50   ~ 0
+TFT_CS
+Wire Wire Line
+	6100 4500 6400 4500
+Wire Wire Line
+	6100 3900 6400 3900
+Wire Wire Line
+	6100 3800 6400 3800
+Wire Wire Line
+	6100 4600 6400 4600
+Wire Wire Line
+	6100 4300 6400 4300
+Wire Wire Line
+	6100 4200 6400 4200
+Wire Wire Line
+	6100 4100 6400 4100
+Wire Wire Line
+	6100 4000 6400 4000
+$Comp
+L power:GND #PWR0108
+U 1 1 5DE97C1C
+P 6400 3900
+F 0 "#PWR0108" H 6400 3650 50  0001 C CNN
+F 1 "GND" V 6400 3700 50  0000 C CNN
+F 2 "" H 6400 3900 50  0001 C CNN
+F 3 "" H 6400 3900 50  0001 C CNN
+	1    6400 3900
+	0    -1   -1   0   
+$EndComp
+$Comp
+L SparkFun-PowerSymbols:3.3V #SUPPLY0104
+U 1 1 5DCD4211
+P 6400 4500
+F 0 "#SUPPLY0104" H 6450 4500 45  0001 L BNN
+F 1 "3.3V" V 6400 4628 45  0000 L CNN
+F 2 "" V 6442 4628 60  0000 L CNN
+F 3 "" H 6400 4500 60  0001 C CNN
+	1    6400 4500
+	0    1    1    0   
+$EndComp
+$Comp
+L SparkFun-PowerSymbols:3.3V #SUPPLY0103
+U 1 1 5DCBDBCA
+P 6400 3800
+F 0 "#SUPPLY0103" H 6450 3800 45  0001 L BNN
+F 1 "3.3V" V 6400 3928 45  0000 L CNN
+F 2 "" V 6442 3928 60  0000 L CNN
+F 3 "" H 6400 3800 60  0001 C CNN
+	1    6400 3800
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	2050 2550 2250 2550
+Wire Wire Line
+	2050 1950 2050 2550
+$Comp
+L Connector_Generic:Conn_01x02 J1
+U 1 1 5DEDC467
+P 1950 1750
+F 0 "J1" V 1914 1562 50  0000 R CNN
+F 1 "Conn_01x02" V 1823 1562 50  0000 R CNN
+F 2 "Kitecraft_Pin_Headers:PinHeader_1x02_P2.54_Friction_Lock" H 1950 1750 50  0001 C CNN
+F 3 "~" H 1950 1750 50  0001 C CNN
+	1    1950 1750
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	4350 5400 4700 5400
+$Comp
+L ESP32-DEVKITC-32D:ESP32-DEVKITC-32D U1
+U 1 1 5DCAA656
+P 3550 4700
+F 0 "U1" H 3550 5867 50  0000 C CNN
+F 1 "ESP32-DEVKITC-32D" H 3550 5776 50  0000 C CNN
+F 2 "Kitecraft_Boards:NodeMCU_ESP-32S_38_Pin" H 3550 4700 50  0001 L BNN
+F 3 "None" H 3550 4700 50  0001 L BNN
+F 4 "ESP32-DEVKITC-32D" H 3550 4700 50  0001 L BNN "Field4"
+F 5 "EVAL BOARD FOR ESP-WROOM-32" H 3550 4700 50  0001 L BNN "Field5"
+F 6 "None" H 3550 4700 50  0001 L BNN "Field6"
+F 7 "Espressif Systems" H 3550 4700 50  0001 L BNN "Field7"
+F 8 "Unavailable" H 3550 4700 50  0001 L BNN "Field8"
+	1    3550 4700
+	1    0    0    -1  
+$EndComp
+NoConn ~ 2750 4400
+NoConn ~ 4350 5500
+NoConn ~ 4350 5600
+NoConn ~ 4350 5100
+NoConn ~ 4350 4900
+NoConn ~ 4350 4800
+NoConn ~ 4350 4700
+NoConn ~ 4350 4200
+NoConn ~ 4350 4100
+NoConn ~ 4350 3800
+NoConn ~ 1600 1950
+$Comp
+L power:GNDA #PWR0101
+U 1 1 5DF99662
+P 1950 2750
+F 0 "#PWR0101" H 1950 2500 50  0001 C CNN
+F 1 "GNDA" V 1955 2622 50  0000 R CNN
+F 2 "" H 1950 2750 50  0001 C CNN
+F 3 "" H 1950 2750 50  0001 C CNN
+	1    1950 2750
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	1950 1950 1950 2550
+$Comp
+L Connector_Generic:Conn_01x02 BT_BTN1
+U 1 1 5DE9602A
+P 6000 5250
+F 0 "BT_BTN1" H 6080 5242 50  0000 L CNN
+F 1 "Conn_01x02" H 6080 5151 50  0000 L CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical" H 6000 5250 50  0001 C CNN
+F 3 "~" H 6000 5250 50  0001 C CNN
+	1    6000 5250
+	-1   0    0    -1  
+$EndComp
+Wire Wire Line
+	1950 2550 1600 2550
+Wire Wire Line
+	1600 2550 1600 2650
+Connection ~ 1950 2550
+Wire Wire Line
+	1950 2550 1950 2750
+$Comp
+L power:GND #PWR0109
+U 1 1 5E4C7D3D
+P 1600 2650
+F 0 "#PWR0109" H 1600 2400 50  0001 C CNN
+F 1 "GND" V 1600 2450 50  0000 C CNN
+F 2 "" H 1600 2650 50  0001 C CNN
+F 3 "" H 1600 2650 50  0001 C CNN
+	1    1600 2650
+	1    0    0    -1  
+$EndComp
+$EndSCHEMATC
