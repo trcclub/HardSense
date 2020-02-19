@@ -15,7 +15,8 @@ DisplayHandler displayHandler;
 HSSerial hsSerial;
 Queues allQueues;
 
-const byte btButton = 27;
+//const byte btButton = 27;
+const byte btButton = 13;
 ESP32Encoder volumeEncoder;
 const byte encoderA_pin = 34;
 const byte encoderB_pin = 35;

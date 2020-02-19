@@ -1,4 +1,4 @@
-17054127469994802
+17055709537753238
 Battery
 BatteryHolder_Bulgin_BX0036_1xC
 Bulgin Battery Holder, BX0036, Battery Type C (https://www.bulgin.com/products/pub/media/bulgin/data/Battery_holders.pdf)
@@ -48572,6 +48572,13 @@ ARDUINO PRO MINI FOOTPRINT
 0
 24
 24
+Kitecraft_Boards
+ESP32S_30Pin
+
+
+0
+30
+30
 Kitecraft_Boards
 NodeMCU_ESP-32S_38_Pin
 
