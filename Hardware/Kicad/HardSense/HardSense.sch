@@ -60,8 +60,8 @@ Wire Wire Line
 Text Label 4150 3750 0    50   ~ 0
 SPI_MOSI
 Wire Wire Line
-	4150 4850 4500 4850
-Text Label 4150 4850 0    50   ~ 0
+	4150 4750 4500 4750
+Text Label 4150 4750 0    50   ~ 0
 TFT_DC
 Wire Wire Line
 	4150 4450 4500 4450
@@ -411,10 +411,10 @@ F 3 "" H 1600 2650 50  0001 C CNN
 	1    1600 2650
 	1    0    0    -1  
 $EndComp
-Text Label 4150 4750 0    50   ~ 0
+Text Label 4150 4850 0    50   ~ 0
 TFT_RST
 Wire Wire Line
-	4150 4750 4500 4750
+	4150 4850 4500 4850
 Wire Wire Line
 	4150 5150 4800 5150
 $Comp
