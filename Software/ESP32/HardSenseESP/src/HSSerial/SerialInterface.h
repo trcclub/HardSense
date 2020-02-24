@@ -64,5 +64,6 @@ enum TRANS__KEY : byte {
 		INCREASE_VOLUME = 0x38, // 8
 		DECREASE_VOLUME = 0x39, // 9
 
+		REQUEST_TIME = 0x42, // B
 
 };

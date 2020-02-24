@@ -77,6 +77,7 @@ namespace HardSense.DataStreamingServer
             TRANSMISSION_KEYS.Add("INCREASE_VOLUME", '\u0038'); // 8
             TRANSMISSION_KEYS.Add("DECREASE_VOLUME", '\u0039'); // 9
 
+            TRANSMISSION_KEYS.Add("REQUEST_TIME", '\u0042'); // B
         }
     }
 
@@ -140,6 +141,8 @@ namespace HardSense.DataStreamingServer
 
         INCREASE_VOLUME = 0x38, // 8
         DECREASE_VOLUME = 0x39, // 9
+
+        REQUEST_TIME = 0x42, // B
     };
 
     

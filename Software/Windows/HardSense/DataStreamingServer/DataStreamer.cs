@@ -233,6 +233,10 @@ namespace HardSense.DataStreamingServer
                 case (char)TRANS__KEY.DECREASE_VOLUME:
                     keybd_event(0xAE, 0, 0, 0);
                     break;
+                case (char)TRANS__KEY.REQUEST_TIME:
+                    String dt = DateTime.Now.ToString("MMM dd yyyy,HH:mm:ss");
+                    sender.AddStringToMessage(ProtocolKeys.TRANSMISSION_KEYS["CONFIG_UPDATE_TIME"], dt);
+                    break;
                 default:
                     break;
             }
