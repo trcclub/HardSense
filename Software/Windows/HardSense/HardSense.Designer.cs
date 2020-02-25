@@ -83,7 +83,7 @@
             // mainboardToolStripMenuItem
             // 
             this.mainboardToolStripMenuItem.Name = "mainboardToolStripMenuItem";
-            this.mainboardToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.mainboardToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
             this.mainboardToolStripMenuItem.Text = "Mainboard";
             // 
             // helpToolStripMenuItem
@@ -160,7 +160,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "HardSense";
-            this.Text = "HardSense";
+            this.Text = "HardSense64";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
