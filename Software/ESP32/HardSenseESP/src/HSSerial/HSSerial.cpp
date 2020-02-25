@@ -335,7 +335,8 @@ void HSSerial::NewSocketRequestAccepted()
 	HandleOutput();
 
 	allQueues->AddItemToDisplayQueue(DisplayCommands::ChangeScreen, String(ScreenTypes::Home));
-
+	allQueues->AddItemToOutputQueue(TRANS__KEY::REQUEST_TIME,"");
+	
 	HeartbeatTimerEnabled(true);
 }
 

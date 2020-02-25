@@ -25,7 +25,7 @@ void DisplayHandler::Init(Queues *newQueues)
 	allQueues = newQueues;
 	tftDisplay.init();
 
-	tftDisplay.setRotation(1);
+	tftDisplay.setRotation(3);
 	tftDisplay.fillScreen(TFT_BLACK);
 	CalibrateTouch();
 }

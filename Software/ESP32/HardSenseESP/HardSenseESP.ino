@@ -17,8 +17,8 @@ Queues allQueues;
 
 const byte btButton = 13;
 ESP32Encoder volumeEncoder;
-const byte encoderA_pin = 34;
-const byte encoderB_pin = 35;
+const byte encoderA_pin = 35;
+const byte encoderB_pin = 34;
 volatile int32_t volumeLevel = 0;
 
 hw_timer_t* heartbeatTimer = NULL;

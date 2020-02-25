@@ -29,6 +29,10 @@
 #define OTA_PANEL_LOW_Y 52
 #define OTA_PANEL_HIGH_Y 179
 
+
+#define DELETE_CALIB_PANEL_X 207
+#define DELETE_CALIB_PANEL_Y 180
+
 class HS_BluetoothConfiguratorScreen :
 	public HS_ScreenBase
 {
@@ -55,6 +59,8 @@ private:
 
 	void Draw_OTA_Panel();
 	bool OTA_Panel_Touched(int x, int y);
+
+	void Draw_Delete_Touch_Calib_Panel();
 public:
 	HS_BluetoothConfiguratorScreen(Queues *newQueues, TFT_eSPI* newTFT);
 	~HS_BluetoothConfiguratorScreen();

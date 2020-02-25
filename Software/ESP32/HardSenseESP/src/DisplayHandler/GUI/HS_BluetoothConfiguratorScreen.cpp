@@ -11,9 +11,11 @@ HS_BluetoothConfiguratorScreen::HS_BluetoothConfiguratorScreen(Queues *newQueues
 	rtc.begin();
 	
 	TFT->unloadFont();
+//	TFT->loadFont(AA_FONT_18PT);
 	TFT->setTextSize(1);
 
 	textPrinter_Sprite->unloadFont();
+//	textPrinter_Sprite->loadFont(AA_FONT_18PT);
 	textPrinter_Sprite->setTextSize(1);
 
 	TFT->fillScreen(TFT_BLACK);
@@ -23,6 +25,7 @@ HS_BluetoothConfiguratorScreen::HS_BluetoothConfiguratorScreen(Queues *newQueues
 	Draw_DeviceID_Panel();
 
 	Draw_OTA_Panel();
+	Draw_Delete_Touch_Calib_Panel();
 
 	Draw_Time_Panel();
 	Update_Time();
@@ -395,4 +398,26 @@ bool HS_BluetoothConfiguratorScreen::OTA_Panel_Touched(int x, int y)
 		return true;
 	}
 	return false;
+}
+
+void HS_BluetoothConfiguratorScreen::Draw_Delete_Touch_Calib_Panel()
+{
+	HS_Coords localCoords(DELETE_CALIB_PANEL_X, DELETE_CALIB_PANEL_Y, 113, 127);
+
+	DrawBoxWithBorderAndDropShadow(localCoords, bluetoothConfiguratorScreenTheme);
+	TFT->fillRect(localCoords.x + 3, localCoords.y + 4, localCoords.w - 8, localCoords.h - 7, bluetoothConfiguratorScreenTheme.panelBGColor);
+	TFT->fillRect(localCoords.x + 3, localCoords.y + 4, localCoords.w - 8, 16, bluetoothConfiguratorScreenTheme.panelHeaderColor);
+
+	textPrinter_Sprite->setTextDatum(TL_DATUM);
+	textPrinter_Sprite->createSprite(95, 60);
+
+	textPrinter_Sprite->setTextColor(bluetoothConfiguratorScreenTheme.textColor, bluetoothConfiguratorScreenTheme.panelHeaderColor);
+	textPrinter_Sprite->fillSprite(bluetoothConfiguratorScreenTheme.panelHeaderColor);
+	textPrinter_Sprite->drawString("Delete", 0,0);
+	textPrinter_Sprite->drawString("Touch", 0,18);
+	textPrinter_Sprite->drawString("Calibation", 0,18);
+	textPrinter_Sprite->pushSprite(localCoords.x + 45, localCoords.y + 4);
+
+	textPrinter_Sprite->deleteSprite();
+
 }
