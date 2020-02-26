@@ -313,7 +313,7 @@ namespace HardSense
             trayMenu.MenuItems.Add("Open", trayIcon_DoubleClick);
 
             trayIcon = new NotifyIcon();
-            trayIcon.Text = "HardSense";
+            trayIcon.Text = "HardSense64";
             trayIcon.Icon = Properties.Resources.AppIcon;
             trayIcon.DoubleClick += new System.EventHandler(this.trayIcon_DoubleClick);
 
