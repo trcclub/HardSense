@@ -1,5 +1,7 @@
 # HardSense
-Monitor local system sensors and display that data on a remote 2.2" LCD screen.
+Monitor local system sensors and display that data on a remote 2.*" LCD screen.
+Full touch screen enabled.
+Multiple screens including GPU details, CPU details
 
 https://youtu.be/yXnQ3QwIAQI
 
