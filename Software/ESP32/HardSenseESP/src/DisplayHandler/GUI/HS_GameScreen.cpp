@@ -48,7 +48,7 @@ HS_GameScreen::HS_GameScreen(Queues *newQueues, TFT_eSPI* newTFT) : HS_ScreenBas
 //	Serial.print("HS_GameScreen: 8: ");
 //	Serial.println(ESP.getFreeHeap());
 
-	SendSensorList();
+	SendSensorList("/game.ini");
 }
 
 
@@ -61,7 +61,7 @@ HS_GameScreen::~HS_GameScreen()
 	delete(netPanel);
 }
 
-
+/*
 void HS_GameScreen::SendSensorList()
 {
 	// a = GPU Core Temperature
@@ -91,6 +91,7 @@ void HS_GameScreen::SendSensorList()
 	// m = CPU Load
 	allQueues->AddItemToOutputQueue(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/intelcpu/0/load/0,m");
 }
+*/
 
 void HS_GameScreen::UpdateScreen(String value)
 {

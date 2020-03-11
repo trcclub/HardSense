@@ -1,6 +1,5 @@
 #include "HS_ScreenBase.h"
 
-//HS_ScreenBase::HS_ScreenBase(TFT_eSPI *newTFT)
 HS_ScreenBase::HS_ScreenBase(Queues *newQueues, TFT_eSPI *newTFT)
 {
 	TFT = newTFT;
@@ -24,13 +23,24 @@ HS_ScreenBase::~HS_ScreenBase()
 	textPrinter_Sprite->unloadFont();
 	textPrinter_Sprite->deleteSprite();
 	delete(textPrinter_Sprite);
-	//AddItemToDisplayQueue = NULL;
 	TFT = NULL;
 }
 
-void HS_ScreenBase::UpdateScreen(String value)
+void HS_ScreenBase::SendSensorList(String fileName)
 {
-
+	File file = SPIFFS.open(fileName);
+	if (!file) {
+		return;
+	}
+	String line = "";
+	while (file.available()) {
+		line = file.readStringUntil('\n');
+		if (line.length() > 0)
+		{
+			allQueues->AddItemToOutputQueue(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, line);
+		}
+	}
+	file.close();
 }
 
 void HS_ScreenBase::DrawBoxWithBorderAndDropShadow(HS_Coords hs_coords, HS_Theme hs_theme)
@@ -42,11 +52,6 @@ void HS_ScreenBase::DrawBoxWithBorderAndDropShadow(HS_Coords hs_coords, HS_Theme
 	TFT->drawFastVLine(hs_coords.x + 2, hs_coords.y + 3, hs_coords.h - 6, hs_theme.panelDropShadowColor);
 	TFT->drawFastHLine(hs_coords.x, hs_coords.y + hs_coords.h - 1, hs_coords.w, hs_theme.panelDropShadowColor);
 	TFT->drawFastVLine(hs_coords.x + hs_coords.w - 1, hs_coords.y, hs_coords.h, hs_theme.panelDropShadowColor);
-}
-
-void HS_ScreenBase::HandleTouch(int x, int y)
-{
-
 }
 
 bool HS_ScreenBase::HiddenHomeScreen_Touched(int x, int y)
@@ -68,7 +73,6 @@ void HS_ScreenBase::HS_Load_Fonts()
 	// ESP32 will crash if any of the fonts are missing
 	bool font_missing = false;
 	if (SPIFFS.exists("/SegoeUI-10.vlw") == false) font_missing = true;
-	//if (SPIFFS.exists("/SegoeUI-12.vlw") == false) font_missing = true;
 	if (SPIFFS.exists("/SegoeUI-14.vlw") == false) font_missing = true;
 	if (SPIFFS.exists("/SegoeUI-18.vlw") == false) font_missing = true;
 

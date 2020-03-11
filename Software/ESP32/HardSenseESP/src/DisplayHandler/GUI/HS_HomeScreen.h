@@ -113,6 +113,6 @@ public:
 	~HS_HomeScreen();
 	void UpdateScreen(String value);
 	void UpdateScreenOnInterval();
-	void SendSensorList();
+	//void SendSensorList();
 	void HandleTouch(int x, int y);
 };

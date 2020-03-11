@@ -25,7 +25,7 @@ HS_HomeScreen::HS_HomeScreen(Queues *newQueues, TFT_eSPI *newTFT) : HS_ScreenBas
 	Draw_Mem_Panel();
 	Draw_HDD_Panel();
 
-	SendSensorList();
+	SendSensorList("/home.ini");
 }
 
 HS_HomeScreen::~HS_HomeScreen()
@@ -104,6 +104,7 @@ void HS_HomeScreen::UpdateScreenOnInterval()
 }
 
 
+/*
 void HS_HomeScreen::SendSensorList()
 {
 	allQueues->AddItemToOutputQueue(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/intelcpu/0/load/0,a|/intelcpu/0/temperature/6,b|/intelcpu/0/clock/1,c|/intelcpu/0/power/0,d");
@@ -112,7 +113,7 @@ void HS_HomeScreen::SendSensorList()
 	allQueues->AddItemToOutputQueue(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/ram/load/0,k|/ram/data/0,l|/ram/data/1,m");
 	allQueues->AddItemToOutputQueue(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/hdd/2/load/0,n|/hdd/3/load/0,o|/hdd/1/load/0,p|/hdd/0/load/0,q");
 }
-
+*/
 
 void HS_HomeScreen::HandleTouch(int x, int y)
 {

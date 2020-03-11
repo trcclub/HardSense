@@ -15,11 +15,11 @@
 class HS_ScreenBase
 {
 private:
-	void HS_Load_Fonts();
 
 public:
 	HS_ScreenBase(Queues *newQueues, TFT_eSPI *newTFT);
 	~HS_ScreenBase();
+	void HS_Load_Fonts();
 
 	String degreesC = "";
 	char degreesC_char[3];
@@ -28,12 +28,11 @@ public:
 	Queues *allQueues;
 	TFT_eSprite* textPrinter_Sprite;
 
-	virtual void UpdateScreen(String value);
-	
-	virtual void HandleTouch(int x, int y);
 	bool HiddenHomeScreen_Touched(int x, int y);
 
 	void DrawBoxWithBorderAndDropShadow(HS_Coords hs_coords, HS_Theme hs_theme);
 	void DisplayFreeHeap();
+
+	void SendSensorList(String fileName);
 };
 

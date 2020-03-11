@@ -21,7 +21,7 @@ HS_CPUScreen::HS_CPUScreen(Queues *newQueues, TFT_eSPI* newTFT) : HS_ScreenBase(
 	DrawPackageLoadGrid();
 	InitCPUCorePanels();
 
-	SendSensorList();
+	SendSensorList("/cpu.ini");
 }
 
 HS_CPUScreen::~HS_CPUScreen()
@@ -49,7 +49,7 @@ HS_CPUScreen::~HS_CPUScreen()
 	
 }
 
-
+/*
 void HS_CPUScreen::SendSensorList()
 {
 	// a = CPU package power
@@ -88,7 +88,7 @@ void HS_CPUScreen::SendSensorList()
 	// v = CPU 6 load
 	allQueues->AddItemToOutputQueue(TRANS__KEY::ADD_SENSORS_TO_SENSOR_LIST, "/intelcpu/0/temperature/5,t|/intelcpu/0/clock/6,u|/intelcpu/0/load/6,v");
 }
-
+*/
 
 void HS_CPUScreen::UpdateScreen(String value)
 {

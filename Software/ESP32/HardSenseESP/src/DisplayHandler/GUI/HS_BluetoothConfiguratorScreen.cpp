@@ -2,6 +2,8 @@
 
 HS_BluetoothConfiguratorScreen::HS_BluetoothConfiguratorScreen(Queues *newQueues, TFT_eSPI* newTFT) : HS_ScreenBase(newQueues, newTFT)
 {
+	HS_Load_Fonts();
+	
 	bluetoothConfiguratorScreenTheme.panelBGColor = PANEL_BGCOLOR;
 	bluetoothConfiguratorScreenTheme.panelBorderColor = BOX_BORDER_COLOR;
 	bluetoothConfiguratorScreenTheme.panelDropShadowColor = BOX_DROP_SHADOW;
