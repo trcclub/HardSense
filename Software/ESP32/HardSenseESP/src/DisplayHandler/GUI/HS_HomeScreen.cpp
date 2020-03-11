@@ -492,7 +492,7 @@ void HS_HomeScreen::Update_Time()
 	date += ", " + String(monthsOfTheYear[now.month()-1]);
 	date += " " + String(d);
 
-
+	TFT->loadFont(AA_FONT_18PT);
 	textPrinter_Sprite->createSprite(107,46);
 	textPrinter_Sprite->fillSprite(homeScreenTheme.panelHeaderColor);
 	textPrinter_Sprite->setTextDatum(TC_DATUM);
