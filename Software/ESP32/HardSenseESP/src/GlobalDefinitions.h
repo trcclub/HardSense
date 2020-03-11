@@ -26,6 +26,7 @@ enum ScreenTypes {
 enum HardSense_Commands {
 	RefreshBluetoothDisplay,
 	BeginOTA,
+	DeleteTouchcalibration,
 };
 
 struct HS_Theme {

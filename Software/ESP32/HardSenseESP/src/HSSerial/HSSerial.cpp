@@ -269,6 +269,10 @@ void HSSerial::HandleCommandQueue()
 		case HardSense_Commands::RefreshBluetoothDisplay:
 			UpdateBluetoothDisplay();
 			break;
+		case HardSense_Commands::DeleteTouchcalibration:
+			SPIFFS.remove(CALIBRATION_FILE);
+			allQueues->AddItemToDisplayQueue(DisplayCommands::ChangeScreen,String(ScreenTypes::BluetoothConfigurator));
+			break;
 		default:
 			break;
 		}

@@ -31,8 +31,9 @@ public:
 	bool HiddenHomeScreen_Touched(int x, int y);
 
 	void DrawBoxWithBorderAndDropShadow(HS_Coords hs_coords, HS_Theme hs_theme);
-	void DisplayFreeHeap();
 
 	void SendSensorList(String fileName);
+
+//	void DisplayFreeHeap();
 };
 

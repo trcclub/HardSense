@@ -83,7 +83,9 @@ void HS_ScreenBase::HS_Load_Fonts()
 	}
 }
 
+/*
 void HS_ScreenBase::DisplayFreeHeap()
 {
 	Serial.println(ESP.getFreeHeap());
 }
+*/

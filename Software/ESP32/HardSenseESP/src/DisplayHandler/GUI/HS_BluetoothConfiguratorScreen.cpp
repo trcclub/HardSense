@@ -92,6 +92,12 @@ void HS_BluetoothConfiguratorScreen::HandleTouch(int x, int y)
 	{
 		allQueues->AddItemToDisplayQueue(DisplayCommands::ChangeScreen, String(ScreenTypes::OTA));
 	}
+	if (Delete_Touch_Calib_Panel_Touched(x, y))
+	{
+		//allQueues->AddItemToDisplayQueue(DisplayCommands::ChangeScreen, String(ScreenTypes::BluetoothConfigurator));
+		//allQueues->AddItemToDisplayQueue(DisplayCommands::ChangeScreen, String(ScreenTypes::OTA));
+		allQueues->AddItemToCommandQueue(HardSense_Commands::DeleteTouchcalibration,"");
+	}
 }
 
 void HS_BluetoothConfiguratorScreen::Draw_Time_Panel()
@@ -363,7 +369,7 @@ void HS_BluetoothConfiguratorScreen::Update_BT_DeviceID(String btDID)
 	textPrinter_Sprite->createSprite(130, 15);
 	textPrinter_Sprite->fillSprite(bluetoothConfiguratorScreenTheme.panelBGColor);
 
-	textPrinter_Sprite->drawString(btDID, 0, 0,2);
+	textPrinter_Sprite->drawString(btDID, 0, 0, 2);
 	textPrinter_Sprite->pushSprite(DEVICEID_PANEL_X + 55, DEVICEID_PANEL_Y + 44);
 
 	textPrinter_Sprite->deleteSprite();
@@ -400,16 +406,25 @@ bool HS_BluetoothConfiguratorScreen::OTA_Panel_Touched(int x, int y)
 	return false;
 }
 
+bool HS_BluetoothConfiguratorScreen::Delete_Touch_Calib_Panel_Touched(int x, int y)
+{
+	if ((x >= DELETE_CALIB_PANEL_LOW_X + 5 && x <= DELETE_CALIB_PANEL_HIGH_X - 5) && (y >= DELETE_CALIB_PANEL_LOW_Y + 5 && y <= DELETE_CALIB_PANEL_HIGH_Y - 5))
+	{
+		return true;
+	}
+	return false;
+}
+
 void HS_BluetoothConfiguratorScreen::Draw_Delete_Touch_Calib_Panel()
 {
-	HS_Coords localCoords(DELETE_CALIB_PANEL_X, DELETE_CALIB_PANEL_Y, 113, 127);
+	HS_Coords localCoords(DELETE_CALIB_PANEL_X, DELETE_CALIB_PANEL_Y, 113, 60);
 
 	DrawBoxWithBorderAndDropShadow(localCoords, bluetoothConfiguratorScreenTheme);
 	TFT->fillRect(localCoords.x + 3, localCoords.y + 4, localCoords.w - 8, localCoords.h - 7, bluetoothConfiguratorScreenTheme.panelHeaderColor);
 	//TFT->fillRect(localCoords.x + 3, localCoords.y + 4, localCoords.w - 8, 16, bluetoothConfiguratorScreenTheme.panelHeaderColor);
 
 	textPrinter_Sprite->setTextDatum(TL_DATUM);
-	textPrinter_Sprite->createSprite(90, 60);
+	textPrinter_Sprite->createSprite(90, 52);
 
 	textPrinter_Sprite->setTextColor(bluetoothConfiguratorScreenTheme.textColor, bluetoothConfiguratorScreenTheme.panelHeaderColor);
 	textPrinter_Sprite->fillSprite(bluetoothConfiguratorScreenTheme.panelHeaderColor);
