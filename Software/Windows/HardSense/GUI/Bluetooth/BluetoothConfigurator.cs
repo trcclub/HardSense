@@ -26,7 +26,6 @@ namespace HardSense.GUI.Bluetooth
         public BluetoothConfigurator()
         {
             InitializeComponent();
-            ProtocolKeys.init();
             readThread = new Thread(readThreadProc);
             writeThread = new Thread(writeThreadProc);
             groupBox_UpdateSettings.Enabled = false;
@@ -89,7 +88,7 @@ namespace HardSense.GUI.Bluetooth
             {
                 if (connected)
                 {
-                    AddKeyToMessage(ProtocolKeys.TRANSMISSION_KEYS["DISCONNECT"]);
+                    AddKeyToMessage((char)TRANS__KEY.DISCONNECT);
                     Thread.Sleep(50); //Give the write thread enough time to send.
                 }
 
@@ -166,7 +165,7 @@ namespace HardSense.GUI.Bluetooth
             {
                 Start();
                 Thread.Sleep(100);
-                AddKeyToMessage(ProtocolKeys.TRANSMISSION_KEYS["CONNECTION_REQUEST"]);
+                AddKeyToMessage((char)TRANS__KEY.CONNECTION_REQUEST);
                 
                 groupBox_Bluetooth.Enabled = false;
                 groupBox_UpdateSettings.Enabled = true;
@@ -213,7 +212,7 @@ namespace HardSense.GUI.Bluetooth
                 {
                     if (btPort.ReadByte() == (int)TRANS__KEY.STX)
                     {
-                        string textinput = btPort.ReadTo(ProtocolKeys.TRANSMISSION_KEYS["ETX"].ToString());
+                        string textinput = btPort.ReadTo(((char)TRANS__KEY.ETX).ToString());
                         parseInput(textinput);
                     }
                     Thread.Sleep(20);
@@ -237,7 +236,7 @@ namespace HardSense.GUI.Bluetooth
         private void parseInput(string inputData)
         {
             string strippedInput = inputData.Substring(0, inputData.Length - 1);
-            string[] splitter = { ProtocolKeys.TRANSMISSION_KEYS["PACKET_END"].ToString() };
+            string[] splitter = { ((char)TRANS__KEY.PACKET_END).ToString() };
             string[] tokens = inputData.Split(splitter, StringSplitOptions.RemoveEmptyEntries);
             {
                 foreach (string currItem in tokens)
@@ -301,12 +300,12 @@ namespace HardSense.GUI.Bluetooth
 
         private void Trans_Accept_New_Connect()
         {
-            AddKeyToMessage(ProtocolKeys.TRANSMISSION_KEYS["CONFIG_REQUEST_SSID"]);
-            AddKeyToMessage(ProtocolKeys.TRANSMISSION_KEYS["CONFIG_REQUEST_IS_PASSWORD_SET"]);
-            AddKeyToMessage(ProtocolKeys.TRANSMISSION_KEYS["CONFIG_REQUEST_SERVER_HOSTNAME"]);
-            AddKeyToMessage(ProtocolKeys.TRANSMISSION_KEYS["CONFIG_REQUEST_SERVER_PORT"]);
-            AddKeyToMessage(ProtocolKeys.TRANSMISSION_KEYS["CONFIG_REQUEST_WIFI_DEVICE_ID"]);
-            AddKeyToMessage(ProtocolKeys.TRANSMISSION_KEYS["CONFIG_REQUEST_BT_DEVICE_ID"]);
+            AddKeyToMessage((char)TRANS__KEY.CONFIG_REQUEST_SSID);
+            AddKeyToMessage((char)TRANS__KEY.CONFIG_REQUEST_IS_PASSWORD_SET);
+            AddKeyToMessage((char)TRANS__KEY.CONFIG_REQUEST_SERVER_HOSTNAME);
+            AddKeyToMessage((char)TRANS__KEY.CONFIG_REQUEST_SERVER_PORT);
+            AddKeyToMessage((char)TRANS__KEY.CONFIG_REQUEST_WIFI_DEVICE_ID);
+            AddKeyToMessage((char)TRANS__KEY.CONFIG_REQUEST_BT_DEVICE_ID);
         }
         private void Trans_Receive_SSID(string newSSID)
         {
@@ -388,7 +387,7 @@ namespace HardSense.GUI.Bluetooth
         {
             if (result)
             {
-                AddKeyToMessage(ProtocolKeys.TRANSMISSION_KEYS["CONFIG_REQUEST_SSID"]);
+                AddKeyToMessage((char)TRANS__KEY.CONFIG_REQUEST_SSID);
             } else
             {
                 MessageBoxPopUp("HardSenseESP failed to update the SSID", "HardSenseESP Failure");
@@ -398,7 +397,7 @@ namespace HardSense.GUI.Bluetooth
         {
             if (result)
             {
-                AddKeyToMessage(ProtocolKeys.TRANSMISSION_KEYS["CONFIG_REQUEST_IS_PASSWORD_SET"]);
+                AddKeyToMessage((char)TRANS__KEY.CONFIG_REQUEST_IS_PASSWORD_SET);
             }
             else
             {
@@ -409,7 +408,7 @@ namespace HardSense.GUI.Bluetooth
         {
             if (result)
             {
-                AddKeyToMessage(ProtocolKeys.TRANSMISSION_KEYS["CONFIG_REQUEST_SERVER_HOSTNAME"]);
+                AddKeyToMessage((char)TRANS__KEY.CONFIG_REQUEST_SERVER_HOSTNAME);
             }
             else
             {
@@ -420,7 +419,7 @@ namespace HardSense.GUI.Bluetooth
         {
             if (result)
             {
-                AddKeyToMessage(ProtocolKeys.TRANSMISSION_KEYS["CONFIG_REQUEST_SERVER_PORT"]);
+                AddKeyToMessage((char)TRANS__KEY.CONFIG_REQUEST_SERVER_PORT);
             }
             else
             {
@@ -431,7 +430,7 @@ namespace HardSense.GUI.Bluetooth
         {
             if (result)
             {
-                AddKeyToMessage(ProtocolKeys.TRANSMISSION_KEYS["CONFIG_REQUEST_WIFI_DEVICE_ID"]);
+                AddKeyToMessage((char)TRANS__KEY.CONFIG_REQUEST_WIFI_DEVICE_ID);
             }
             else
             {
@@ -442,7 +441,7 @@ namespace HardSense.GUI.Bluetooth
         {
             if (result)
             {
-                AddKeyToMessage(ProtocolKeys.TRANSMISSION_KEYS["CONFIG_REQUEST_BT_DEVICE_ID"]);
+                AddKeyToMessage((char)TRANS__KEY.CONFIG_REQUEST_BT_DEVICE_ID);
             }
             else
             {
@@ -472,7 +471,7 @@ namespace HardSense.GUI.Bluetooth
             StringBuilder tmpSB = new StringBuilder();
             tmpSB.Append(key);
             tmpSB.Append(value);
-            tmpSB.Append(ProtocolKeys.TRANSMISSION_KEYS["PACKET_END"]);
+            tmpSB.Append((char)TRANS__KEY.PACKET_END);
 
             dataLock.WaitOne();
             message.Append(tmpSB.ToString());
@@ -490,8 +489,8 @@ namespace HardSense.GUI.Bluetooth
             message.Clear();
             dataLock.ReleaseMutex();
 
-            tmpSB.Insert(0, ProtocolKeys.TRANSMISSION_KEYS["STX"]);
-            tmpSB.Append(ProtocolKeys.TRANSMISSION_KEYS["ETX"]);
+            tmpSB.Insert(0, (char)TRANS__KEY.STX);
+            tmpSB.Append((char)TRANS__KEY.ETX);
 
             byte[] byteData = Encoding.ASCII.GetBytes(tmpSB.ToString());
 
@@ -516,8 +515,8 @@ namespace HardSense.GUI.Bluetooth
                 MessageBox.Show(message, caption, buttons);
                 return;
             }
-            AddStringToMessage(ProtocolKeys.TRANSMISSION_KEYS["CONFIG_SET_SSID"], newSSID);
-            AddStringToMessage(ProtocolKeys.TRANSMISSION_KEYS["CONFIG_SET_PASSWORD"], newPassword);
+            AddStringToMessage((char)TRANS__KEY.CONFIG_SET_SSID, newSSID);
+            AddStringToMessage((char)TRANS__KEY.CONFIG_SET_PASSWORD, newPassword);
             textBox_NewSSID.Clear();
             textBox_NewPassword.Clear();
             textBox_NewPasswordConfirm.Clear();
@@ -525,8 +524,8 @@ namespace HardSense.GUI.Bluetooth
 
         private void button_UpdateServerInfoToESP_Click(object sender, EventArgs e)
         {
-            AddStringToMessage(ProtocolKeys.TRANSMISSION_KEYS["CONFIG_SET_SERVER_HOSTNAME"], textBox_ServerName.Text);
-            AddStringToMessage(ProtocolKeys.TRANSMISSION_KEYS["CONFIG_SET_SERVER_PORT"], textBox_ServerPort.Text);
+            AddStringToMessage((char)TRANS__KEY.CONFIG_SET_SERVER_HOSTNAME, textBox_ServerName.Text);
+            AddStringToMessage((char)TRANS__KEY.CONFIG_SET_SERVER_PORT, textBox_ServerPort.Text);
             textBox_ServerName.Clear();
             textBox_ServerPort.Clear();
         }
@@ -535,7 +534,7 @@ namespace HardSense.GUI.Bluetooth
         {
             if (MessageBox.Show("Are you sure you want to delete the touch calibration file?", "Confirm Delete", MessageBoxButtons.OKCancel) == DialogResult.OK)
             {
-                AddKeyToMessage(ProtocolKeys.TRANSMISSION_KEYS["CONFIG_DELETE_TOUCH_CALIBRATION_FILE"]);
+                AddKeyToMessage((char)TRANS__KEY.CONFIG_DELETE_TOUCH_CALIBRATION_FILE);
             }
         }
 
@@ -543,13 +542,13 @@ namespace HardSense.GUI.Bluetooth
         {
             DateTime localDate = DateTime.Now;
             String dt = localDate.ToString("MMM dd yyyy,HH:mm:ss");
-            AddStringToMessage(ProtocolKeys.TRANSMISSION_KEYS["CONFIG_UPDATE_TIME"], dt);
+            AddStringToMessage((char)TRANS__KEY.CONFIG_UPDATE_TIME, dt);
         }
 
         private void button_UpdateDeviceIDInfoToESP_Click(object sender, EventArgs e)
         {
-            AddStringToMessage(ProtocolKeys.TRANSMISSION_KEYS["CONFIG_SET_WIFI_DEVICED_ID"], textBox_NewWifiDeviceID.Text);
-            AddStringToMessage(ProtocolKeys.TRANSMISSION_KEYS["CONFIG_SET_BT_DEVICE_ID"], textBox_NewBluetoothDeviceID.Text);
+            AddStringToMessage((char)TRANS__KEY.CONFIG_SET_WIFI_DEVICED_ID, textBox_NewWifiDeviceID.Text);
+            AddStringToMessage((char)TRANS__KEY.CONFIG_SET_BT_DEVICE_ID, textBox_NewBluetoothDeviceID.Text);
             textBox_NewWifiDeviceID.Clear();
             textBox_NewBluetoothDeviceID.Clear();
         }

@@ -70,11 +70,14 @@
             this.textBox_CurrentWiFIDeviceID = new System.Windows.Forms.TextBox();
             this.label11 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
+            this.groupBox_HardSenseESP_ScreenLayouts = new System.Windows.Forms.GroupBox();
+            this.groupBox_HomeScreenLayout = new System.Windows.Forms.GroupBox();
             ((System.ComponentModel.ISupportInitialize)(this.bindingSource1)).BeginInit();
             this.groupBox_Bluetooth.SuspendLayout();
             this.groupBox_HardSenseESPCurrentInfo.SuspendLayout();
             this.groupBox_UpdateSettings.SuspendLayout();
             this.groupBox_DeviceIDs.SuspendLayout();
+            this.groupBox_HardSenseESP_ScreenLayouts.SuspendLayout();
             this.SuspendLayout();
             // 
             // label_CommPort
@@ -439,11 +442,31 @@
             this.label10.TabIndex = 0;
             this.label10.Text = "Wifi";
             // 
+            // groupBox_HardSenseESP_ScreenLayouts
+            // 
+            this.groupBox_HardSenseESP_ScreenLayouts.Controls.Add(this.groupBox_HomeScreenLayout);
+            this.groupBox_HardSenseESP_ScreenLayouts.Location = new System.Drawing.Point(378, 12);
+            this.groupBox_HardSenseESP_ScreenLayouts.Name = "groupBox_HardSenseESP_ScreenLayouts";
+            this.groupBox_HardSenseESP_ScreenLayouts.Size = new System.Drawing.Size(587, 328);
+            this.groupBox_HardSenseESP_ScreenLayouts.TabIndex = 9;
+            this.groupBox_HardSenseESP_ScreenLayouts.TabStop = false;
+            this.groupBox_HardSenseESP_ScreenLayouts.Text = "HardSenseESP Layouts";
+            // 
+            // groupBox_HomeScreenLayout
+            // 
+            this.groupBox_HomeScreenLayout.Location = new System.Drawing.Point(6, 24);
+            this.groupBox_HomeScreenLayout.Name = "groupBox_HomeScreenLayout";
+            this.groupBox_HomeScreenLayout.Size = new System.Drawing.Size(320, 240);
+            this.groupBox_HomeScreenLayout.TabIndex = 0;
+            this.groupBox_HomeScreenLayout.TabStop = false;
+            this.groupBox_HomeScreenLayout.Text = "Home Screen";
+            // 
             // BluetoothConfigurator
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(383, 380);
+            this.ClientSize = new System.Drawing.Size(996, 380);
+            this.Controls.Add(this.groupBox_HardSenseESP_ScreenLayouts);
             this.Controls.Add(this.groupBox_DeviceIDs);
             this.Controls.Add(this.button_UpdateTime);
             this.Controls.Add(this.button_DeleteTouchCalibrationFile);
@@ -465,6 +488,7 @@
             this.groupBox_UpdateSettings.PerformLayout();
             this.groupBox_DeviceIDs.ResumeLayout(false);
             this.groupBox_DeviceIDs.PerformLayout();
+            this.groupBox_HardSenseESP_ScreenLayouts.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -512,5 +536,7 @@
         private System.Windows.Forms.TextBox textBox_NewWifiDeviceID;
         private System.Windows.Forms.TextBox textBox_CurrentBluetoothDeviceID;
         private System.Windows.Forms.TextBox textBox_CurrentWiFIDeviceID;
+        private System.Windows.Forms.GroupBox groupBox_HardSenseESP_ScreenLayouts;
+        private System.Windows.Forms.GroupBox groupBox_HomeScreenLayout;
     }
 }

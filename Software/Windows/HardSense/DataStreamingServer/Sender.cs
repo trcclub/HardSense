@@ -47,7 +47,7 @@ namespace HardSense.DataStreamingServer
             StringBuilder tmpSB = new StringBuilder();
             tmpSB.Append(key);
             tmpSB.Append(value);
-            tmpSB.Append(ProtocolKeys.TRANSMISSION_KEYS["PACKET_END"]);
+            tmpSB.Append((char)TRANS__KEY.PACKET_END);
 
             dataLock.WaitOne();
             message.Append(tmpSB.ToString());
@@ -66,8 +66,8 @@ namespace HardSense.DataStreamingServer
             message.Clear();
             dataLock.ReleaseMutex();
 
-            tmpSB.Insert(0, ProtocolKeys.TRANSMISSION_KEYS["STX"]);
-            tmpSB.Append(ProtocolKeys.TRANSMISSION_KEYS["ETX"]);
+            tmpSB.Insert(0, (char)TRANS__KEY.STX);
+            tmpSB.Append((char)TRANS__KEY.ETX);
 
             byte[] byteData = Encoding.ASCII.GetBytes(tmpSB.ToString());
             

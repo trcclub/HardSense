@@ -63,7 +63,7 @@ namespace HardSense.DataStreamingServer
                 Stop();
                 return;
             }
-            sender.AddKeyToMessage(ProtocolKeys.TRANSMISSION_KEYS["HEARTBEAT"]);
+            sender.AddKeyToMessage((char)TRANS__KEY.HEARTBEAT);
             heartbeatsMissed++;
         }
         
@@ -140,17 +140,17 @@ namespace HardSense.DataStreamingServer
                 return ret;
             }
 
-            int firstInstanceOfStart = inputData.IndexOf(ProtocolKeys.TRANSMISSION_KEYS["STX"]);
+            int firstInstanceOfStart = inputData.IndexOf((char)TRANS__KEY.STX);
             if (firstInstanceOfStart > 0)
             {
                 inputData = inputData.Substring(firstInstanceOfStart);
             }
 
-            if (!inputData.StartsWith(ProtocolKeys.TRANSMISSION_KEYS["STX"].ToString()))
+            if (!inputData.StartsWith(((char)TRANS__KEY.STX).ToString()))
             {
-                if (inputData.IndexOf(ProtocolKeys.TRANSMISSION_KEYS["STX"]) > 0)
+                if (inputData.IndexOf((char)TRANS__KEY.STX) > 0)
                 {
-                    inputData = inputData.Substring(inputData.IndexOf(ProtocolKeys.TRANSMISSION_KEYS["STX"]));
+                    inputData = inputData.Substring(inputData.IndexOf((char)TRANS__KEY.STX));
                 }
                 else
                 {
@@ -159,13 +159,13 @@ namespace HardSense.DataStreamingServer
             }
 
 
-            int endMarkerLocation = inputData.IndexOf(ProtocolKeys.TRANSMISSION_KEYS["ETX"]);
+            int endMarkerLocation = inputData.IndexOf((char)TRANS__KEY.ETX);
             if (endMarkerLocation != inputData.Length)
             {
                 if (endMarkerLocation > 0)
                 {
-                    string tmpContent = inputData.Substring(0, inputData.IndexOf(ProtocolKeys.TRANSMISSION_KEYS["ETX"]) + 1);
-                    ret = inputData.Substring(inputData.IndexOf(ProtocolKeys.TRANSMISSION_KEYS["ETX"]) + 1);
+                    string tmpContent = inputData.Substring(0, inputData.IndexOf((char)TRANS__KEY.ETX) + 1);
+                    ret = inputData.Substring(inputData.IndexOf((char)TRANS__KEY.ETX) + 1);
                     parseInput(tmpContent);
                     return HandleInput(ret);
                 }
@@ -182,7 +182,7 @@ namespace HardSense.DataStreamingServer
         private void parseInput(string inputData)
         {
             string strippedData = inputData.Substring(1, inputData.Length - 3);
-            string[] tokens = strippedData.Split(ProtocolKeys.TRANSMISSION_KEYS["PACKET_END"]);
+            string[] tokens = strippedData.Split((char)TRANS__KEY.PACKET_END);
             {
                 foreach(string currItem in tokens)
                 {
@@ -198,25 +198,25 @@ namespace HardSense.DataStreamingServer
             switch (key)
             {
                 case (char)TRANS__KEY.REQUEST_NEW_CONNECTION:
-                    sender.AddKeyToMessage(ProtocolKeys.TRANSMISSION_KEYS["NEW_CONNECTION_APPROVED"]);
+                    sender.AddKeyToMessage((char)TRANS__KEY.NEW_CONNECTION_APPROVED);
                     break;
                 case (char)TRANS__KEY.START_SENSOR_DATA_STREAM:
                     if (sdStreamer.StartStreaming())
                     {
-                        sender.AddStringToMessage(ProtocolKeys.TRANSMISSION_KEYS["ACK"], "Started data streaming");
+                        sender.AddStringToMessage((char)TRANS__KEY.ACK, "Started data streaming");
                     } else
                     {
-                        sender.AddStringToMessage(ProtocolKeys.TRANSMISSION_KEYS["ACK"], "Failed to start data streaming");
+                        sender.AddStringToMessage((char)TRANS__KEY.ACK, "Failed to start data streaming");
                     }
 
                     break;
                 case (char)TRANS__KEY.STOP_SENSOR_DATA_STREAM:
                     sdStreamer.StopStreaming();
-                    sender.AddStringToMessage(ProtocolKeys.TRANSMISSION_KEYS["ACK"], "Stoped data streaming");
+                    sender.AddStringToMessage((char)TRANS__KEY.ACK, "Stopped data streaming");
                     break;
                 case (char)TRANS__KEY.ADD_SENSORS_TO_SENSOR_LIST:
                     AddSensorListToSDStreamer(value);
-                    sender.AddStringToMessage(ProtocolKeys.TRANSMISSION_KEYS["ACK"], "Sensors aded to list");
+                    sender.AddStringToMessage((char)TRANS__KEY.ACK, "Sensors added to list");
                     break;
                 case (char)TRANS__KEY.CLEAR_SENSOR_LIST:
                     sdStreamer.ClearSensorList();
@@ -225,7 +225,7 @@ namespace HardSense.DataStreamingServer
                     heartbeatsMissed = 0;
                     break;
                 case (char)TRANS__KEY.HEARTBEAT:
-                    sender.AddKeyToMessage(ProtocolKeys.TRANSMISSION_KEYS["HEARTBEAT_ACK"]);
+                    sender.AddKeyToMessage((char)TRANS__KEY.HEARTBEAT_ACK);
                     break;
                 case (char)TRANS__KEY.INCREASE_VOLUME:
                     keybd_event(0xAF, 0, 0, 0);
@@ -235,7 +235,7 @@ namespace HardSense.DataStreamingServer
                     break;
                 case (char)TRANS__KEY.REQUEST_TIME:
                     String dt = DateTime.Now.ToString("MMM dd yyyy,HH:mm:ss");
-                    sender.AddStringToMessage(ProtocolKeys.TRANSMISSION_KEYS["CONFIG_UPDATE_TIME"], dt);
+                    sender.AddStringToMessage((char)TRANS__KEY.CONFIG_UPDATE_TIME, dt);
                     break;
                 default:
                     break;

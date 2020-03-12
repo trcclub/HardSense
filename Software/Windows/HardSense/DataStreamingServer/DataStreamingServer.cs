@@ -20,7 +20,6 @@ namespace HardSense.DataStreamingServer
         
         public static void StartServer()
         {
-            ProtocolKeys.init();  
             continueRunning = true;
             socketServerThread = new Thread(SocketListener);
             socketServerThread.Start();

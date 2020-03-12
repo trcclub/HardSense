@@ -83,7 +83,7 @@ namespace HardSense.DataStreamingServer
                             //Sensor update format:
                             //<key>,<value>
                             string tmp = currSensorItem.key + "," + currValue.ToString();
-                            sender.AddStringToMessage(ProtocolKeys.TRANSMISSION_KEYS["UPDATE_SENSOR_VALUE"], tmp);
+                            sender.AddStringToMessage((char)TRANS__KEY.UPDATE_SENSOR_VALUE, tmp);
                         }
                     }
                     catch (Exception e)
