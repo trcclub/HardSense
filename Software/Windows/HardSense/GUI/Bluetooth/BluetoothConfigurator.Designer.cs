@@ -72,12 +72,15 @@
             this.label10 = new System.Windows.Forms.Label();
             this.groupBox_HardSenseESP_ScreenLayouts = new System.Windows.Forms.GroupBox();
             this.groupBox_HomeScreenLayout = new System.Windows.Forms.GroupBox();
+            this.button_Edit_HomeScreen_Layout = new System.Windows.Forms.Button();
+            this.button_Upload_HomeScreen_Layout = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.bindingSource1)).BeginInit();
             this.groupBox_Bluetooth.SuspendLayout();
             this.groupBox_HardSenseESPCurrentInfo.SuspendLayout();
             this.groupBox_UpdateSettings.SuspendLayout();
             this.groupBox_DeviceIDs.SuspendLayout();
             this.groupBox_HardSenseESP_ScreenLayouts.SuspendLayout();
+            this.groupBox_HomeScreenLayout.SuspendLayout();
             this.SuspendLayout();
             // 
             // label_CommPort
@@ -450,16 +453,37 @@
             this.groupBox_HardSenseESP_ScreenLayouts.Size = new System.Drawing.Size(587, 328);
             this.groupBox_HardSenseESP_ScreenLayouts.TabIndex = 9;
             this.groupBox_HardSenseESP_ScreenLayouts.TabStop = false;
-            this.groupBox_HardSenseESP_ScreenLayouts.Text = "HardSenseESP Layouts";
+            this.groupBox_HardSenseESP_ScreenLayouts.Text = "HardSenseESP Screen Layouts";
             // 
             // groupBox_HomeScreenLayout
             // 
+            this.groupBox_HomeScreenLayout.Controls.Add(this.button_Upload_HomeScreen_Layout);
+            this.groupBox_HomeScreenLayout.Controls.Add(this.button_Edit_HomeScreen_Layout);
             this.groupBox_HomeScreenLayout.Location = new System.Drawing.Point(6, 24);
             this.groupBox_HomeScreenLayout.Name = "groupBox_HomeScreenLayout";
-            this.groupBox_HomeScreenLayout.Size = new System.Drawing.Size(320, 240);
+            this.groupBox_HomeScreenLayout.Size = new System.Drawing.Size(172, 55);
             this.groupBox_HomeScreenLayout.TabIndex = 0;
             this.groupBox_HomeScreenLayout.TabStop = false;
             this.groupBox_HomeScreenLayout.Text = "Home Screen";
+            // 
+            // button_Edit_HomeScreen_Layout
+            // 
+            this.button_Edit_HomeScreen_Layout.Location = new System.Drawing.Point(6, 22);
+            this.button_Edit_HomeScreen_Layout.Name = "button_Edit_HomeScreen_Layout";
+            this.button_Edit_HomeScreen_Layout.Size = new System.Drawing.Size(75, 23);
+            this.button_Edit_HomeScreen_Layout.TabIndex = 0;
+            this.button_Edit_HomeScreen_Layout.Text = "Edit";
+            this.button_Edit_HomeScreen_Layout.UseVisualStyleBackColor = true;
+            this.button_Edit_HomeScreen_Layout.Click += new System.EventHandler(this.button_Edit_HomeScreen_Layout_Click);
+            // 
+            // button_Upload_HomeScreen_Layout
+            // 
+            this.button_Upload_HomeScreen_Layout.Location = new System.Drawing.Point(87, 22);
+            this.button_Upload_HomeScreen_Layout.Name = "button_Upload_HomeScreen_Layout";
+            this.button_Upload_HomeScreen_Layout.Size = new System.Drawing.Size(75, 23);
+            this.button_Upload_HomeScreen_Layout.TabIndex = 1;
+            this.button_Upload_HomeScreen_Layout.Text = "Upload";
+            this.button_Upload_HomeScreen_Layout.UseVisualStyleBackColor = true;
             // 
             // BluetoothConfigurator
             // 
@@ -477,7 +501,7 @@
             this.DataBindings.Add(new System.Windows.Forms.Binding("Location", global::HardSense.Properties.Settings.Default, "BluetoothConfiguratorFormLastPosition", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.Location = global::HardSense.Properties.Settings.Default.BluetoothConfiguratorFormLastPosition;
             this.Name = "BluetoothConfigurator";
-            this.Text = "BluetoothConfigurator";
+            this.Text = "Configurator";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.BluetoothConfigurator_FormClosed);
             ((System.ComponentModel.ISupportInitialize)(this.bindingSource1)).EndInit();
             this.groupBox_Bluetooth.ResumeLayout(false);
@@ -489,6 +513,7 @@
             this.groupBox_DeviceIDs.ResumeLayout(false);
             this.groupBox_DeviceIDs.PerformLayout();
             this.groupBox_HardSenseESP_ScreenLayouts.ResumeLayout(false);
+            this.groupBox_HomeScreenLayout.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -538,5 +563,7 @@
         private System.Windows.Forms.TextBox textBox_CurrentWiFIDeviceID;
         private System.Windows.Forms.GroupBox groupBox_HardSenseESP_ScreenLayouts;
         private System.Windows.Forms.GroupBox groupBox_HomeScreenLayout;
+        private System.Windows.Forms.Button button_Upload_HomeScreen_Layout;
+        private System.Windows.Forms.Button button_Edit_HomeScreen_Layout;
     }
 }

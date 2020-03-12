@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using HardSense.MemFile;
 using HardSense.GUI;
 using HardSense.GUI.Bluetooth;
+using HardSense.HardwareMonitor;
 using System.Threading;
 
 namespace HardSense
@@ -13,7 +14,7 @@ namespace HardSense
     {
         private NotifyIcon trayIcon;
         private ContextMenu trayMenu;
-        private LocalHardwareMonitor computerMonitor = new LocalHardwareMonitor();
+        //private LocalHardwareMonitor computerMonitor = new LocalHardwareMonitor();
         
 
 
@@ -46,8 +47,8 @@ namespace HardSense
             //tmpSensorExcludeList.Add("/Bluetooth/0/send");
             //tmpSensorExcludeList.Add("/Bluetooth/0/recv");
 
-            computerMonitor.init(tmpHardwareExludeList, tmpSensorExcludeList);
-            computerMonitor.StartMonitor();
+            LocalHardwareMonitor.init(tmpHardwareExludeList, tmpSensorExcludeList);
+            LocalHardwareMonitor.StartMonitor();
             DataStreamingServer.DataStreamingServer.StartServer();
 
             /* Temporarily disable the monitor and socket while working on the other bits.
@@ -65,8 +66,8 @@ namespace HardSense
             //----------------------------------------//
             */
 
-            //DisplayHardwareDataIntheBox();
-            DisplaySensorsInTheBox();
+            DisplayHardwareDataIntheBox();
+            //DisplaySensorsInTheBox();
 
         }
 
@@ -85,6 +86,7 @@ namespace HardSense
             }
         }
         */
+        
         private void DisplaySensorsInTheBox()
         {
             string numSensors = "Total available sensors: " + LocalHardwareMonitor.allAvailableSensors.Count.ToString() + "\n";// computerMonitor.allAvailableSensors.Count.ToString() + "\n";
@@ -108,10 +110,10 @@ namespace HardSense
         {
 
             tempDisplayBox.AppendText("\n---\nMotherboard Info\n");
-            string s = "Found " + computerMonitor.motherBoardInfo.Count.ToString() + " Motherboards(s)\n";
+            string s = "Found " + LocalHardwareMonitor.motherBoardInfo.Count.ToString() + " Motherboards(s)\n";
             tempDisplayBox.AppendText(s);
             int count = 0;
-            foreach (LocalHardwareItem currItem in computerMonitor.motherBoardInfo)
+            foreach (LocalHardwareItem currItem in LocalHardwareMonitor.motherBoardInfo)
             {
                 count++;
                 s = "\n";
@@ -131,10 +133,10 @@ namespace HardSense
 
 
             tempDisplayBox.AppendText("\n---\nCPU Info\n");
-            s = "Found " + computerMonitor.cpuInfo.Count.ToString() + " CPU(s)\n";
+            s = "Found " + LocalHardwareMonitor.cpuInfo.Count.ToString() + " CPU(s)\n";
             tempDisplayBox.AppendText(s);
             count = 0;
-            foreach (LocalHardwareItem currItem in computerMonitor.cpuInfo)
+            foreach (LocalHardwareItem currItem in LocalHardwareMonitor.cpuInfo)
             {
                 count++;
                 s = "\n";
@@ -152,10 +154,10 @@ namespace HardSense
             }
 
             tempDisplayBox.AppendText("\n---\nGPU Info\n");
-            s = "Found " + computerMonitor.gpuInfo.Count.ToString() + " GPU(s)\n";
+            s = "Found " + LocalHardwareMonitor.gpuInfo.Count.ToString() + " GPU(s)\n";
             tempDisplayBox.AppendText(s);
             count = 0;
-            foreach (LocalHardwareItem currItem in computerMonitor.gpuInfo)
+            foreach (LocalHardwareItem currItem in LocalHardwareMonitor.gpuInfo)
             {
                 count++;
                 s = "\n";
@@ -173,10 +175,10 @@ namespace HardSense
             }
 
             tempDisplayBox.AppendText("\n---\nRAM Info\n");
-            s = "Found " + computerMonitor.ramInfo.Count.ToString() + " RAM Unit(s)\n";
+            s = "Found " + LocalHardwareMonitor.ramInfo.Count.ToString() + " RAM Unit(s)\n";
             tempDisplayBox.AppendText(s);
             count = 0;
-            foreach (LocalHardwareItem currItem in computerMonitor.ramInfo)
+            foreach (LocalHardwareItem currItem in LocalHardwareMonitor.ramInfo)
             {
                 count++;
                 s = "\n";
@@ -194,10 +196,10 @@ namespace HardSense
             }
 
             tempDisplayBox.AppendText("\n---\nHDD Info\n");
-            s = "Found " + computerMonitor.hddInfo.Count.ToString() + " HDD(s)\n";
+            s = "Found " + LocalHardwareMonitor.hddInfo.Count.ToString() + " HDD(s)\n";
             tempDisplayBox.AppendText(s);
             count = 0;
-            foreach (LocalHardwareItem currItem in computerMonitor.hddInfo)
+            foreach (LocalHardwareItem currItem in LocalHardwareMonitor.hddInfo)
             {
                 count++;
                 s = "\n";
@@ -214,13 +216,13 @@ namespace HardSense
                 }
             }
 
-            if (computerMonitor.nicInfo.Count != 0)
+            if (LocalHardwareMonitor.nicInfo.Count != 0)
             {
                 tempDisplayBox.AppendText("\n---\nNic Info\n");
-                s = "Found " + computerMonitor.nicInfo.Count.ToString() + " nic(s)\n";
+                s = "Found " + LocalHardwareMonitor.nicInfo.Count.ToString() + " nic(s)\n";
                 tempDisplayBox.AppendText(s);
                 count = 0;
-                foreach (LocalHardwareItem currItem in computerMonitor.nicInfo)
+                foreach (LocalHardwareItem currItem in LocalHardwareMonitor.nicInfo)
                 {
                     count++;
                     s = "\n";
@@ -244,10 +246,10 @@ namespace HardSense
 
 
             tempDisplayBox.AppendText("\n---\nFPS Info\n");
-            s = "Found " + computerMonitor.fpsInfo.Count.ToString() + " FPS Unit(s)\n";
+            s = "Found " + LocalHardwareMonitor.fpsInfo.Count.ToString() + " FPS Unit(s)\n";
             tempDisplayBox.AppendText(s);
             count = 0;
-            foreach (LocalHardwareItem currItem in computerMonitor.fpsInfo)
+            foreach (LocalHardwareItem currItem in LocalHardwareMonitor.fpsInfo)
             {
                 count++;
                 s = "\n";
@@ -345,7 +347,8 @@ namespace HardSense
         private void OnExit(object sender, EventArgs e)
         {
             DataStreamingServer.DataStreamingServer.StopServer();
-            computerMonitor.StopMonitor();
+            LocalHardwareMonitor.StopMonitor();
+            LocalHardwareMonitor.Close();
             Application.Exit();
         }
 

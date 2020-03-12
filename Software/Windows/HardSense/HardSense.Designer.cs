@@ -112,8 +112,8 @@
             // bluetoothConfiguratorToolStripMenuItem1
             // 
             this.bluetoothConfiguratorToolStripMenuItem1.Name = "bluetoothConfiguratorToolStripMenuItem1";
-            this.bluetoothConfiguratorToolStripMenuItem1.Size = new System.Drawing.Size(197, 22);
-            this.bluetoothConfiguratorToolStripMenuItem1.Text = "Bluetooth Configurator";
+            this.bluetoothConfiguratorToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
+            this.bluetoothConfiguratorToolStripMenuItem1.Text = "Configurator";
             this.bluetoothConfiguratorToolStripMenuItem1.Click += new System.EventHandler(this.bluetoothConfiguratorToolStripMenuItem1_Click);
             // 
             // listView1

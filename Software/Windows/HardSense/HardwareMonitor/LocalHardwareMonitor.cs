@@ -9,35 +9,36 @@ using OpenHardwareMonitor.Hardware;
 
 namespace HardSense.HardwareMonitor
 {    
-    public class LocalHardwareMonitor
+    public static class LocalHardwareMonitor
     {
-        public bool running = false;
-        private bool continueMonitoring = false;
-        private Thread monitorThread;
+        public static bool running = false;
+        private static bool continueMonitoring = false;
+        private static Thread monitorThread;
 
-        private UpdateVisitor updateVisitor = new UpdateVisitor();
-        private Computer computer = new Computer();
-        private NetSpeedMonitor netSpeedMonitor = new NetSpeedMonitor();
-        private FPSMonitor fpsMonitor = new FPSMonitor();
+        private static UpdateVisitor updateVisitor = new UpdateVisitor();
+        private static Computer computer = new Computer();
+        private static NetSpeedMonitor netSpeedMonitor = new NetSpeedMonitor();
+        private static FPSMonitor fpsMonitor = new FPSMonitor();
         
 
-        private MemFile.HardSenseMemFile mmFile = new MemFile.HardSenseMemFile(true);
+        private static MemFile.HardSenseMemFile mmFile = new MemFile.HardSenseMemFile(true);
 
-        private bool initiationComplete = false;
+        private static bool initiationComplete = false;
 
-        public List<LocalHardwareItem> motherBoardInfo { get; private set; }
-        public List<LocalHardwareItem> cpuInfo { get; private set; }
-        public List<LocalHardwareItem> gpuInfo { get; private set; }
-        public List<LocalHardwareItem> ramInfo { get; private set; }
-        public List<LocalHardwareItem> hddInfo { get; private set; }
-        public List<LocalHardwareItem> fanInfo { get; private set; }
-        public List<LocalHardwareItem> nicInfo { get; private set; }
-        public List<LocalHardwareItem> fpsInfo { get; private set; }
+        public static List<LocalHardwareItem> motherBoardInfo { get; private set; }
+        public static List<LocalHardwareItem> cpuInfo { get; private set; }
+        public static List<LocalHardwareItem> gpuInfo { get; private set; }
+        public static List<LocalHardwareItem> ramInfo { get; private set; }
+        public static List<LocalHardwareItem> hddInfo { get; private set; }
+        public static List<LocalHardwareItem> fanInfo { get; private set; }
+        public static List<LocalHardwareItem> nicInfo { get; private set; }
+        public static List<LocalHardwareItem> fpsInfo { get; private set; }
 
-        public List<string> listOfHardwareIDsToIgnore { get; set; } = new List<string>();
-        public List<string> listOfSensorIDsToIgnore { get; set; } = new List<string>();
+        public static List<string> listOfHardwareIDsToIgnore { get; set; } = new List<string>();
+        public static List<string> listOfSensorIDsToIgnore { get; set; } = new List<string>();
         public static List<LocalSensor> allAvailableSensors { get; private set; } = new List<LocalSensor>();
 
+        /*
         public LocalHardwareMonitor()
         { 
             computer.Open();
@@ -48,9 +49,13 @@ namespace HardSense.HardwareMonitor
         {
             computer.Close();
         }
+        */
 
-        public void init(List<string> newListOfHardwareIDsToIgnore, List<string> newListOfSensorIDsToIgnore)
+        public static void init(List<string> newListOfHardwareIDsToIgnore, List<string> newListOfSensorIDsToIgnore)
         {
+            computer.Open();
+            computer.Accept(updateVisitor);
+
             listOfHardwareIDsToIgnore = newListOfHardwareIDsToIgnore;
             listOfSensorIDsToIgnore = newListOfSensorIDsToIgnore;
 
@@ -60,7 +65,12 @@ namespace HardSense.HardwareMonitor
             initiationComplete = true;
         }
         
-        private void MonitorThreadFunction()
+        public static void Close()
+        {
+            computer.Close();
+        }
+
+        private static void MonitorThreadFunction()
         {
             if (!initiationComplete)
                 throw new Exception("ThreadPrc: Initiation has not been completed.  You must init().");
@@ -72,7 +82,7 @@ namespace HardSense.HardwareMonitor
             }
         }
 
-        private void UpdateComputersSensorValues()
+        private static void UpdateComputersSensorValues()
         {
             foreach (IHardware hardwareItem in computer.Hardware)
             {
@@ -102,7 +112,7 @@ namespace HardSense.HardwareMonitor
             mmFile.UpdateKeyWithValue(Properties.Settings.Default.FPSSensorName, fpsMonitor.averageFPS);
         }
 
-        private void UpdateHardwareItemsSensorValues(IHardware hardwareItem)
+        private static void UpdateHardwareItemsSensorValues(IHardware hardwareItem)
         {
             if (listOfHardwareIDsToIgnore.Contains(hardwareItem.Identifier.ToString()))
                 return;
@@ -120,7 +130,7 @@ namespace HardSense.HardwareMonitor
 
         }
 
-        private void UpdateSensorValue(ISensor currSensor)
+        private static void UpdateSensorValue(ISensor currSensor)
         {
             if (listOfSensorIDsToIgnore.Contains(currSensor.Identifier.ToString()))
             {
@@ -131,7 +141,7 @@ namespace HardSense.HardwareMonitor
 
             return;
         }
-        public void StartMonitor()
+        public static void StartMonitor()
         {
             fpsMonitor.StartMonitor();
             continueMonitoring = true;
@@ -140,7 +150,7 @@ namespace HardSense.HardwareMonitor
             running = true;
         }
 
-        public void StopMonitor()
+        public static void StopMonitor()
         {
             if (!running)
             {
@@ -152,7 +162,7 @@ namespace HardSense.HardwareMonitor
             running = false;
         }
 
-        private void EnableAllHardwareItems()
+        private static void EnableAllHardwareItems()
         {
             computer.CPUEnabled = true;
             computer.GPUEnabled = true;
@@ -162,7 +172,7 @@ namespace HardSense.HardwareMonitor
             computer.FanControllerEnabled = false;
         }
 
-        private void DisableAllHardwareItems()
+        private static void DisableAllHardwareItems()
         {
             computer.CPUEnabled = false;
             computer.GPUEnabled = false;
@@ -173,7 +183,7 @@ namespace HardSense.HardwareMonitor
 
         }
 
-        public void FindAllHardwareItemsAndSensors()
+        public static void FindAllHardwareItemsAndSensors()
         {
             bool wasMonitorRuning = running;
             if (running)
@@ -201,7 +211,7 @@ namespace HardSense.HardwareMonitor
             }
         }
 
-        private List<LocalHardwareItem> FetchHardwareInfo()
+        private static List<LocalHardwareItem> FetchHardwareInfo()
         {
             List<LocalHardwareItem> ret = new List<LocalHardwareItem>();
 
@@ -221,7 +231,7 @@ namespace HardSense.HardwareMonitor
             return ret;
         }
 
-        private void BuildMainboardInfo()
+        private static void BuildMainboardInfo()
         {
             DisableAllHardwareItems();
             computer.MainboardEnabled = true;
@@ -229,7 +239,7 @@ namespace HardSense.HardwareMonitor
             AddSensorsToAllAvailableList(motherBoardInfo);
             AddHardwareListToMMFileMap(motherBoardInfo);
         }
-        private void BuildCPUInfo()
+        private static void BuildCPUInfo()
         {
             DisableAllHardwareItems();
             computer.CPUEnabled = true;
@@ -238,7 +248,7 @@ namespace HardSense.HardwareMonitor
             AddHardwareListToMMFileMap(cpuInfo);
         }
 
-        private void BuildGPUInfo()
+        private static void BuildGPUInfo()
         {
             DisableAllHardwareItems();
             computer.GPUEnabled = true;
@@ -247,7 +257,7 @@ namespace HardSense.HardwareMonitor
             AddHardwareListToMMFileMap(gpuInfo);
         }
 
-        private void BuildRAMInfo()
+        private static void BuildRAMInfo()
         {
             DisableAllHardwareItems();
             computer.RAMEnabled = true;
@@ -256,7 +266,7 @@ namespace HardSense.HardwareMonitor
             AddHardwareListToMMFileMap(ramInfo);
         }
 
-        private void BuildFanInfo()
+        private static void BuildFanInfo()
         {
             DisableAllHardwareItems();
             computer.FanControllerEnabled = true;
@@ -265,7 +275,7 @@ namespace HardSense.HardwareMonitor
             AddHardwareListToMMFileMap(fanInfo);
         }
 
-        private void BuildHDDInfo()
+        private static void BuildHDDInfo()
         {
             DisableAllHardwareItems();
             computer.HDDEnabled = true;
@@ -290,7 +300,7 @@ namespace HardSense.HardwareMonitor
             AddHardwareListToMMFileMap(hddInfo);
         }
 
-        private void BuildNicInfo()
+        private static void BuildNicInfo()
         {
             netSpeedMonitor.FindNICs(listOfHardwareIDsToIgnore, listOfSensorIDsToIgnore);
             nicInfo = new List<LocalHardwareItem>();
@@ -303,7 +313,7 @@ namespace HardSense.HardwareMonitor
             AddSensorsToAllAvailableList(nicInfo);
         }
 
-        private void BuildFPSInfo()
+        private static void BuildFPSInfo()
         {
             fpsInfo = new List<LocalHardwareItem>();
             LocalHardwareItem fpsItem = new LocalHardwareItem();
@@ -317,7 +327,7 @@ namespace HardSense.HardwareMonitor
 
         }
         
-        private void AddSensorsToAllAvailableList(List<LocalHardwareItem> hardwareItemList)
+        private static void AddSensorsToAllAvailableList(List<LocalHardwareItem> hardwareItemList)
         {
             foreach (LocalHardwareItem currHardwareItem in hardwareItemList)
             {
@@ -334,7 +344,7 @@ namespace HardSense.HardwareMonitor
             }
         }
 
-        private void AddHardwareListToMMFileMap(List<LocalHardwareItem> currHardwareItemList)
+        private static void AddHardwareListToMMFileMap(List<LocalHardwareItem> currHardwareItemList)
         {
             foreach(LocalHardwareItem currHardwareItem in currHardwareItemList)
             {

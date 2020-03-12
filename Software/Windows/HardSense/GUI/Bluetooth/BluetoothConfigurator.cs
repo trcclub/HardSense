@@ -11,6 +11,7 @@ using System.Threading;
 using System.IO.Ports;
 using HardSense.DataStreamingServer;
 
+
 namespace HardSense.GUI.Bluetooth
 {
     public partial class BluetoothConfigurator : Form
@@ -33,6 +34,7 @@ namespace HardSense.GUI.Bluetooth
             groupBox_DeviceIDs.Enabled = false;
             button_DeleteTouchCalibrationFile.Enabled = false;
             button_UpdateTime.Enabled = false;
+            button_Upload_HomeScreen_Layout.Enabled = false;
 
             GetAvailablePorts();
         }
@@ -173,6 +175,7 @@ namespace HardSense.GUI.Bluetooth
                 groupBox_DeviceIDs.Enabled = true;
                 button_DeleteTouchCalibrationFile.Enabled = true;
                 button_UpdateTime.Enabled = true;
+                button_Upload_HomeScreen_Layout.Enabled = true;
 
                 if (Properties.Settings.Default.DebugOutput)
                 {
@@ -551,6 +554,12 @@ namespace HardSense.GUI.Bluetooth
             AddStringToMessage((char)TRANS__KEY.CONFIG_SET_BT_DEVICE_ID, textBox_NewBluetoothDeviceID.Text);
             textBox_NewWifiDeviceID.Clear();
             textBox_NewBluetoothDeviceID.Clear();
+        }
+
+        private void button_Edit_HomeScreen_Layout_Click(object sender, EventArgs e)
+        {
+            LayoutEditor_HomeScreen leHomeScreen = new LayoutEditor_HomeScreen();
+            leHomeScreen.ShowDialog(this);
         }
     }
 }
