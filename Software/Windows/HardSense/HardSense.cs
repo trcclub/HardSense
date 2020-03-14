@@ -26,14 +26,28 @@ namespace HardSense
             SetupTrayIcon();
 
             tempDisplayBox.AppendText("Starting...\n");
-            
+
+
+            TreeNode root = new TreeNode();
+            root.Text = Environment.MachineName;
+
+
+            TreeNode motherBoards = new TreeNode();
+            motherBoards.Text = "Motherboards";
+
+
+            root.Nodes.Add(motherBoards);
+            root.Expand();
+            treeView_SensorList.Nodes.Add(root);
+           
+
 
             //tempThread = new Thread(ThreadProc);
             //tempThread.Start();
 
-            
 
-            
+
+
             List<string> tmpHardwareExludeList = new List<string>();
             //tmpHardwareExludeList.Add("/mainboard");
             //tmpHardwareExludeList.Add("/intelcpu/0");

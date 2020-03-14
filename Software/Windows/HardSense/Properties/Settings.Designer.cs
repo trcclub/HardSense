@@ -220,5 +220,17 @@ namespace HardSense.Properties {
                 return ((string)(this["FPSSensorName"]));
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0, 0")]
+        public global::System.Drawing.Point LayoutEditor_HomeScreenLastPosition {
+            get {
+                return ((global::System.Drawing.Point)(this["LayoutEditor_HomeScreenLastPosition"]));
+            }
+            set {
+                this["LayoutEditor_HomeScreenLastPosition"] = value;
+            }
+        }
     }
 }
