@@ -232,5 +232,17 @@ namespace HardSense.Properties {
                 this["LayoutEditor_HomeScreenLastPosition"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0, 0")]
+        public global::System.Drawing.Point SensorMonitor_WindowsLastPosition {
+            get {
+                return ((global::System.Drawing.Point)(this["SensorMonitor_WindowsLastPosition"]));
+            }
+            set {
+                this["SensorMonitor_WindowsLastPosition"] = value;
+            }
+        }
     }
 }

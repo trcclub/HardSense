@@ -27,21 +27,6 @@ namespace HardSense
 
             tempDisplayBox.AppendText("Starting...\n");
 
-
-            TreeNode root = new TreeNode();
-            root.Text = Environment.MachineName;
-
-
-            TreeNode motherBoards = new TreeNode();
-            motherBoards.Text = "Motherboards";
-
-
-            root.Nodes.Add(motherBoards);
-            root.Expand();
-            treeView_SensorList.Nodes.Add(root);
-           
-
-
             //tempThread = new Thread(ThreadProc);
             //tempThread.Start();
 
@@ -80,8 +65,8 @@ namespace HardSense
             //----------------------------------------//
             */
 
-            DisplayHardwareDataIntheBox();
-            //DisplaySensorsInTheBox();
+            //DisplayHardwareDataIntheBox();
+            DisplaySensorsInTheBox();
 
         }
 
@@ -385,7 +370,14 @@ namespace HardSense
         private void bluetoothConfiguratorToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             BluetoothConfigurator btConfig = new BluetoothConfigurator();
-            btConfig.ShowDialog(this);
+            //btConfig.ShowDialog(this);
+            btConfig.Show(this);
+        }
+
+        private void monitorToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SensorMonitor sensorMonitor = new SensorMonitor();
+            sensorMonitor.Show(this);
         }
     }
 }

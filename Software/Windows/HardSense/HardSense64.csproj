@@ -116,6 +116,12 @@
     <Compile Include="GUI\Bluetooth\LayoutEditor_HomeScreen.Designer.cs">
       <DependentUpon>LayoutEditor_HomeScreen.cs</DependentUpon>
     </Compile>
+    <Compile Include="GUI\SensorMonitor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\SensorMonitor.Designer.cs">
+      <DependentUpon>SensorMonitor.cs</DependentUpon>
+    </Compile>
     <Compile Include="HardSense.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -138,6 +144,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\Bluetooth\LayoutEditor_HomeScreen.resx">
       <DependentUpon>LayoutEditor_HomeScreen.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\SensorMonitor.resx">
+      <DependentUpon>SensorMonitor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="HardSense.resx">
       <DependentUpon>HardSense.cs</DependentUpon>
